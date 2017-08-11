@@ -1,0 +1,50 @@
+.filterable {
+    margin-top: 15px;
+}
+.filterable .panel-heading .pull-right {
+    margin-top: -15px;
+}
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: #333;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+    color: #333;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+    color: #333;
+}
+
+#table-wrapper {
+  position:relative;
+}
+#table-scroll {
+  height:350px;
+  overflow:auto;  
+  margin-top:20px;
+
+}
+#table-wrapper table {
+  width:100%;
+
+}
+#table-wrapper table * {
+  background:yellow;
+  color:black;
+
+}
+#table-wrapper table thead th .text {
+  position:absolute;   
+  top:-20px;
+  z-index:2;
+  height:20px;
+  width:35%;
+  border: 1px solid black;
+}

@@ -1,0 +1,75 @@
+<?php
+error_reporting(0);
+require_once ('dompdf_config.inc.php');
+// $pdf_content='
+//       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+//       <html xmlns="http://www.w3.org/1999/xhtml">
+//       <head>
+//       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+//       </head>
+    
+//       <style type="text/css">             
+//         #pdf_header, #pdf_container{ border: 1px solid #CCCCCC; padding:10px; }       
+//         #pdf_header{ margin:10px auto 0px; border-bottom:none; }        
+//         table{ width:580px; }       
+//         #pdf_container{margin:0px auto; }
+//         .rpt_title{ background:#99CCFF; }                             
+//       </style>
+              
+// <div id="pdf_container" >
+// <div id="topo" style="width: 304px; margin-left: 10px;" align="center">
+//   <div class="formulario" align="center">
+//     <img src="/imagens/avatar.jpg">
+//   </div>
+//   <div class="borda" style="width: 450px; background-color: #08034c; height: 20px; float: left; margin-left: 10px;" ></div>
+//   <div class="borda" style="width: 450px; background-color: #005485; height: 20px; float: left;" align="center"></div><br>
+//   <h1 style="font-family: arial; font-weight: inherit;">TERMO DE CI&Ecirc;NCIA</h1> 
+//   <h2 style="font-family: arial; font-weight: inherit;"><i>SOLICITA&Ccedil;&Atilde;O DE TROCA DE HOR&Aacute;RIO</i></h2>  
+//   <div style="width: 760px;">
+//     <span style="text-align: center; font-size: 17px; font-family: arial; ">Insira o texto aqui.Insira o texto aqui.Insira o texto aqui.Insira o texto aqui.Insira o texto aqui.Insira o texto aqui.Insira o texto aqui.Insira o texto aqui.Insira o texto aqui.</span><br><br><br><br>
+//   </div>
+//   <div align="left" style="font-family: arial; margin-left: 30px;">
+//     <span>Dados da Troca:</span>
+//     <ul style="margin-left: -40px;" >
+//       <li style="list-style-type: none; margin-bottom: 5px;">Solicitante:<span style="margin-left: 30px;">texto</span></li>
+//       <li style="list-style-type: none; margin-bottom: 5px;">Matr&iacute;cula:<span style="margin-left: 37px;">texto</span> </li>
+//       <li style="list-style-type: none; margin-bottom: 5px;">Consultor:<span style="margin-left: 34px;">texto</span></li>
+//       <li style="list-style-type: none; margin-bottom: 5px;">Hor&aacute;rio:<span style="margin-left:49px;"s>texto</span></li><br>
+//       <li style="list-style-type: none; margin-bottom: 5px;">Cedente<span style="margin-left:45px;"s>texto</span></li>
+//       <li style="list-style-type: none; margin-bottom: 5px;">Matr&iacute;cula:<span style="margin-left:35px;"s>texto</span></li>
+//       <li style="list-style-type: none; margin-bottom: 5px;">Consultor:<span style="margin-left:32px;"s>texto</span></li>
+//       <li style="list-style-type: none; margin-bottom: 5px;">Hor&aacute;rio:<span style="margin-left:48px;"s>texto</span></li>
+//     </ul>
+//   </div><br>
+//   <div style="border-top: 2px solid black; width: 40px; float: left; margin: 0px 56px; font-family: arial;"><span>Solicitante</span></div>
+//   <div style="border-top: 2px solid black; width: 40px; float: left; font-family: arial;"><span>Cedente</span></div><br><br><br><br>
+//   <div style="border-top: 2px solid black; width: 40px; float: left; margin: 0px 56px; font-family: arial;"><span>Supervisor do solicitante</span></div>
+//   <div style="border-top: 2px solid black; width: 40px; float: left; font-family: arial;"><span>Supervisor do cedente</span></div>
+// <br>
+    
+//     <span style="font-family: arial;">(data atual)</span>
+  
+// </div>  
+
+//       </div></body></html>'
+//       ;
+
+
+//       $name = date("Ymd").rand().'.pdf';
+//       $reportPDF=createPDF(12, $pdf_content, 'activity_Report', $name );
+//   function createPDF($pdf_userid, $pdf_content, $pdf_For, $filename){
+  
+//   $path='UsersActivityReports/';
+//   /*$rndNumber=rand();
+//   $filename=$pdf_userid.date("Ymd").$rndNumber.'.pdf';*/
+//   $dompdf=new DOMPDF();
+//   $dompdf->load_html($pdf_content);
+//   $dompdf->render();
+//   $output = $dompdf->output();
+//   file_put_contents($path.$filename, $output);
+//   return $filename;   
+//   } 
+//   //echo '<a href="UsersActivityReports/'.$name.'" > Download </a>';
+
+//  header("Location:UsersActivityReports/$name");
+// ?>

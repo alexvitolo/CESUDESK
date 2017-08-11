@@ -1,0 +1,30 @@
+table {
+    box-shadow: 0px 0px 10px black;   
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+table th, table td {
+    border: 1px ; 
+}
+ 
+
+.centro {
+    text-align: center;
+}
+
+.direita {
+    text-align: right;
+}
+
+.esquerda {
+    text-align: left;
+}
+
+
+#table-scroll {
+  height:350px;
+  overflow:auto;  
+  margin-top:20px;
+
+}

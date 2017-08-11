@@ -1,0 +1,63 @@
+
+table {
+    box-shadow: 0px 0px 5px black;   
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+table th, table td {
+    border: 1px ; 
+}
+ 
+
+.centro {
+    text-align: center;
+}
+
+.direita {
+    text-align: right;
+}
+
+.esquerda {
+    text-align: left;
+}
+
+input[type='checkbox'] {
+    float: left;
+}
+
+#table-scroll {
+  height:350px;
+  overflow:auto;  
+  margin-top:20px;
+
+}
+.button{
+    margin:0 0 10px 0;
+    padding:4px 7px;
+    background:#01579B;
+    border:0px;
+    position: relative;
+    top:10px;
+    width:100px;
+    border-bottom: 1px double #01579B;
+    border-top: 1px double #01579B;
+    border-left:1px double #01579B;
+    border-right:1px double #01579B;
+    color:white;
+}
+.button2{
+    margin:0 0 10px 0;
+    padding:4px 7px;
+    background:#ff3333;
+    border:0px;
+    position: relative;
+    top:10px;
+    width:180px;
+    border-bottom: 1px double #ff3333;
+    border-top: 1px double #ff3333;
+    border-left:1px double #ff3333;
+    border-right:1px double #ff3333;
+    color:white;
+}
+

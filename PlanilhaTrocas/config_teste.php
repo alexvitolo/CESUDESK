@@ -1,0 +1,81 @@
+<?php
+
+  return array(
+    'LYCEUM' => array(
+      'HOST' => '172.16.0.71:49241',
+      'DB' => 'LYCEUM',
+      'USER' => 'webcesumar',
+      'PASS' => 'webcesumar123@',
+      'CONFIG' => array("SET ANSI_NULLS ON", "SET ANSI_WARNINGS ON"),
+    ),
+    'TALISMA' => array(
+      'HOST' => '172.16.1.188:1433',
+      'DB' => 'tlmain',
+      'USER' => 'talismaadmin',
+      'PASS' => 'talisma',
+      'CONFIG' => array("SET ANSI_NULLS ON", "SET ANSI_WARNINGS ON"),
+    ),
+    'MYSQL_EAD' => array(
+      'HOST' => '172.16.6.15',
+      'DB' => 'moodle2009ead',
+      'USER' => 'webcesumar',
+      'PASS' => 'webcesumar123@',
+      'CONFIG' => array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"),
+    ),
+    'MOODLE_PRESENCIAL' => array(
+      'HOST' => '172.16.6.14',
+      'DB' => 'moodle_presencial',
+      'USER' => 'webcesumar',
+      'PASS' => 'webcesumar123@',
+      'CONFIG' => array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"),
+    ),
+    'MYSQL_PRESENCIAL' => array(
+      'HOST' => '172.16.6.14',
+      'DB' => 'ces_email',
+      'USER' => 'webcesumar',
+      'PASS' => 'webcesumar123@',
+      'CONFIG' => array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"),
+    ),
+    'PERGAMUM' => array(
+      'HOST' => '172.16.0.70:59472',
+      'DB' => 'PERGAMARC',
+      'USER' => 'pergaweb',
+      'PASS' => 'webcesumar123@',
+      'CONFIG' => array("SET ANSI_NULLS ON", "SET ANSI_WARNINGS ON"),
+    ),
+    'UNIVERSOEAD' => array(
+        'HOST' => '172.16.0.71:56319',
+        'DB'   => 'DB_ECOMMERCE',
+        'USER' => 'user_ecommerce',
+        'PASS' => '99*zx7@',
+      'CONFIG' => array("SET ANSI_NULLS ON", "SET ANSI_WARNINGS ON"),
+    ),
+    'AVA' => array(
+        'HOST' => '172.16.0.71\AVA',
+        'DB'   => 'AVA',
+        'USER' => 'ava_portal',
+        'PASS' => 'ava_portal123@',
+      'CONFIG' => array("SET ANSI_NULLS ON", "SET ANSI_WARNINGS ON"),
+    ),
+    'LYCEUMD1' => array(
+      'HOST' => '172.16.1.145:49241',
+      'DB' => 'LYCEUM',
+      'USER' => 'gid',
+      'PASS' => 'Fuyt2DZkKV',
+      'CONFIG' => array("SET ANSI_NULLS ON", "SET ANSI_WARNINGS ON"),
+    ),
+    'LYCEUMHM' => array(
+      'HOST' => '172.16.0.70:49241',
+      'DB' => 'LYCEUM',
+      'USER' => 'webcesumar',
+      'PASS' => '5up3r5t4rr0ck3t',
+      'CONFIG' => array("SET ANSI_NULLS ON", "SET ANSI_WARNINGS ON"),
+    ),
+    'CRM_REPORT' => array(
+      'HOST' => 'W2K8R2-APP36\CRM_REPORTS',
+      'DB' => 'DB_CRM_REPORT',
+      'USER' => 'usr_cesudesk',
+      'PASS' => 'ZRioYf68',
+      'CONFIG' => array("SET ANSI_NULLS ON", "SET ANSI_WARNINGS ON"),
+    ),
+  );

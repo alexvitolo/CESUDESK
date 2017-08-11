@@ -1,0 +1,114 @@
+form,input,select,textarea{margin:0; padding:0; color:#ffffff;}
+
+.filterable {
+    margin-top: 15px;
+}
+.filterable .panel-heading .pull-right {
+    margin-top: -15px;
+}
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: #333;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+    color: #333;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+    color: #333;
+}
+
+#table-wrapper {
+  position:relative;
+}
+#table-scroll {
+  height:350px;
+  overflow:auto;  
+  margin-top:20px;
+
+}
+#table-wrapper table {
+  width:100%;
+
+}
+#table-wrapper table * {
+  background:yellow;
+  color:black;
+
+}
+#table-wrapper table thead th .text {
+  position:absolute;   
+  top:-20px;
+  z-index:2;
+  height:20px;
+  width:35%;
+  border: 1px solid black;
+}
+
+
+div.box {
+    margin:0 auto;
+    width:500px;
+    background:#222222;
+    position:relative;
+    top:50px;
+    border:1px solid #262626;
+}
+
+div.box h1 { 
+    color:#ffffff;
+    font-size:18px;
+    text-transform:uppercase;
+    padding:5px 0 5px 5px;
+    border-bottom:1px solid #161712;
+    border-top:1px solid #161712; 
+}
+
+div.box label {
+    width:100%;
+    display: block;
+    background:#1C1C1C;
+    border-top:1px solid #262626;
+    border-bottom:1px solid #161712;
+    padding:10px 0 10px 0;
+}
+
+div.box label span {
+    display: block;
+    color:#bbbbbb;
+    font-size:12px;
+    float:left;
+    width:100px;
+    text-align:right;
+    padding:5px 20px 0 0;
+}
+
+div.box .input_text {
+    padding:10px 10px;
+    width:200px;
+    background:#262626;
+    border-bottom: 1px double #171717;
+    border-top: 1px double #171717;
+    border-left:1px double #333333;
+    border-right:1px double #333333;
+}
+div.box .button{
+    margin:0 0 10px 0;
+    padding:4px 7px;
+    background:#01579B;
+    border:0px;
+    position: relative;
+    top:10px;
+    left:75px;
+    width:100px;
+    border-bottom: 1px double #01579B;
+    border-top: 1px double #01579B;
+    border-left:1px double #01579B;
+    border-right:1px double #01579B;
+}
