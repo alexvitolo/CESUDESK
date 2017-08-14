@@ -1,21 +1,14 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
-$squilaDicas = "SELECT tc.ID_MATRICULA,
-                       tc.NOME,
-                       tc.STATUS_COLABORADOR,
-                       tc.LOGIN_REDE,
-                       tc.CODIGO_PORTAL
-                  FROM tb_crm_colaborador tc
-              ORDER BY tc.NOME";
+// $ID_MATRICULA = $_POST["ID_MATRICULA"];
 
-$result_squila = sqlsrv_prepare($conn, $squilaDicas);
-sqlsrv_execute($result_squila);
+// fazer skila dicas 
 
 
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -88,13 +81,13 @@ sqlsrv_execute($result_squila);
                   <li class="mt">
                       <a class="" href="index.html">
                           <i class="fa fa-dashboard"></i>
-                          <span>Indicadores</span>
+                          <span>Dashboard</span>
                       </a>
                   </li>
 
                   <li class="sub-menu">
                       <a class="active" href="colaboradores.php">
-                          <i class="fa fa-th"></i>
+                          <i class="fa fa-dashboard"></i>
                           <span>Colaboradores</span>
                       </a>
                   </li>
@@ -175,56 +168,149 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Colaboradores</h3>
+            <h3><i class="fa fa-right"></i> Edição de colaboradores</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
-                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela Colaboradores </h4>
-                            <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroColaborador.php"><input style="margin-left: 750px" type="button" value="Novo Colaborador" ></input></a>
-                              <thead>
-                              <tr>
-                                  <th><i class="fa fa-bullhorn"></i> Status Colaborador </th>
-                                  <th><i class="fa fa-bullhorn"></i> Nome </th>
-                                  <th><i class="fa fa-bullhorn"></i> Matrícula </th>
-                                  <th><i class="fa fa-bookmark"></i> Login Rede</th>
-                                  <th><i class=" fa fa-edit"></i> Codigo Portal</th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-                                    if ($row['STATUS_COLABORADOR'] == "ATIVO") {
-                                      $corStatus = "label label-success label-mini";
-                                    }elseif (($row['STATUS_COLABORADOR'] == "DESLIGADO") or ($row['STATUS_COLABORADOR'] == "Desligado")) {
-                                      $corStatus = "label label-danger  label-mini";
-                                    }else{
-                                      $corStatus = "label label-warning  label-mini";
-                                    }
-                                    ?>
-                                  <td><?php echo $row['NOME']?></a></td>
-                                  <td><?php echo $row['ID_MATRICULA']?></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['STATUS_COLABORADOR']?></span></td>
-                                  <td><?php echo $row['LOGIN_REDE']?></td>
-                                  <td><?php echo $row['CODIGO_PORTAL']?></td>
-                                  <td>
-                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_MATRICULA'] ?>"  name="ID_MATRICULA"><i class="fa fa-pencil"></i></button>
-                                  </td>
-                              </tr>
+                         <form name="Form" method="post" id="formulario" action="@paginaphp.php">
+<!-- DADOS PESSOAIS-->
+                         <fieldset>
+                          <legend> Dados do colaborador </legend>
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" for="nome">Matricula: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="ID_MATRICULA">
+                            </td>
+                            <td>
+                             <label style="margin-left: 15px" for="sobrenome">Nome: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="nomr">
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" for="sobrenome">Data Nascimento: </label>
+                            </td>
+                            <td align="left">
+                             <input type="date" name="dtNascimento">
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" for="sobrenome">E-mail: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="email" size="40">
+                            </td>
+                           </tr>
 
-                              <?php 
-                                    }
-                              ?>
-                              
-                              </tbody>
+                           <tr>
+                            <td>
+                            <br/>
+                             <label style="margin-left: 15px" for="rg">Login Rede: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="loginRede" size="20" > 
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" >Login :</label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="login" size="30" > 
+                            </td>
+                            <td>
+                             <label style="margin-left: 15px" for="status">Status :</label>
+                            </td>
+                            <td align="left">
+                             <select name="status"> 
+                             <option value="ATIVO">ATIVO</option>
+                             <option value="FERIAS">FERIAS</option> 
+                             <option value="DESLIGADO">DESLIGADO</option>
+                             <option value="INSS">INSS</option>  
+                            </select>
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" for="sobrenome">Código Portal: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="codPortal" size="10">
+                            </td>
+                           </tr>
+
+                           <tr>
+                            <td>
+                             <label style="margin-left: 15px">ID Supervisor :</label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="idSupervisor" size="9" > 
+                            </td>
+                            <td style="width:120px";>
+                             <label>Nome Supervisor:</label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="nomeSupervisor" size="30" > 
+                            </td>
+                           </tr>
+
+                            <tr>
+                            <td>
+                            <br/>
+                             <label style="margin-left: 15px" for="rg">ID Cargo: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="loginRede" size="9" > 
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" >Descrição Cargo :</label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="login" size="30" > 
+                            </td>
+                            <td>
+                             <label style="margin-left: 15px" for="status">Nível Cargo :</label>
+                            </td>
+                            <td align="left">
+                             <select name="status"> 
+                             <option value="I">I</option>
+                             <option value="II">II</option> 
+                             <option value="III">III</option>
+                             <option value="IV">IV</option>  
+                            </select>
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" >Data Admissão :</label>
+                            </td>
+                            <td align="left">
+                             <input type="date" name="dtAdmissao"> 
+                            </td>
+                           </tr>
+
+                            <tr>
+                            <td>
+                            <br/>
+                             <label style="margin-left: 15px" for="rg">ID Horário: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="idHorario" size="9" > 
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" >Horário :</label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="horario" size="30" > 
+                            </td>
+                           </tr>
+
                           </table>
-                        </form>
+                         </fieldset>
+                         
+                         <br/>
+
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $row['ID_MATRICULA']?>"  name="ID_MATRICULA">Confirmar</button> 
+                         <input type="reset" value="Limpar">
+                         </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
@@ -303,5 +389,19 @@ sqlsrv_execute($result_squila);
 
    })(document);
         
+
+
+    function getConfirmation(){
+       // var retVal = confirm("Do you want to continue ?");
+       if(  confirm(" Deseja Finalizar a Troca ? ") == true ){
+          return true;
+       }
+       else{
+          return false;
+       }
+    }
+        
+
+
 
 </script>

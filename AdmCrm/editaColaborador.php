@@ -1,8 +1,8 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
-$ID_MATRICULA = $_POST["ID_MATRICULA"];
+$ID_MATRICULA = $_POST["ID_MATRICULA"]; // id colaborador
 
-
+// fazer skila dicas 
 
 
 ?>
@@ -174,84 +174,141 @@ $ID_MATRICULA = $_POST["ID_MATRICULA"];
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form action="Script_do_Formulario.php" method="post">
+                         <form name="Form" method="post" id="formulario" action="@paginaphp.php">
 <!-- DADOS PESSOAIS-->
                          <fieldset>
                           <legend> Dados do colaborador </legend>
-                          <table cellspacing="10">
+                          <table cellspacing="10" style="vertical-align: middle">
                            <tr>
-                            <td>
-                             <label for="nome">Matricula: </label>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" for="nome">Matricula: </label>
                             </td>
                             <td align="left">
                              <input type="text" name="ID_MATRICULA">
                             </td>
                             <td>
-                             <label style="margin-left: 15px" for="sobrenome">Sobrenome: </label>
+                             <label style="margin-left: 15px" for="sobrenome">Nome: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="sobrenome">
+                             <input type="text" name="nomr">
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" for="sobrenome">Data Nascimento: </label>
+                            </td>
+                            <td align="left">
+                             <input type="date" name="dtNascimento">
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" for="sobrenome">E-mail: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="email" size="40">
                             </td>
                            </tr>
+
                            <tr>
                             <td>
                             <br/>
-                             <label for="rg">RG: </label>
+                             <label style="margin-left: 15px" for="rg">Login Rede: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="rg" size="13" maxlength="13"> 
+                             <input type="text" name="loginRede" size="20" > 
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" >Login :</label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="login" size="30" > 
+                            </td>
+                            <td>
+                             <label style="margin-left: 15px" for="status">Status :</label>
+                            </td>
+                            <td align="left">
+                             <select name="status"> 
+                             <option value="ATIVO">ATIVO</option>
+                             <option value="FERIAS">FERIAS</option> 
+                             <option value="DESLIGADO">DESLIGADO</option>
+                             <option value="INSS">INSS</option>  
+                            </select>
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" for="sobrenome">Código Portal: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="codPortal" size="10">
                             </td>
                            </tr>
+
                            <tr>
                             <td>
-                             <label>CPF:</label>
+                             <label style="margin-left: 15px">ID Supervisor :</label>
                             </td>
                             <td align="left">
-                             <input type="text" name="cpf" size="9" maxlength="9"> - <input type="text" name="cpf2" size="2" maxlength="2">
+                             <input type="text" name="idSupervisor" size="9" > 
+                            </td>
+                            <td style="width:120px";>
+                             <label>Nome Supervisor:</label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="nomeSupervisor" size="30" > 
                             </td>
                            </tr>
+
+                            <tr>
+                            <td>
+                            <br/>
+                             <label style="margin-left: 15px" for="rg">ID Cargo: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="loginRede" size="9" > 
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" >Descrição Cargo :</label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="login" size="30" > 
+                            </td>
+                            <td>
+                             <label style="margin-left: 15px" for="status">Nível Cargo :</label>
+                            </td>
+                            <td align="left">
+                             <select name="status"> 
+                             <option value="I">I</option>
+                             <option value="II">II</option> 
+                             <option value="III">III</option>
+                             <option value="IV">IV</option>  
+                            </select>
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" >Data Admissão :</label>
+                            </td>
+                            <td align="left">
+                             <input type="date" name="dtAdmissao"> 
+                            </td>
+                           </tr>
+
+                            <tr>
+                            <td>
+                            <br/>
+                             <label style="margin-left: 15px" for="rg">ID Horário: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="idHorario" size="9" > 
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" >Horário :</label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="horario" size="30" > 
+                            </td>
+                           </tr>
+
                           </table>
                          </fieldset>
                          
                          <br/>
-                         
-                           <tr>
-                            <td>
-                             <label for="estado">Estado:</label>
-                            </td>
-                            <td align="left">
-                             <select name="estado"> 
-                             <option value="ac">Acre</option> 
-                             <option value="al">Alagoas</option> 
-                             <option value="am">Amazonas</option> 
-                             <option value="ap">Amapá</option> 
-                             <option value="ba">Bahia</option> 
-                             <option value="ce">Ceará</option> 
-                             <option value="df">Distrito Federal</option> 
-                             <option value="es">Espírito Santo</option> 
-                             <option value="go">Goiás</option> 
-                             <option value="ma">Maranhão</option> 
-                             <option value="mt">Mato Grosso</option> 
-                             <option value="ms">Mato Grosso do Sul</option> 
-                             <option value="mg">Minas Gerais</option> 
-                             <option value="pa">Pará</option> 
-                             <option value="pb">Paraíba</option> 
-                             <option value="pr">Paraná</option> 
-                             <option value="pe">Pernambuco</option> 
-                             <option value="pi">Piauí</option> 
-                             <option value="rj">Rio de Janeiro</option> 
-                             <option value="rn">Rio Grande do Norte</option> 
-                             <option value="ro">Rondônia</option> 
-                             <option value="rs">Rio Grande do Sul</option> 
-                             <option value="rr">Roraima</option> 
-                             <option value="sc">Santa Catarina</option> 
-                             <option value="se">Sergipe</option> 
-                             <option value="sp">São Paulo</option> 
-                             <option value="to">Tocantins</option> 
-                            </select>
-                            </td>
-                           </tr>
-                         <input type="submit">
+
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $row['ID_MATRICULA']?>"  name="ID_MATRICULA">Confirmar</button> 
                          <input type="reset" value="Limpar">
                          </form>
                       </div><!-- /content-panel -->
@@ -332,5 +389,19 @@ $ID_MATRICULA = $_POST["ID_MATRICULA"];
 
    })(document);
         
+
+
+    function getConfirmation(){
+       // var retVal = confirm("Do you want to continue ?");
+       if(  confirm(" Deseja Finalizar a Troca ? ") == true ){
+          return true;
+       }
+       else{
+          return false;
+       }
+    }
+        
+
+
 
 </script>
