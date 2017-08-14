@@ -4,6 +4,36 @@
 
 // fazer skila dicas 
 
+$sqlSupervisores = "SELECT tc.ID_COLABORADOR AS ID_SUP
+                      ,tc.NOME AS NOME_SUP
+                  FROM tb_crm_colaborador tc
+            INNER JOIN tb_crm_cargo ta ON ta.ID_CARGO = tc.ID_CARGO AND ta.BO_GESTOR = 'S'
+              ORDER BY tc.NOME";
+
+$result_supervisores = sqlsrv_prepare($conn, $sqlSupervisores);
+sqlsrv_execute($result_supervisores);
+
+
+$sqlHorarios = "SELECT th.ID_HORARIO
+                      ,CONVERT(varchar,th.ENTRADA,108) AS ENTRADA
+                      ,CONVERT(varchar,th.SAIDA,108) AS SAIDA
+                      ,CONVERT(varchar,th.CARGA_HORARIO,108) AS CARGA_HORARIO
+                      FROM tb_crm_horario th
+                    WHERE th.BO_ESCALA_FDS = 'N'
+                   ORDER BY th.CARGA_HORARIO
+                       ,th.ENTRADA";
+
+$result_Horario = sqlsrv_prepare($conn, $sqlHorarios);
+sqlsrv_execute($result_Horario);
+
+$sqlCargos = "SELECT tc.ID_CARGO
+                    ,tc.DESCRICAO AS DESC_CARGO
+                  FROM tb_crm_cargo tc
+              ORDER BY tc.DESCRICAO";
+
+$result_Cargo = sqlsrv_prepare($conn, $sqlCargos);
+sqlsrv_execute($result_Cargo);
+
 
 ?>
 
@@ -20,6 +50,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/vendor/bootstrap-combobox/css/bootstrap-combobox.css">
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         
@@ -241,30 +272,47 @@
 
                            <tr>
                             <td>
-                             <label style="margin-left: 15px">ID Supervisor :</label>
+                             <label style="margin-left: 15px">Supervisor: </label>
+                             <!-- <label class="col-xs-3 control-label">Supervisor</label> -->
                             </td>
                             <td align="left">
-                             <input type="text" name="idSupervisor" size="9" > 
+                             <!-- <input type="text" name="idSupervisor" size="9" >  -->
+                              <div class="form-group">
+                                 <!-- <label class="col-xs-3 control-label">Supervisor</label> -->
+                                 <div class="col-xs-12 selectContainer" >
+                                     <select name="supervisor">
+                                         <option value="">Escolha um supervisor</option>
+                                         <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
+                                            <option value=<?php echo $row['ID_SUP']?> > <?php echo utf8_encode($row['NOME_SUP']) ?> </option>
+                                         <?php }
+                                         ?>
+                                     </select>
+                                 </div>
+                              </div>
                             </td>
-                            <td style="width:120px";>
-                             <label>Nome Supervisor:</label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="nomeSupervisor" size="30" > 
-                            </td>
-                           </tr>
+                            </tr> 
 
                             <tr>
                             <td>
-                            <br/>
-                             <label style="margin-left: 15px" for="rg">ID Cargo: </label>
+                             <label style="margin-left: 15px">Cargo: </label>
+                             <!-- <label class="col-xs-3 control-label">Supervisor</label> -->
                             </td>
                             <td align="left">
-                             <input type="text" name="loginRede" size="9" > 
+                             <!-- <input type="text" name="idSupervisor" size="9" >  -->
+                              <div class="form-group">
+                                 <!-- <label class="col-xs-3 control-label">Supervisor</label> -->
+                                 <div class="col-xs-12 selectContainer" >
+                                     <select name="supervisor">
+                                         <option value="">Escolha um Cargo</option>
+                                         <?php while ($row = sqlsrv_fetch_array($result_Cargo)){ ?>
+                                            <option value=<?php echo $row['ID_CARGO']?> > <?php echo utf8_encode($row['DESC_CARGO']) ?> </option>
+                                         <?php }
+                                         ?>
+                                     </select>
+                                 </div>
+                              </div>
                             </td>
-                             <td>
-                             <label style="margin-left: 15px" >Descrição Cargo :</label>
-                            </td>
+
                             <td align="left">
                              <input type="text" name="login" size="30" > 
                             </td>
@@ -289,19 +337,24 @@
 
                             <tr>
                             <td>
-                            <br/>
-                             <label style="margin-left: 15px" for="rg">ID Horário: </label>
+                             <label style="margin-left: 15px">Horário: </label>
+                             <!-- <label class="col-xs-3 control-label">Horário</label> -->
                             </td>
                             <td align="left">
-                             <input type="text" name="idHorario" size="9" > 
+                             <!-- <input type="text" name="idSupervisor" size="9" >  -->
+                              <div class="form-group">
+                                 <!-- <label class="col-xs-3 control-label">Supervisor</label> -->
+                                 <div class="col-xs-12 selectContainer" >
+                                     <select  name="horario">
+                                         <option value="">Escolha um horário</option>
+                                         <?php while ($row = sqlsrv_fetch_array($result_Horario)){ ?>
+                                            <option value=<?php echo $row['ID_HORARIO']?> > <?php echo 'ENTRADA: '.$row['ENTRADA'].'  |  Saída: '.$row['SAIDA'].'  |  Carga Horária: '.$row['CARGA_HORARIO']?> </option>
+                                         <?php }
+                                         ?>
+                                     </select>
+                                 </div>
+                              </div>
                             </td>
-                             <td>
-                             <label style="margin-left: 15px" >Horário :</label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="horario" size="30" > 
-                            </td>
-                           </tr>
 
                           </table>
                          </fieldset>
