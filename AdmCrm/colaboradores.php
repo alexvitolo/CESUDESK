@@ -4,7 +4,8 @@ $squilaDicas = "SELECT tc.ID_MATRICULA,
                        tc.NOME,
                        tc.STATUS_COLABORADOR,
                        tc.LOGIN_REDE,
-                       tc.CODIGO_PORTAL
+                       tc.CODIGO_PORTAL,
+                       tc.ID_COLABORADOR
                   FROM tb_crm_colaborador tc
               ORDER BY tc.NOME";
 
@@ -214,7 +215,7 @@ sqlsrv_execute($result_squila);
                                   <td><?php echo $row['CODIGO_PORTAL']?></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_MATRICULA'] ?>"  name="ID_MATRICULA"><i class="fa fa-pencil"></i></button>
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_COLABORADOR'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 

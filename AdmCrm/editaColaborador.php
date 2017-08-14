@@ -1,14 +1,38 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
-$ID_MATRICULA = $_POST["ID_MATRICULA"]; // id colaborador
+$ID_COLABORADOR = $_POST["ID_COLABORADOR"]; // id colaborador
 
-// fazer skila dicas 
+$squiladica = "SELECT TC.ID_COLABORADOR,
+                      TC.NOME,
+                      TC.LOGIN_REDE,
+                      TC.LOGIN_TELEFONIA,
+                      TC.DT_NASCIMENTO,
+                      TC.DT_ADMISSAO,
+                      TC.EMAIL,
+                      TC.STATUS_COLABORADOR,
+                      TC.ID_MATRICULA,
+                      TC.ID_COLABORADOR_GESTOR,
+                      TC.CODIGO_PORTAL,
+                      TC.NIVEL_CARGO,
+                      TC.ID_CARGO,
+                      TC.ID_GRUPO,
+                      TC.ID_HORARIO
 
+                 FROM tb_crm_colaborador TC
+                WHERE ID_COLABORADOR = '{$ID_COLABORADOR}' ";
+
+$result_squila = sqlsrv_prepare($conn, $squiladica);
+sqlsrv_execute($result_squila);
+
+$vetorSQL = sqlsrv_fetch_array($result_squila);
+
+$DT_NASCIMENTO = date_format($vetorSQL['DT_NASCIMENTO'], "Y-m-d");
+$DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
 
 ?>
 
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -184,25 +208,25 @@ $ID_MATRICULA = $_POST["ID_MATRICULA"]; // id colaborador
                              <label style="margin-left: 15px" for="nome">Matricula: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="ID_MATRICULA">
+                             <input type="text" name="ID_MATRICULA" value="<?php echo $vetorSQL['ID_MATRICULA']; ?>">
                             </td>
                             <td>
                              <label style="margin-left: 15px" for="sobrenome">Nome: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="nomr">
+                             <input type="text" name="nome" size="35" value="<?php echo $vetorSQL['NOME']; ?>">
                             </td>
                              <td>
                              <label style="margin-left: 15px" for="sobrenome">Data Nascimento: </label>
                             </td>
                             <td align="left">
-                             <input type="date" name="dtNascimento">
+                             <input type="date" name="dtNascimento" value="<?php echo $DT_NASCIMENTO ?>">
                             </td>
                              <td>
                              <label style="margin-left: 15px" for="sobrenome">E-mail: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="email" size="40">
+                             <input type="text" name="email" size="40" value="<?php echo $vetorSQL['EMAIL']; ?>">
                             </td>
                            </tr>
 
@@ -212,19 +236,19 @@ $ID_MATRICULA = $_POST["ID_MATRICULA"]; // id colaborador
                              <label style="margin-left: 15px" for="rg">Login Rede: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="loginRede" size="20" > 
+                             <input type="text" name="loginRede" size="20" value="<?php echo $vetorSQL['LOGIN_REDE']; ?>"> 
                             </td>
                              <td>
-                             <label style="margin-left: 15px" >Login :</label>
+                             <label style="margin-left: 15px" >Login Telefonia:</label>
                             </td>
                             <td align="left">
-                             <input type="text" name="login" size="30" > 
+                             <input type="text" name="login" size="30" value="<?php echo $vetorSQL['LOGIN_TELEFONIA']; ?>"> 
                             </td>
                             <td>
                              <label style="margin-left: 15px" for="status">Status :</label>
                             </td>
                             <td align="left">
-                             <select name="status"> 
+                             <select name="status" value="<?php echo $vetorSQL['STATUS_COLABORADOR']; ?>"> 
                              <option value="ATIVO">ATIVO</option>
                              <option value="FERIAS">FERIAS</option> 
                              <option value="DESLIGADO">DESLIGADO</option>
@@ -235,7 +259,7 @@ $ID_MATRICULA = $_POST["ID_MATRICULA"]; // id colaborador
                              <label style="margin-left: 15px" for="sobrenome">Código Portal: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="codPortal" size="10">
+                             <input type="text" name="codPortal" size="10" value="<?php echo $vetorSQL['CODIGO_PORTAL']; ?>">
                             </td>
                            </tr>
 
@@ -244,7 +268,7 @@ $ID_MATRICULA = $_POST["ID_MATRICULA"]; // id colaborador
                              <label style="margin-left: 15px">ID Supervisor :</label>
                             </td>
                             <td align="left">
-                             <input type="text" name="idSupervisor" size="9" > 
+                             <input type="text" name="idSupervisor" size="9" value="<?php echo $vetorSQL['ID_COLABORADOR_GESTOR']; ?>"> 
                             </td>
                             <td style="width:120px";>
                              <label>Nome Supervisor:</label>
@@ -260,19 +284,13 @@ $ID_MATRICULA = $_POST["ID_MATRICULA"]; // id colaborador
                              <label style="margin-left: 15px" for="rg">ID Cargo: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="loginRede" size="9" > 
-                            </td>
-                             <td>
-                             <label style="margin-left: 15px" >Descrição Cargo :</label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="login" size="30" > 
+                             <input type="text" name="loginRede" size="9" value="<?php echo $vetorSQL['ID_CARGO']; ?>"> 
                             </td>
                             <td>
                              <label style="margin-left: 15px" for="status">Nível Cargo :</label>
                             </td>
                             <td align="left">
-                             <select name="status"> 
+                             <select name="status" value="<?php echo $vetorSQL['NIVEL_CARGO']; ?>"> 
                              <option value="I">I</option>
                              <option value="II">II</option> 
                              <option value="III">III</option>
@@ -283,7 +301,7 @@ $ID_MATRICULA = $_POST["ID_MATRICULA"]; // id colaborador
                              <label style="margin-left: 15px" >Data Admissão :</label>
                             </td>
                             <td align="left">
-                             <input type="date" name="dtAdmissao"> 
+                             <input type="date" name="dtAdmissao" value="<?php echo $DT_ADMISSAO ; ?>"> 
                             </td>
                            </tr>
 
@@ -293,13 +311,17 @@ $ID_MATRICULA = $_POST["ID_MATRICULA"]; // id colaborador
                              <label style="margin-left: 15px" for="rg">ID Horário: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="idHorario" size="9" > 
+                             <input type="text" name="idHorario" size="9" value="<?php echo $vetorSQL['ID_HORARIO']; ?>"> 
                             </td>
-                             <td>
-                             <label style="margin-left: 15px" >Horário :</label>
+                           </tr>
+
+                           <tr>
+                            <td>
+                            <br/>
+                             <label style="margin-left: 15px" for="rg">ID Grupo: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="horario" size="30" > 
+                             <input type="text" name="idGrupo" size="9" value="<?php echo $vetorSQL['ID_GRUPO']; ?>"> 
                             </td>
                            </tr>
 
