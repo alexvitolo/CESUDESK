@@ -6,6 +6,7 @@ $squiladica = "SELECT TC.ID_COLABORADOR,
                       TC.NOME,
                       TC.LOGIN_REDE,
                       TC.LOGIN_TELEFONIA,
+                      TC.TELEFONE,
                       TC.DT_NASCIMENTO,
                       TC.DT_ADMISSAO,
                       TC.EMAIL,
@@ -28,6 +29,51 @@ $vetorSQL = sqlsrv_fetch_array($result_squila);
 
 $DT_NASCIMENTO = date_format($vetorSQL['DT_NASCIMENTO'], "Y-m-d");
 $DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
+
+
+
+
+$sqlSupervisores = "SELECT tc.ID_COLABORADOR AS ID_SUP
+                      ,tc.NOME AS NOME_SUP
+                  FROM tb_crm_colaborador tc
+            INNER JOIN tb_crm_cargo ta ON ta.ID_CARGO = tc.ID_CARGO AND ta.BO_GESTOR = 'S'
+              ORDER BY tc.NOME";
+
+$result_supervisores = sqlsrv_prepare($conn, $sqlSupervisores);
+sqlsrv_execute($result_supervisores);
+
+
+$sqlHorarios = "SELECT th.ID_HORARIO
+                      ,CONVERT(varchar,th.ENTRADA,108) AS ENTRADA
+                      ,CONVERT(varchar,th.SAIDA,108) AS SAIDA
+                      ,CONVERT(varchar,th.CARGA_HORARIO,108) AS CARGA_HORARIO
+                      FROM tb_crm_horario th
+                    WHERE th.BO_ESCALA_FDS = 'N'
+                   ORDER BY th.CARGA_HORARIO
+                       ,th.ENTRADA";
+
+$result_Horario = sqlsrv_prepare($conn, $sqlHorarios);
+sqlsrv_execute($result_Horario);
+
+$sqlCargos = "SELECT tc.ID_CARGO
+                    ,tc.DESCRICAO AS DESC_CARGO
+                  FROM tb_crm_cargo tc
+              ORDER BY tc.DESCRICAO";
+
+$result_Cargo = sqlsrv_prepare($conn, $sqlCargos);
+sqlsrv_execute($result_Cargo);
+
+$sqlGrupo = "SELECT tg.ID_GRUPO
+                   ,tg.DESCRICAO AS DESC_GRUPO
+                   ,CASE
+                    WHEN tr.DESCRICAO = 'Sem região' THEN '' ELSE tr.DESCRICAO
+                     END AS DESC_REGIAO
+              FROM tb_crm_grupo tg
+        INNER JOIN tb_crm_regiao tr on tg.ID_REGIAO = tr.ID_REGIAO";
+
+$result_Grupo = sqlsrv_prepare($conn, $sqlGrupo);
+sqlsrv_execute($result_Grupo);
+
 
 ?>
 
@@ -198,7 +244,7 @@ $DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="@paginaphp.php">
+                         <form name="Form" method="post" id="formulario" action="ValidaEditaColaborador.php">
 <!-- DADOS PESSOAIS-->
                          <fieldset>
                           <legend> Dados do colaborador </legend>
@@ -208,25 +254,43 @@ $DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
                              <label style="margin-left: 15px" for="nome">Matricula: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="ID_MATRICULA" value="<?php echo $vetorSQL['ID_MATRICULA']; ?>">
+                             <input type="text" name="MATRICULA" value="<?php echo $vetorSQL['ID_MATRICULA']; ?>">
                             </td>
                             <td>
-                             <label style="margin-left: 15px" for="sobrenome">Nome: </label>
+                             <label style="margin-left: 15px" for="nome">Nome: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="nome" size="35" value="<?php echo $vetorSQL['NOME']; ?>">
+                             <input type="text" name="NOME" size="35" value="<?php echo $vetorSQL['NOME']; ?>">
                             </td>
                              <td>
                              <label style="margin-left: 15px" for="sobrenome">Data Nascimento: </label>
                             </td>
                             <td align="left">
                              <input type="date" name="dtNascimento" value="<?php echo $DT_NASCIMENTO ?>">
-                            </td>
-                             <td>
-                             <label style="margin-left: 15px" for="sobrenome">E-mail: </label>
+                            </td> 
+                           </tr>
+
+                           <tr>
+                            <td>
+                             <label style="margin-left: 15px" >E-mail: </label>
                             </td>
                             <td align="left">
                              <input type="text" name="email" size="40" value="<?php echo $vetorSQL['EMAIL']; ?>">
+                            </td>
+                            <td>
+                             <label style="margin-left: 15px" >Código Portal: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="codPortal" size="10" value="<?php echo $vetorSQL['CODIGO_PORTAL']; ?>">
+                            </td>
+                           </tr>
+
+                           <tr>
+                           <td>
+                             <label style="margin-left: 15px" >Telefone: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="telefone" size="25" value="<?php echo $vetorSQL['TELEFONE']; ?>">
                             </td>
                            </tr>
 
@@ -236,61 +300,62 @@ $DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
                              <label style="margin-left: 15px" for="rg">Login Rede: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="loginRede" size="20" value="<?php echo $vetorSQL['LOGIN_REDE']; ?>"> 
+                             <input type="text" name="loginRede" size="25" value="<?php echo $vetorSQL['LOGIN_REDE']; ?>"> 
                             </td>
                              <td>
                              <label style="margin-left: 15px" >Login Telefonia:</label>
                             </td>
                             <td align="left">
-                             <input type="text" name="login" size="30" value="<?php echo $vetorSQL['LOGIN_TELEFONIA']; ?>"> 
+                             <input type="text" name="loginTelefonia" size="30" value="<?php echo $vetorSQL['LOGIN_TELEFONIA']; ?>"> 
                             </td>
                             <td>
                              <label style="margin-left: 15px" for="status">Status :</label>
                             </td>
                             <td align="left">
-                             <select name="status" value="<?php echo $vetorSQL['STATUS_COLABORADOR']; ?>"> 
+                             <select name="STATUS" value="<?php echo $vetorSQL['STATUS_COLABORADOR']; ?>"> 
                              <option value="ATIVO">ATIVO</option>
                              <option value="FERIAS">FERIAS</option> 
                              <option value="DESLIGADO">DESLIGADO</option>
                              <option value="INSS">INSS</option>  
                             </select>
                             </td>
-                             <td>
-                             <label style="margin-left: 15px" for="sobrenome">Código Portal: </label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="codPortal" size="10" value="<?php echo $vetorSQL['CODIGO_PORTAL']; ?>">
-                            </td>
                            </tr>
 
                            <tr>
-                            <td>
-                             <label style="margin-left: 15px">ID Supervisor :</label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="idSupervisor" size="9" value="<?php echo $vetorSQL['ID_COLABORADOR_GESTOR']; ?>"> 
-                            </td>
                             <td style="width:120px";>
-                             <label>Nome Supervisor:</label>
+                             <label style="margin-left: 15px">Nome Supervisor:</label>
                             </td>
                             <td align="left">
-                             <input type="text" name="nomeSupervisor" size="30" > 
+                             <select name="supervisor">
+                                         <option value="">Escolha um supervisor</option>
+                                         <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
+                                            <option value=<?php echo $row['ID_SUP']?> > <?php echo utf8_encode($row['NOME_SUP']) ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
+                            </td>
                             </td>
                            </tr>
 
                             <tr>
                             <td>
                             <br/>
-                             <label style="margin-left: 15px" for="rg">ID Cargo: </label>
+                             <label style="margin-left: 15px" for="rg">Cargo: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="loginRede" size="9" value="<?php echo $vetorSQL['ID_CARGO']; ?>"> 
+                             <select name="cargo">
+                                         <option value="">Escolha um Cargo</option>
+                                         <?php while ($row = sqlsrv_fetch_array($result_Cargo)){ ?>
+                                            <option value=<?php echo $row['ID_CARGO']?> > <?php echo utf8_encode($row['DESC_CARGO']) ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
                             </td>
                             <td>
                              <label style="margin-left: 15px" for="status">Nível Cargo :</label>
                             </td>
                             <td align="left">
-                             <select name="status" value="<?php echo $vetorSQL['NIVEL_CARGO']; ?>"> 
+                             <select name="nivelCargo" value="<?php echo $vetorSQL['NIVEL_CARGO']; ?>"> 
                              <option value="I">I</option>
                              <option value="II">II</option> 
                              <option value="III">III</option>
@@ -308,22 +373,32 @@ $DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
                             <tr>
                             <td>
                             <br/>
-                             <label style="margin-left: 15px" for="rg">ID Horário: </label>
+                             <label style="margin-left: 15px" >Horário: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="idHorario" size="9" value="<?php echo $vetorSQL['ID_HORARIO']; ?>"> 
+                             <select  name="horario">
+                                         <option value="">Escolha um horário</option>
+                                         <?php while ($row = sqlsrv_fetch_array($result_Horario)){ ?>
+                                            <option value=<?php echo $row['ID_HORARIO']?> > <?php echo 'ENTRADA: '.$row['ENTRADA'].'  |  Saída: '.$row['SAIDA'].'  |  Carga Horária: '.$row['CARGA_HORARIO']?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
+                            </td>
+                            <td>
+                            <br/>
+                             <label style="margin-left: 15px" >Grupo: </label>
+                            </td>
+                            <td align="left">
+                             <select  name="grupo">
+                                         <option value="">Escolha um Grupo</option>
+                                         <?php while ($row = sqlsrv_fetch_array($result_Grupo)){ ?>
+                                           <option value=<?php echo $row['ID_GRUPO']?> > <?php echo 'Grupo: '. utf8_encode($row['DESC_GRUPO']).'  |   '. utf8_encode($row['DESC_REGIAO']) ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
                             </td>
                            </tr>
 
-                           <tr>
-                            <td>
-                            <br/>
-                             <label style="margin-left: 15px" for="rg">ID Grupo: </label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="idGrupo" size="9" value="<?php echo $vetorSQL['ID_GRUPO']; ?>"> 
-                            </td>
-                           </tr>
 
                           </table>
                          </fieldset>
@@ -331,8 +406,8 @@ $DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
                          <br/>
 
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $row['ID_MATRICULA']?>"  name="ID_MATRICULA">Confirmar</button> 
-                         <input type="reset" value="Limpar">
-                         </form>
+                         <a href="colaboradores.php"><input type="button" value="Cancelar"></a>
+                      </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
@@ -344,7 +419,7 @@ $DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
-              2014 - Alvarez.is
+              2017 - CRM MASTER
               <a href="basic_table.html#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>

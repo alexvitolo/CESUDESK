@@ -1,8 +1,5 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
-// $ID_MATRICULA = $_POST["ID_MATRICULA"];
-
-// fazer skila dicas 
 
 $sqlSupervisores = "SELECT tc.ID_COLABORADOR AS ID_SUP
                       ,tc.NOME AS NOME_SUP
@@ -34,11 +31,22 @@ $sqlCargos = "SELECT tc.ID_CARGO
 $result_Cargo = sqlsrv_prepare($conn, $sqlCargos);
 sqlsrv_execute($result_Cargo);
 
+$sqlGrupo = "SELECT tg.ID_GRUPO
+                   ,tg.DESCRICAO AS DESC_GRUPO
+                   ,CASE
+                    WHEN tr.DESCRICAO = 'Sem região' THEN '' ELSE tr.DESCRICAO
+                     END AS DESC_REGIAO
+              FROM tb_crm_grupo tg
+        INNER JOIN tb_crm_regiao tr on tg.ID_REGIAO = tr.ID_REGIAO";
+
+$result_Grupo = sqlsrv_prepare($conn, $sqlGrupo);
+sqlsrv_execute($result_Grupo);
+
 
 ?>
 
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,7 +58,6 @@ sqlsrv_execute($result_Cargo);
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="/vendor/bootstrap-combobox/css/bootstrap-combobox.css">
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         
@@ -199,13 +206,13 @@ sqlsrv_execute($result_Cargo);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Edição de colaboradores</h3>
+            <h3><i class="fa fa-right"></i> Cadastro de colaboradores</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="@paginaphp.php">
+                         <form name="Form" method="post" id="formulario" action="ValidaCadastroColaborador.php">
 <!-- DADOS PESSOAIS-->
                          <fieldset>
                           <legend> Dados do colaborador </legend>
@@ -215,55 +222,31 @@ sqlsrv_execute($result_Cargo);
                              <label style="margin-left: 15px" for="nome">Matricula: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="ID_MATRICULA">
+                             <input type="text" name="MATRICULA">
                             </td>
                             <td>
-                             <label style="margin-left: 15px" for="sobrenome">Nome: </label>
+                             <label style="margin-left: 15px">Nome: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="nomr">
+                             <input type="text" name="NOME" size="35">
                             </td>
                              <td>
-                             <label style="margin-left: 15px" for="sobrenome">Data Nascimento: </label>
+                             <label style="margin-left: 15px">Data Nascimento: </label>
                             </td>
                             <td align="left">
                              <input type="date" name="dtNascimento">
-                            </td>
-                             <td>
-                             <label style="margin-left: 15px" for="sobrenome">E-mail: </label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="email" size="40">
-                            </td>
+                            </td> 
                            </tr>
 
                            <tr>
                             <td>
-                            <br/>
-                             <label style="margin-left: 15px" for="rg">Login Rede: </label>
+                             <label style="margin-left: 15px">E-mail: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="loginRede" size="20" > 
-                            </td>
-                             <td>
-                             <label style="margin-left: 15px" >Login :</label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="login" size="30" > 
+                             <input type="text" name="email" size="40">
                             </td>
                             <td>
-                             <label style="margin-left: 15px" for="status">Status :</label>
-                            </td>
-                            <td align="left">
-                             <select name="status"> 
-                             <option value="ATIVO">ATIVO</option>
-                             <option value="FERIAS">FERIAS</option> 
-                             <option value="DESLIGADO">DESLIGADO</option>
-                             <option value="INSS">INSS</option>  
-                            </select>
-                            </td>
-                             <td>
-                             <label style="margin-left: 15px" for="sobrenome">Código Portal: </label>
+                             <label style="margin-left: 15px">Código Portal: </label>
                             </td>
                             <td align="left">
                              <input type="text" name="codPortal" size="10">
@@ -272,55 +255,75 @@ sqlsrv_execute($result_Cargo);
 
                            <tr>
                             <td>
-                             <label style="margin-left: 15px">Supervisor: </label>
-                             <!-- <label class="col-xs-3 control-label">Supervisor</label> -->
+                             <label style="margin-left: 15px">Telefone: </label>
                             </td>
                             <td align="left">
-                             <!-- <input type="text" name="idSupervisor" size="9" >  -->
-                              <div class="form-group">
-                                 <!-- <label class="col-xs-3 control-label">Supervisor</label> -->
-                                 <div class="col-xs-12 selectContainer" >
-                                     <select name="supervisor">
+                             <input type="text" name="telefone" size="25">
+                            </td>
+                           </tr>
+
+                           <tr>
+                            <td>
+                            <br/>
+                             <label style="margin-left: 15px">Login Rede: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="loginRede" size="25"> 
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px" >Login Telefonia:</label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="loginTelefonia" size="30"> 
+                            </td>
+                            <td>
+                             <label style="margin-left: 15px">Status :</label>
+                            </td>
+                            <td align="left">
+                             <select name="STATUS" value="ATIVO"> 
+                             <option value="ATIVO">ATIVO</option>
+                             <option value="FERIAS">FERIAS</option> 
+                             <option value="DESLIGADO">DESLIGADO</option>
+                             <option value="INSS">INSS</option>  
+                            </select>
+                            </td>
+                           </tr>
+
+                           <tr>
+                            <td style="width:120px";>
+                             <label style="margin-left: 15px">Nome Supervisor:</label>
+                            </td>
+                            <td align="left">
+                             <select name="supervisor">
                                          <option value="">Escolha um supervisor</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
                                             <option value=<?php echo $row['ID_SUP']?> > <?php echo utf8_encode($row['NOME_SUP']) ?> </option>
                                          <?php }
                                          ?>
-                                     </select>
-                                 </div>
-                              </div>
+                             </select>
                             </td>
-                            </tr> 
+                            </td>
+                           </tr>
 
                             <tr>
                             <td>
-                             <label style="margin-left: 15px">Cargo: </label>
-                             <!-- <label class="col-xs-3 control-label">Supervisor</label> -->
+                            <br/>
+                             <label style="margin-left: 15px" for="rg">Cargo: </label>
                             </td>
                             <td align="left">
-                             <!-- <input type="text" name="idSupervisor" size="9" >  -->
-                              <div class="form-group">
-                                 <!-- <label class="col-xs-3 control-label">Supervisor</label> -->
-                                 <div class="col-xs-12 selectContainer" >
-                                     <select name="supervisor">
+                             <select name="cargo">
                                          <option value="">Escolha um Cargo</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_Cargo)){ ?>
                                             <option value=<?php echo $row['ID_CARGO']?> > <?php echo utf8_encode($row['DESC_CARGO']) ?> </option>
                                          <?php }
                                          ?>
-                                     </select>
-                                 </div>
-                              </div>
-                            </td>
-
-                            <td align="left">
-                             <input type="text" name="login" size="30" > 
+                             </select>
                             </td>
                             <td>
                              <label style="margin-left: 15px" for="status">Nível Cargo :</label>
                             </td>
                             <td align="left">
-                             <select name="status"> 
+                             <select name="nivelCargo" value="I"> 
                              <option value="I">I</option>
                              <option value="II">II</option> 
                              <option value="III">III</option>
@@ -337,24 +340,33 @@ sqlsrv_execute($result_Cargo);
 
                             <tr>
                             <td>
-                             <label style="margin-left: 15px">Horário: </label>
-                             <!-- <label class="col-xs-3 control-label">Horário</label> -->
+                            <br/>
+                             <label style="margin-left: 15px" >Horário: </label>
                             </td>
                             <td align="left">
-                             <!-- <input type="text" name="idSupervisor" size="9" >  -->
-                              <div class="form-group">
-                                 <!-- <label class="col-xs-3 control-label">Supervisor</label> -->
-                                 <div class="col-xs-12 selectContainer" >
-                                     <select  name="horario">
+                             <select  name="horario">
                                          <option value="">Escolha um horário</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_Horario)){ ?>
                                             <option value=<?php echo $row['ID_HORARIO']?> > <?php echo 'ENTRADA: '.$row['ENTRADA'].'  |  Saída: '.$row['SAIDA'].'  |  Carga Horária: '.$row['CARGA_HORARIO']?> </option>
                                          <?php }
                                          ?>
-                                     </select>
-                                 </div>
-                              </div>
+                             </select>
                             </td>
+                            <td>
+                            <br/>
+                             <label style="margin-left: 15px" >Grupo: </label>
+                            </td>
+                            <td align="left">
+                             <select  name="grupo">
+                                         <option value="">Escolha um Grupo</option>
+                                         <?php while ($row = sqlsrv_fetch_array($result_Grupo)){ ?>
+                                           <option value=<?php echo $row['ID_GRUPO']?> > <?php echo 'Grupo: '. utf8_encode($row['DESC_GRUPO']).'  |   '. utf8_encode($row['DESC_REGIAO']) ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
+                            </td>
+                           </tr>
+
 
                           </table>
                          </fieldset>
@@ -362,8 +374,8 @@ sqlsrv_execute($result_Cargo);
                          <br/>
 
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $row['ID_MATRICULA']?>"  name="ID_MATRICULA">Confirmar</button> 
-                         <input type="reset" value="Limpar">
-                         </form>
+                         <a href="colaboradores.php"><input type="button" value="Cancelar"></a>
+                      </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
@@ -375,7 +387,7 @@ sqlsrv_execute($result_Cargo);
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
-              2014 - Alvarez.is
+              2017 - CRM MASTER
               <a href="basic_table.html#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>

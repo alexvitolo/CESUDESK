@@ -187,7 +187,7 @@ sqlsrv_execute($result_squila);
                             <h4><i class="fa fa-right"></i> Tabela Colaboradores </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroColaborador.php"><input style="margin-left: 750px" type="button" value="Novo Colaborador" ></input></a>
+                            <a href="cadastroColaborador.php"><input style="margin-left: 800px" type="button" value="Novo Colaborador" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class="fa fa-bullhorn"></i> Status Colaborador </th>
@@ -237,7 +237,7 @@ sqlsrv_execute($result_squila);
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
-              2014 - Alvarez.is
+              2017 - CRM MASTER
               <a href="basic_table.html#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
