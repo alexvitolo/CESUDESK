@@ -4,7 +4,8 @@ $squilaDicas = "SELECT tc.ID_MATRICULA,
                        tc.NOME,
                        tc.STATUS_COLABORADOR,
                        tc.LOGIN_REDE,
-                       tc.CODIGO_PORTAL
+                       tc.CODIGO_PORTAL,
+                       tc.ID_COLABORADOR
                   FROM tb_crm_colaborador tc
               ORDER BY tc.NOME";
 
@@ -186,7 +187,7 @@ sqlsrv_execute($result_squila);
                             <h4><i class="fa fa-right"></i> Tabela Colaboradores </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroColaborador.php"><input style="margin-left: 750px" type="button" value="Novo Colaborador" ></input></a>
+                            <a href="cadastroColaborador.php"><input style="margin-left: 800px" type="button" value="Novo Colaborador" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class="fa fa-bullhorn"></i> Status Colaborador </th>
@@ -214,7 +215,7 @@ sqlsrv_execute($result_squila);
                                   <td><?php echo $row['CODIGO_PORTAL']?></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_MATRICULA'] ?>"  name="ID_MATRICULA"><i class="fa fa-pencil"></i></button>
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_COLABORADOR'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 
@@ -236,7 +237,7 @@ sqlsrv_execute($result_squila);
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
-              2014 - Alvarez.is
+              2017 - CRM MASTER
               <a href="basic_table.html#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
