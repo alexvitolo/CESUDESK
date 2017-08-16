@@ -331,7 +331,7 @@ sqlsrv_execute($result_Grupo);
                             </td>
                             </td>
                            </tr>
-
+ 
                             <tr>
                             <td>
                             <br/>
