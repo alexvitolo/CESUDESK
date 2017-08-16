@@ -309,15 +309,10 @@ sqlsrv_execute($result_Grupo);
                              <input type="text" name="loginTelefonia" size="30" value="<?php echo $vetorSQL['LOGIN_TELEFONIA']; ?>"> 
                             </td>
                             <td>
-                             <label style="margin-left: 15px" for="status">Status :</label>
+                             <label style="margin-left: 15px" >Data Admissão :</label>
                             </td>
                             <td align="left">
-                             <select name="STATUS" value="<?php echo $vetorSQL['STATUS_COLABORADOR']; ?>"> 
-                             <option value="ATIVO">ATIVO</option>
-                             <option value="FERIAS">FERIAS</option> 
-                             <option value="DESLIGADO">DESLIGADO</option>
-                             <option value="INSS">INSS</option>  
-                            </select>
+                             <input type="date" name="dtAdmissao" value="<?php echo $DT_ADMISSAO ; ?>"> 
                             </td>
                            </tr>
 
@@ -327,7 +322,7 @@ sqlsrv_execute($result_Grupo);
                             </td>
                             <td align="left">
                              <select name="supervisor">
-                                         <option value="">Escolha um supervisor</option>
+                                         <option value="<?php echo $vetorSQL['ID_COLABORADOR_GESTOR'] ?>">SEM ALTERAÇÃO</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
                                             <option value=<?php echo $row['ID_SUP']?> > <?php echo utf8_encode($row['NOME_SUP']) ?> </option>
                                          <?php }
@@ -344,7 +339,7 @@ sqlsrv_execute($result_Grupo);
                             </td>
                             <td align="left">
                              <select name="cargo">
-                                         <option value="">Escolha um Cargo</option>
+                                         <option value="<?php echo $vetorSQL['ID_CARGO'] ?>">SEM ALTERAÇÃO</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_Cargo)){ ?>
                                             <option value=<?php echo $row['ID_CARGO']?> > <?php echo utf8_encode($row['DESC_CARGO']) ?> </option>
                                          <?php }
@@ -355,18 +350,25 @@ sqlsrv_execute($result_Grupo);
                              <label style="margin-left: 15px" for="status">Nível Cargo :</label>
                             </td>
                             <td align="left">
-                             <select name="nivelCargo" value="<?php echo $vetorSQL['NIVEL_CARGO']; ?>"> 
-                             <option value="I">I</option>
-                             <option value="II">II</option> 
-                             <option value="III">III</option>
-                             <option value="IV">IV</option>  
+                             <select name="nivelCargo" value="<?php echo $vetorSQL['NIVEL_CARGO']; ?>">
+                                    <option value="<?php echo $vetorSQL['NIVEL_CARGO']; ?>"><?php echo $vetorSQL['NIVEL_CARGO']; ?></option> 
+                                    <option value="I">I</option>
+                                    <option value="II">II</option> 
+                                    <option value="III">III</option>
+                                    <option value="IV">IV</option>  
                             </select>
                             </td>
                              <td>
-                             <label style="margin-left: 15px" >Data Admissão :</label>
+                             <label style="margin-left: 15px" for="status">Status :</label>
                             </td>
                             <td align="left">
-                             <input type="date" name="dtAdmissao" value="<?php echo $DT_ADMISSAO ; ?>"> 
+                             <select name="STATUS"> 
+                                 <option value="<?php echo $vetorSQL['STATUS_COLABORADOR']; ?>" ><?php echo $vetorSQL['STATUS_COLABORADOR']; ?></option> 
+                                 <option value="ATIVO">ATIVO</option>
+                                 <option value="FERIAS">FERIAS</option> 
+                                 <option value="DESLIGADO">DESLIGADO</option>
+                                 <option value="INSS">INSS</option>  
+                            </select>
                             </td>
                            </tr>
 
@@ -377,7 +379,7 @@ sqlsrv_execute($result_Grupo);
                             </td>
                             <td align="left">
                              <select  name="horario">
-                                         <option value="">Escolha um horário</option>
+                                         <option value="<?php echo $vetorSQL['ID_HORARIO'] ?>">SEM ALTERAÇÃO</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_Horario)){ ?>
                                             <option value=<?php echo $row['ID_HORARIO']?> > <?php echo 'ENTRADA: '.$row['ENTRADA'].'  |  Saída: '.$row['SAIDA'].'  |  Carga Horária: '.$row['CARGA_HORARIO']?> </option>
                                          <?php }
@@ -390,7 +392,7 @@ sqlsrv_execute($result_Grupo);
                             </td>
                             <td align="left">
                              <select  name="grupo">
-                                         <option value="">Escolha um Grupo</option>
+                                         <option value="<?php echo $vetorSQL['ID_GRUPO'] ?>">SEM ALTERAÇÃO</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_Grupo)){ ?>
                                            <option value=<?php echo $row['ID_GRUPO']?> > <?php echo 'Grupo: '. utf8_encode($row['DESC_GRUPO']).'  |   '. utf8_encode($row['DESC_REGIAO']) ?> </option>
                                          <?php }

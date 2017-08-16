@@ -74,9 +74,7 @@ $horaLimite = '17:00:00';
 
           }
         
-         
-
-  $sqlPaginaTroca = " SELECT tc.ID_MATRICULA
+    $sqlPaginaTroca = "SELECT tc.ID_MATRICULA
                            ,tc.NOME
                            ,tg.DESCRICAO AS DESCRICAO_GRUPO
                            ,tr.DESCRICAO AS DESCRICAO_REGIAO
@@ -104,10 +102,18 @@ $horaLimite = '17:00:00';
                                                                              OR ID_COLABORADOR2 = T.ID_COLABORADOR
                              WHERE DT_TROCA = '{$dateTroca_PaginaIni}' 
                                AND TP_STATUS <> 'CANCELADO') = 0
-                       AND tc.ID_HORARIO NOT IN (SELECT ID_HORARIO
-                                                   FROM tb_crm_colaborador
-                                                  WHERE ID_MATRICULA = '{$numero_PaginaIni}'
-                          )
+                       AND (tc.ID_HORARIO NOT IN (SELECT ID_HORARIO
+                                                    FROM tb_crm_colaborador
+                                                   WHERE ID_MATRICULA = '{$numero_PaginaIni}'
+                             AND DATEPART(DW,'{$dateTroca_PaginaIni}')<>7
+                          UNION 
+                          SELECT ID_HORARIO
+                            FROM tb_crm_escala_fds 
+                           WHERE ID_COLABORADOR = (SELECT ID_COLABORADOR 
+                                                     FROM tb_crm_colaborador 
+                                      WHERE ID_MATRICULA = '{$numero_PaginaIni}')
+                           and DATEPART(DW,'{$dateTroca_PaginaIni}' )=7
+                          ))
                        AND tc.ID_MATRICULA <> '{$numero_PaginaIni}'
                        AND UPPER(tc.STATUS_COLABORADOR) = 'ATIVO'
                        AND EXISTS (SELECT top 1 1
@@ -118,7 +124,10 @@ $horaLimite = '17:00:00';
                                       AND ID_MATRICULA = '{$numero_PaginaIni}'
                     )
                   ORDER BY tr.id_regiao, tc.NOME";
+                  
  
+
+
   $stmtPaginaTroca = sqlsrv_prepare($conn, $sqlPaginaTroca);
   $resultPaginaTroca = sqlsrv_execute($stmtPaginaTroca);
 
