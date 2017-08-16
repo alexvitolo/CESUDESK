@@ -75,6 +75,54 @@ $horaLimite = '17:00:00';
           }
         
          
+  if ($diasemana_dataTroca == 6) {
+
+    $sqlPaginaTroca = "SELECT tc.ID_MATRICULA
+                           ,tc.NOME
+                           ,tg.DESCRICAO AS DESCRICAO_GRUPO
+                           ,tr.DESCRICAO AS DESCRICAO_REGIAO
+                           ,(SELECT COUNT(1) 
+                               FROM tb_crm_trocas 
+                              WHERE MATRICULA = tc.ID_MATRICULA 
+                                AND DATA_TROCA BETWEEN DATEADD(month, DATEDIFF(month, -1, getdate()) - 1, 0) -- PRIMEIRO DIA DO MÊS ATUAL
+                                                   AND DATEADD(ss, -1, DATEADD(month, DATEDIFF(month, 0, getdate())+1, 0)) -- ULTIMO DIA DO MÊS ATUAL
+                                                      ) as QT_TROCA_MES_ATUAL
+                      FROM tb_crm_colaborador tc
+                INNER JOIN tb_crm_grupo tg on tg.ID_GRUPO = tc.ID_GRUPO
+                INNER JOIN tb_crm_regiao tr on tr.ID_REGIAO = tg.ID_REGIAO
+                INNER JOIN tb_crm_cargo ta on ta.ID_CARGO = tc.ID_CARGO AND ta.BO_TROCA_HORARIO = 'S' 
+        INNER JOIN tb_crm_escala_fds tfds on tfds.ID_COLABORADOR = tc.ID_COLABORADOR AND tfds.DT_FDS = '{$dateTroca_PaginaIni}' 
+                     WHERE (SELECT COUNT(1) 
+                              FROM TB_CRM_TROCAS_NEW 
+                             WHERE TC.ID_COLABORADOR IN (ID_COLABORADOR1,ID_COLABORADOR2)
+                               AND DT_TROCA BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, GETDATE()) - 1, 0) 
+                                                AND DATEADD(SS, -1, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE())+1, 0))
+                               AND TP_STATUS <> 'CANCELADO') <= 2
+                       AND (SELECT COUNT(1)
+                              FROM TB_CRM_TROCAS_NEW 
+                        INNER JOIN (SELECT ID_COLABORADOR 
+                                      FROM tb_crm_colaborador 
+                                     WHERE ID_MATRICULA = TC.ID_MATRICULA) T ON ID_COLABORADOR1 = T.ID_COLABORADOR 
+                                                                             OR ID_COLABORADOR2 = T.ID_COLABORADOR
+                             WHERE DT_TROCA = '{$dateTroca_PaginaIni}' 
+                               AND TP_STATUS <> 'CANCELADO') = 0
+                       AND tfds.ID_COLABORADOR NOT IN (SELECT DISTINCT ID_COLABORADOR
+                                                   FROM tb_crm_escala_fds
+                                                  WHERE ID_MATRICULA ='{$numero_PaginaIni}' AND DT_FDS='{$dateTroca_PaginaIni}' 
+                          )
+                       AND tc.ID_MATRICULA <> '{$numero_PaginaIni}'
+                       AND UPPER(tc.STATUS_COLABORADOR) = 'ATIVO'
+                       AND EXISTS (SELECT top 1 1
+                                     FROM tb_crm_colaborador c
+                               INNER JOIN tb_crm_grupo g ON g.ID_GRUPO = c.ID_GRUPO
+                                    WHERE g.ID_REGIAO = tg.ID_REGIAO
+                                      AND c.ID_GRUPO = tc.ID_GRUPO
+                                      AND ID_MATRICULA ='{$numero_PaginaIni}'
+                    )
+                  ORDER BY tr.id_regiao, tc.NOME";
+                  
+  }
+  else{
 
   $sqlPaginaTroca = " SELECT tc.ID_MATRICULA
                            ,tc.NOME
@@ -118,7 +166,9 @@ $horaLimite = '17:00:00';
                                       AND ID_MATRICULA = '{$numero_PaginaIni}'
                     )
                   ORDER BY tr.id_regiao, tc.NOME";
- 
+ }
+
+
   $stmtPaginaTroca = sqlsrv_prepare($conn, $sqlPaginaTroca);
   $resultPaginaTroca = sqlsrv_execute($stmtPaginaTroca);
 
