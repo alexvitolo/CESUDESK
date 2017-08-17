@@ -1,3 +1,10 @@
+<?php 
+
+$USUARIO = $_GET['USUARIO'];
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -37,12 +44,12 @@
 		      <form class="form-login" action="index.html">
 		        <h2 class="form-login-heading">Tela de Login</h2>
 		        <div class="login-wrap">
-		            <input type="text" class="form-control" placeholder="User ID" autofocus>
+		            <input type="text" class="form-control" value="<?php echo $USUARIO ?>" autofocus>
 		            <br>
 		            <input type="password" class="form-control" placeholder="Password">
 		            <label class="checkbox">
 		                <span class="pull-right">
-		                    <a data-toggle="modal" href="login.html#myModal"> Forgot Password?</a>
+		                    <a data-toggle="modal" href="login.php#myModal"> Forgot Password?</a>
 		
 		                </span>
 		            </label>
