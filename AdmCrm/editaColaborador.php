@@ -130,7 +130,7 @@ sqlsrv_execute($result_Grupo);
             </div>
             <div class="top-menu">
             	<ul class="nav pull-right top-menu">
-                    <li><a class="logout" href="login.html">Logout</a></li>
+                    <li><a class="logout" href="login.php">Logout</a></li>
             	</ul>
             </div>
         </header>
@@ -162,67 +162,15 @@ sqlsrv_execute($result_Grupo);
                       </a>
                   </li>
    
-                  <li class="sub-menu">
+                    <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class="fa fa-desktop"></i>
-                          <span>UI Elements</span>
+                          <span>General</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="general.html">General</a></li>
+                          <li><a  href="horarios.php">Horario</a></li>
                           <li><a  href="buttons.html">Buttons</a></li>
                           <li><a  href="panels.html">Panels</a></li>
-                      </ul>
-                  </li>
-
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-cogs"></i>
-                          <span>Components</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="calendar.html">Calendar</a></li>
-                          <li><a  href="gallery.html">Gallery</a></li>
-                          <li><a  href="todo_list.html">Todo List</a></li>
-                      </ul>
-                  </li>
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-book"></i>
-                          <span>Extra Pages</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="blank.html">Blank Page</a></li>
-                          <li><a  href="login.html">Login</a></li>
-                          <li><a  href="lock_screen.html">Lock Screen</a></li>
-                      </ul>
-                  </li>
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-tasks"></i>
-                          <span>Forms</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="form_component.html">Form Components</a></li>
-                      </ul>
-                  </li>
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-th"></i>
-                          <span>Data Tables</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="basic_table.html">Basic Table</a></li>
-                          <li><a  href="responsive_table.html">Responsive Table</a></li>
-                      </ul>
-                  </li>
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class=" fa fa-bar-chart-o"></i>
-                          <span>Charts</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="morris.html">Morris</a></li>
-                          <li><a  href="chartjs.html">Chartjs</a></li>
                       </ul>
                   </li>
 
@@ -322,9 +270,8 @@ sqlsrv_execute($result_Grupo);
                             </td>
                             <td align="left">
                              <select name="supervisor">
-                                         <option value="<?php echo $vetorSQL['ID_COLABORADOR_GESTOR'] ?>">SEM ALTERAÇÃO</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
-                                            <option value=<?php echo $row['ID_SUP']?> > <?php echo utf8_encode($row['NOME_SUP']) ?> </option>
+                                            <option <?php if ($row['ID_SUP']==$vetorSQL['ID_COLABORADOR_GESTOR']) { echo 'selected'; } ?> value=<?php echo $row['ID_SUP']?> > <?php echo utf8_encode($row['NOME_SUP']) ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -339,9 +286,8 @@ sqlsrv_execute($result_Grupo);
                             </td>
                             <td align="left">
                              <select name="cargo">
-                                         <option value="<?php echo $vetorSQL['ID_CARGO'] ?>">SEM ALTERAÇÃO</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_Cargo)){ ?>
-                                            <option value=<?php echo $row['ID_CARGO']?> > <?php echo utf8_encode($row['DESC_CARGO']) ?> </option>
+                                            <option <?php if ($row['ID_CARGO']==$vetorSQL['ID_CARGO']) { echo 'selected'; } ?> value=<?php echo $row['ID_CARGO']?> > <?php echo utf8_encode($row['DESC_CARGO']) ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -379,9 +325,8 @@ sqlsrv_execute($result_Grupo);
                             </td>
                             <td align="left">
                              <select  name="horario">
-                                         <option value="<?php echo $vetorSQL['ID_HORARIO'] ?>">SEM ALTERAÇÃO</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_Horario)){ ?>
-                                            <option value=<?php echo $row['ID_HORARIO']?> > <?php echo 'ENTRADA: '.$row['ENTRADA'].'  |  Saída: '.$row['SAIDA'].'  |  Carga Horária: '.$row['CARGA_HORARIO']?> </option>
+                                            <option <?php if ($row['ID_HORARIO']==$vetorSQL['ID_HORARIO']) { echo 'selected'; } ?>  value=<?php echo $row['ID_HORARIO']?> > <?php echo 'ENTRADA: '.$row['ENTRADA'].'  |  Saída: '.$row['SAIDA'].'  |  Carga Horária: '.$row['CARGA_HORARIO']?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -392,9 +337,8 @@ sqlsrv_execute($result_Grupo);
                             </td>
                             <td align="left">
                              <select  name="grupo">
-                                         <option value="<?php echo $vetorSQL['ID_GRUPO'] ?>">SEM ALTERAÇÃO</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_Grupo)){ ?>
-                                           <option value=<?php echo $row['ID_GRUPO']?> > <?php echo 'Grupo: '. utf8_encode($row['DESC_GRUPO']).'  |   '. utf8_encode($row['DESC_REGIAO']) ?> </option>
+                                           <option <?php if ($row['ID_GRUPO']==$vetorSQL['ID_GRUPO']) { echo 'selected'; } ?>  value=<?php echo $row['ID_GRUPO']?> > <?php echo 'Grupo: '. utf8_encode($row['DESC_GRUPO']).'  |   '. utf8_encode($row['DESC_REGIAO']) ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -492,7 +436,7 @@ sqlsrv_execute($result_Grupo);
 
     function getConfirmation(){
        // var retVal = confirm("Do you want to continue ?");
-       if(  confirm(" Deseja Finalizar a Troca ? ") == true ){
+       if(  confirm(" Deseja confirmar a edição ? ") == true ){
           return true;
        }
        else{
