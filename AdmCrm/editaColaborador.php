@@ -382,20 +382,21 @@ sqlsrv_execute($resultPausa);
                             <td align="left">
                              <input type="time" name="pausa1" size="15" value="<?php echo date_format($vetorPausa[0][1],"H:i") ?>">
                             </td>
-                        
-                           <td>
-                             <label style="margin-left: 15px" >Pausa 2: </label>
-                            </td>
-                            <td align="left">
-                             <input type="time" name="pausa2" size="15" value="<?php echo date_format($vetorPausa[1][1],"H:i") ?>">
-                            </td>
-                    
+
+                            
                            <td>
                              <label style="margin-left: 15px" >Lanche: </label>
                             </td>
                             <td align="left">
                              <input type="time" name="lanche" size="15" value="<?php echo date_format($vetorPausa[2][1],"H:i") ?>">
                              <input type="hidden" name="ID_COLABORADOR" value="<?php echo $ID_COLABORADOR ?>">
+                            </td>
+                        
+                           <td>
+                             <label style="margin-left: 15px" >Pausa 2: </label>
+                            </td>
+                            <td align="left">
+                             <input type="time" name="pausa2" size="15" value="<?php echo date_format($vetorPausa[1][1],"H:i") ?>">
                             </td>
                            </tr>
 

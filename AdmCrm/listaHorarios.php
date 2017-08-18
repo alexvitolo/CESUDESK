@@ -154,7 +154,7 @@ sqlsrv_execute($result_squila);
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
                               <thead>
                               <tr>
-                                  <th><i class="fa fa-bullhorn"></i> Matrícula </th>
+                                  <th><i class="fa fa-bookmark"></i> Matrícula </th>
                                   <th><i class="fa fa-bullhorn"></i> Nome </th>
                                   <th><i class="fa fa-bookmark"></i> Entrada </th>
                                   <th><i class=" fa fa-edit"></i> Saída </th>
