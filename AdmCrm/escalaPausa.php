@@ -1,13 +1,18 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
-$squilaDicas = "SELECT tc.ID_MATRICULA,
-                       tc.NOME,
-                       tc.STATUS_COLABORADOR,
-                       tc.LOGIN_REDE,
-                       tc.CODIGO_PORTAL,
-                       tc.ID_COLABORADOR
-                  FROM tb_crm_colaborador tc
-              ORDER BY tc.NOME";
+$squilaDicas = "SELECT  
+                      tp.ID_COLABORADOR
+                      ,tp.ID_TIPO_PAUSA
+                      ,tp.HORARIO_PAUSA
+                      ,tp.DT_VIGENCIA_INICIAL
+                      ,tp.DT_VIGENCIA_FINAL
+                      ,tc.NOME
+                      ,tc.ID_MATRICULA
+                      ,tt.DESCRICAO
+                      ,tt.DURACAO
+                 FROM tb_crm_escala_pausa tp
+           INNER JOIN tb_crm_colaborador tc on tc.ID_COLABORADOR = tp.ID_COLABORADOR 
+           INNER JOIN tb_crm_tipo_pausa tt on tt.ID_TIPO_PAUSA = tp.ID_TIPO_PAUSA";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
@@ -94,20 +99,20 @@ sqlsrv_execute($result_squila);
                   </li>
 
                   <li class="sub-menu">
-                      <a class="active" href="colaboradores.php">
+                      <a class="" href="colaboradores.php">
                           <i class="fa fa-th"></i>
                           <span>Colaboradores</span>
                       </a>
                   </li>
    
                    <li class="sub-menu">
-                      <a href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          <li><a  href="">Buttons</a></li>
+                          <li class="active"><a  href="escalaPausa.php">Escala Pausa</a></li>
                           <li><a  href="">Panels</a></li>
                       </ul>
                   </li>
@@ -124,7 +129,7 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Colaboradores</h3>
+            <h3><i class="fa fa-right"></i> Lista de Horários</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
@@ -132,38 +137,36 @@ sqlsrv_execute($result_squila);
                       <div class="content-panel">
                         <form name="Form" method="post" id="formulario" action="editaColaborador.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela Colaboradores </h4>
+                            <h4><i class="fa fa-right"></i> Tabela de Horários </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroColaborador.php"><input style="margin-left: 800px" type="button" value="Novo Colaborador" ></input></a>
+                            <a href="cadastroColaborador.php"><input style="margin-left: 800px" type="button" value="Novo Horário" ></input></a>
                               <thead>
                               <tr>
-                                  <th><i class="fa fa-bullhorn"></i> Status Colaborador </th>
-                                  <th><i class="fa fa-bullhorn"></i> Nome </th>
                                   <th><i class="fa fa-bullhorn"></i> Matrícula </th>
-                                  <th><i class="fa fa-bookmark"></i> Login Rede</th>
-                                  <th><i class=" fa fa-edit"></i> Codigo Portal</th>
+                                  <th><i class="fa fa-bullhorn"></i> Nome </th>
+                                  <th><i class="fa fa-bookmark"></i> Entrada</th>
+                                  <th><i class=" fa fa-edit"></i> Saída</th>
+                                  <th><i class=" fa fa-edit"></i> Status</th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
                                   <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-                                    if ($row['STATUS_COLABORADOR'] == "ATIVO") {
+                                    if ($row['BO_ESCALA_FDS'] == "S") {
                                       $corStatus = "label label-success label-mini";
-                                    }elseif (($row['STATUS_COLABORADOR'] == "DESLIGADO") or ($row['STATUS_COLABORADOR'] == "Desligado")) {
+                                    }elseif ($row['BO_ESCALA_FDS'] == "N") {
                                       $corStatus = "label label-danger  label-mini";
-                                    }else{
-                                      $corStatus = "label label-warning  label-mini";
                                     }
+
                                     ?>
-                                  <td><?php echo utf8_encode($row['NOME']) ?></a></td>
-                                  <td><?php echo $row['ID_MATRICULA']?></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['STATUS_COLABORADOR']?></span></td>
-                                  <td><?php echo $row['LOGIN_REDE']?></td>
-                                  <td><?php echo $row['CODIGO_PORTAL']?></td>
+                                  <td><?php echo date_format($row['ENTRADA'],"H:i"); ?></a></td>
+                                  <td><?php echo date_format($row['SAIDA'],"H:i"); ?></td>
+                                  <td><?php echo date_format($row['CARGA_HORARIO'],"H:i"); ?></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_ESCALA_FDS']?></span></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_COLABORADOR'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_HORARIO'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 

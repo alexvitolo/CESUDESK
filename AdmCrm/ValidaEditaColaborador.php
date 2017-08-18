@@ -1,5 +1,8 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
+date_default_timezone_set('America/Sao_Paulo');
+
+
 $MATRICULA = $_POST["MATRICULA"]; 
 $NOME = $_POST["NOME"]; 
 $dtNascimento = $_POST["dtNascimento"]; 
@@ -16,6 +19,113 @@ $dtAdmissao = $_POST["dtAdmissao"];
 $horario = $_POST["horario"];
 $grupo = $_POST["grupo"]; 
 
+
+
+
+
+
+$ID_COLABORADOR = $_POST["ID_COLABORADOR"];
+$pausa1 = $_POST["pausa1"]; 
+$pausa2 = $_POST["pausa2"]; 
+$lanche = $_POST["lanche"]; 
+
+
+$today = date("Y-m-d");
+
+
+// realizar verificação para ver se é consultor
+if(isset($_POST['validaEscalaPausa']))
+{
+
+//updates
+
+  $updateSquilaPausa1 = " UPDATE tb_crm_escala_pausa
+                            SET DT_VIGENCIA_INICIAL = DT_VIGENCIA_INICIAL
+                               ,DT_VIGENCIA_FINAL = '{$today}'
+
+                          WHERE ID_COLABORADOR = '{$ID_COLABORADOR}' AND DT_VIGENCIA_FINAL IS NULL";
+
+  $result_update1 = sqlsrv_query($conn, $updateSquilaPausa1);
+   sqlsrv_free_stmt($result_update1);
+
+
+ //inserts
+
+
+
+
+  $insertSquilaPausa1 = " INSERT INTO tb_crm_escala_pausa
+                                    (ID_COLABORADOR
+                                    ,ID_HORARIO
+                                    ,ID_TIPO_PAUSA
+                                    ,HORARIO_PAUSA
+                                    ,DT_VIGENCIA_INICIAL
+                                    ,DT_VIGENCIA_FINAL
+                                     )
+                              VALUES
+                                    ('{$ID_COLABORADOR}'
+                                    ,'{$horario}'
+                                    ,'1'
+                                    ,'{$pausa1}'
+                                    ,'{$today}'
+                                    ,null
+                                    )  ";
+
+$result_insert1 = sqlsrv_query($conn, $insertSquilaPausa1);
+   sqlsrv_free_stmt($result_insert1);
+
+
+
+  $insertSquilaPausa2 = " INSERT INTO tb_crm_escala_pausa
+                                    (ID_COLABORADOR
+                                    ,ID_HORARIO
+                                    ,ID_TIPO_PAUSA
+                                    ,HORARIO_PAUSA
+                                    ,DT_VIGENCIA_INICIAL
+                                    ,DT_VIGENCIA_FINAL
+                                     )
+                              VALUES
+                                    ('{$ID_COLABORADOR}'
+                                    ,'{$horario}'
+                                    ,'2'
+                                    ,'{$pausa2}'
+                                    ,'{$today}'
+                                    ,null
+                                    )  ";
+
+$result_insert2 = sqlsrv_query($conn, $insertSquilaPausa2);
+   sqlsrv_free_stmt($result_insert2);
+
+
+
+  $insertSquilaPausa5 = " INSERT INTO tb_crm_escala_pausa
+                                    (ID_COLABORADOR
+                                    ,ID_HORARIO
+                                    ,ID_TIPO_PAUSA
+                                    ,HORARIO_PAUSA
+                                    ,DT_VIGENCIA_INICIAL
+                                    ,DT_VIGENCIA_FINAL
+                                     )
+                              VALUES
+                                    ('{$ID_COLABORADOR}'
+                                    ,'{$horario}'
+                                    ,'5'
+                                    ,'{$lanche}'
+                                    ,'{$today}'
+                                    ,null
+                                    )  ";
+
+$result_insert5 = sqlsrv_query($conn, $insertSquilaPausa5);
+   sqlsrv_free_stmt($result_insert5);
+
+
+
+}
+
+
+
+elseif(isset($_POST['validaDadosColaborador']))
+{
 
 $updateSquila = " UPDATE tb_crm_colaborador
                      SET ID_MATRICULA = '{$MATRICULA}'
@@ -47,3 +157,13 @@ $updateSquila = " UPDATE tb_crm_colaborador
             echo  '<script type="text/javascript">alert("Colaborador Atualizado !");</script>';
             echo  '<script type="text/javascript"> window.location.href = "Colaboradores.php" </script>';
         }
+
+}
+
+else{
+  echo  '<script type="text/javascript">alert("Nenhuma das Opções Marcadas !");</script>';
+  echo  '<script type="text/javascript"> window.location.href = "colaboradores.php" </script>';
+}
+
+  echo  '<script type="text/javascript">alert("Colaborador Atualizado !");</script>';
+  echo  '<script type="text/javascript"> window.location.href = "colaboradores.php" </script>';
