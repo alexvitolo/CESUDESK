@@ -50,9 +50,9 @@
                 <!--  notification end -->
             </div>
             <div class="top-menu">
-            	<ul class="nav pull-right top-menu">
+              <ul class="nav pull-right top-menu">
                     <li><a class="logout" href="login.php">Logout</a></li>
-            	</ul>
+              </ul>
             </div>
         </header>
       <!--header end-->
@@ -66,14 +66,18 @@
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
-              	  <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.png" class="img-circle" width="60"></a></p>
-              	  <h5 class="centered">CRM EAD</h5>
-              	  	
-                  <li class="mt">
-                      <a class="active" href="index.html">
+                  <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.gif" class="img-circle" width="120"></a></p>
+                  <h5 class="centered">CRM EAD</h5>
+                    
+                  <li class="sub-menu"">
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
                           <span>Indicadores</span>
                       </a>
+                      <ul class ="sub">
+                          <li class="active"><a  href="index.html">Resumo</a></li>
+                          <li><a  href="">Dimensionamento</a></li>
+                      </ul>
                   </li>
 
                   <li class="sub-menu">
@@ -90,8 +94,6 @@
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          <li><a  href="">Buttons</a></li>
-                          <li><a  href="">Panels</a></li>
                       </ul>
                   </li>
 
@@ -117,87 +119,87 @@
                       
                       <div class="row mt">
                       <!-- SERVER STATUS PANELS -->
-                      	<div class="col-md-4 col-sm-4 mb">
-                      		<div class="white-panel pn donut-chart">
-                      			<div class="white-header">
-						  			<h5>Chamados CESUDESK</h5>
-                      			</div>
-								<div class="row">
-									<div class="col-sm-6 col-xs-6 goleft">
-										<p><i class="fa fa-database"></i> 70%</p>
-									</div>
-	                      		</div>
-								<canvas id="serverstatus01" height="120" width="120"></canvas>
-								<script>
-									var doughnutData = [
-											{
-												value: 70,
-												color:"#68dff0"
-											},
-											{
-												value : 30,
-												color : "#fdfdfd"
-											}
-										];
-										var myDoughnut = new Chart(document.getElementById("serverstatus01").getContext("2d")).Doughnut(doughnutData);
-								</script>
-	                      	</div>
+                        <div class="col-md-4 col-sm-4 mb">
+                          <div class="white-panel pn donut-chart">
+                            <div class="white-header">
+                    <h5>Chamados CESUDESK</h5>
+                            </div>
+                <div class="row">
+                  <div class="col-sm-6 col-xs-6 goleft">
+                    <p><i class="fa fa-database"></i> 70%</p>
+                  </div>
+                            </div>
+                <canvas id="serverstatus01" height="120" width="120"></canvas>
+                <script>
+                  var doughnutData = [
+                      {
+                        value: 70,
+                        color:"#68dff0"
+                      },
+                      {
+                        value : 30,
+                        color : "#fdfdfd"
+                      }
+                    ];
+                    var myDoughnut = new Chart(document.getElementById("serverstatus01").getContext("2d")).Doughnut(doughnutData);
+                </script>
+                          </div>
                      </div><!-- /col-md-4-->
               </div><!-- /row -->
                     
-                    				
-					<div class="row">               <!-- /row2 -->
-						<!-- TWITTER PANEL -->
-						<div class="col-md-4 mb">
-                      		<div class="darkblue-panel pn">
-                      			<div class="darkblue-header">
-						  			<h5>Capacidade Serviço</h5>
-                      			</div>
-								<canvas id="serverstatus02" height="120" width="120"></canvas>
-								<script>
-									var doughnutData = [
-											{
-												value: 60,
-												color:"#68dff0"
-											},
-											{
-												value : 40,
-												color : "#444c57"
-											}
-										];
-										var myDoughnut = new Chart(document.getElementById("serverstatus02").getContext("2d")).Doughnut(doughnutData);
-								</script>
-								<p>April 17, 2014</p>
-								<footer>
-									<div class="pull-left">
-										<h5><i class="fa fa-hdd-o"></i> 17 GB</h5>
-									</div>
-									<div class="pull-right">
-										<h5>60% Used</h5>
-									</div>
-								</footer>
-                      		</div>
-						</div><!-- /col-md-4 -->
-						
-						
-						
-						
-						<div class="col-md-4 col-sm-4 mb">
-							<!-- REVENUE PANEL -->
-							<div class="darkblue-panel pn">
-								<div class="darkblue-header">
-									<h5>Trocas Relizadas por DIA</h5>
-								</div>
-								<div class="chart mt">
-									<div class="sparkline" data-type="line" data-resize="true" data-height="75" data-width="90%" data-line-width="1" data-line-color="#fff" data-spot-color="#fff" data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="4" data-data="[200,135,667,333,526,996,564,123,890,464,655]"></div>
-								</div>
-								<p class="mt"><b>$ 17,980</b><br/>Troca Diária/ Quantidade de Colaboradores</p>
-							</div>
-						</div><!-- /col-md-4 -->
-						
-					</div><!-- /row -->
-					
-					<div class="row mt">
+                            
+          <div class="row">               <!-- /row2 -->
+            <!-- TWITTER PANEL -->
+            <div class="col-md-4 mb">
+                          <div class="darkblue-panel pn">
+                            <div class="darkblue-header">
+                    <h5>Capacidade Serviço</h5>
+                            </div>
+                <canvas id="serverstatus02" height="120" width="120"></canvas>
+                <script>
+                  var doughnutData = [
+                      {
+                        value: 60,
+                        color:"#68dff0"
+                      },
+                      {
+                        value : 40,
+                        color : "#444c57"
+                      }
+                    ];
+                    var myDoughnut = new Chart(document.getElementById("serverstatus02").getContext("2d")).Doughnut(doughnutData);
+                </script>
+                <p>April 17, 2014</p>
+                <footer>
+                  <div class="pull-left">
+                    <h5><i class="fa fa-hdd-o"></i> 17 GB</h5>
+                  </div>
+                  <div class="pull-right">
+                    <h5>60% Used</h5>
+                  </div>
+                </footer>
+                          </div>
+            </div><!-- /col-md-4 -->
+            
+            
+            
+            
+            <div class="col-md-4 col-sm-4 mb">
+              <!-- REVENUE PANEL -->
+              <div class="darkblue-panel pn">
+                <div class="darkblue-header">
+                  <h5>Trocas Relizadas por DIA</h5>
+                </div>
+                <div class="chart mt">
+                  <div class="sparkline" data-type="line" data-resize="true" data-height="75" data-width="90%" data-line-width="1" data-line-color="#fff" data-spot-color="#fff" data-fill-color="" data-highlight-line-color="#fff" data-spot-radius="4" data-data="[200,135,667,333,526,996,564,123,890,464,655]"></div>
+                </div>
+                <p class="mt"><b>$ 17,980</b><br/>Troca Diária/ Quantidade de Colaboradores</p>
+              </div>
+            </div><!-- /col-md-4 -->
+            
+          </div><!-- /row -->
+          
+          <div class="row mt">
                       <!--CUSTOM CHART START -->
                       <div class="border-head">
                           <h3>VISITS</h3>
@@ -241,8 +243,8 @@
                           </div>
                       </div>
                       <!--custom chart end-->
-					</div><!-- /row -->	
-					
+          </div><!-- /row --> 
+          
                   </div><!-- /col-lg-9 END SECTION MIDDLE -->
                   
                   
@@ -284,10 +286,10 @@
 
     <!--script for this page-->
     <script src="assets/js/sparkline-chart.js"></script>    
-	<script src="assets/js/zabuto_calendar.js"></script>	
-	
-	
-	<script type="application/javascript">
+  <script src="assets/js/zabuto_calendar.js"></script>  
+  
+  
+  <script type="application/javascript">
         $(document).ready(function () {
             $("#date-popover").popover({html: true, trigger: "manual"});
             $("#date-popover").hide();

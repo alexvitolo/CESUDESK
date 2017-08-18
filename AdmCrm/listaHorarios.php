@@ -100,14 +100,18 @@ sqlsrv_execute($result_squila);
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
-                  <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.png" class="img-circle" width="60"></a></p>
+                  <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.gif" class="img-circle" width="60"></a></p>
                   <h5 class="centered">CRM EAD</h5>
                     
-                  <li class="mt">
-                      <a class="" href="index.html">
+                  <li class="sub-menu"">
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
                           <span>Indicadores</span>
                       </a>
+                      <ul class ="sub">
+                          <li class=""><a  href="index.html">Resumo</a></li>
+                          <li><a  href="">Dimensionamento</a></li>
+                      </ul>
                   </li>
 
                   <li class="sub-menu">
@@ -124,8 +128,7 @@ sqlsrv_execute($result_squila);
                       </a>
                       <ul class="sub">
                           <li class="active"><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          <li><a  href="">Buttons</a></li>
-                          <li><a  href="">Panels</a></li>
+                          
                       </ul>
                   </li>
 
@@ -162,8 +165,8 @@ sqlsrv_execute($result_squila);
                                   <th><i class=" fa fa-edit"></i> Grupo </th>
                                   <th><i class=" fa fa-edit"></i> Regição </th>
                                   <th><i class=" fa fa-edit"></i> Pausa 1 </th>
-                                  <th><i class=" fa fa-edit"></i> Pausa 2 </th>
                                   <th><i class=" fa fa-edit"></i> Lanche </th>
+                                  <th><i class=" fa fa-edit"></i> Pausa 2 </th>
  
                               </tr>
                               </thead>
@@ -180,8 +183,8 @@ sqlsrv_execute($result_squila);
                                   <td><?php echo utf8_encode($row['GRUPO']); ?></a></td>
                                   <td><?php echo utf8_encode($row['REGIAO']); ?></a></td>
                                   <td><?php echo $row['PAUSA1']; ?></td>
-                                  <td><?php echo $row['PAUSA2']; ?></td>
                                   <td><?php echo $row['LANCHE']; ?></td>
+                                  <td><?php echo $row['PAUSA2']; ?></td>
                                   <td>
                                       
                                   </td>

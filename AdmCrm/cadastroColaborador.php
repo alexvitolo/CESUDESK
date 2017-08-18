@@ -113,19 +113,23 @@ sqlsrv_execute($result_Grupo);
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
-                  <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.png" class="img-circle" width="60"></a></p>
+                  <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.gif" class="img-circle" width="60"></a></p>
                   <h5 class="centered">CRM EAD</h5>
                     
-                  <li class="mt">
-                      <a class="" href="index.html">
+                  <li class="sub-menu"">
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Dashboard</span>
+                          <span>Indicadores</span>
                       </a>
+                      <ul class ="sub">
+                          <li class=""><a  href="index.html">Resumo</a></li>
+                          <li><a  href="">Dimensionamento</a></li>
+                      </ul>
                   </li>
 
                   <li class="sub-menu">
                       <a class="active" href="colaboradores.php">
-                          <i class="fa fa-dashboard"></i>
+                          <i class="fa fa-th"></i>
                           <span>Colaboradores</span>
                       </a>
                   </li>
@@ -137,8 +141,7 @@ sqlsrv_execute($result_Grupo);
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          <li><a  href="">Buttons</a></li>
-                          <li><a  href="">Panels</a></li>
+                          
                       </ul>
                   </li>
 
