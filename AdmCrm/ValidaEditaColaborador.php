@@ -124,7 +124,7 @@ $result_insert5 = sqlsrv_query($conn, $insertSquilaPausa5);
 
 
 
-elseif(isset($_POST['validaDadosColaborador']))
+if(isset($_POST['validaDadosColaborador']))
 {
 
 $updateSquila = " UPDATE tb_crm_colaborador
