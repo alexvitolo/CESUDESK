@@ -75,6 +75,29 @@ $result_Grupo = sqlsrv_prepare($conn, $sqlGrupo);
 sqlsrv_execute($result_Grupo);
 
 
+$sqlPausa = "SELECT tp.ID_TIPO_PAUSA
+                     ,tp.HORARIO_PAUSA
+                     ,tp.DT_VIGENCIA_INICIAL
+                     ,tp.DT_VIGENCIA_FINAL
+                 FROM tb_crm_escala_pausa tp
+                WHERE tp.ID_COLABORADOR = '{$ID_COLABORADOR}' 
+                  AND tp.DT_VIGENCIA_FINAL IS NULL
+             ORDER BY ID_TIPO_PAUSA";
+
+$resultPausa = sqlsrv_prepare($conn, $sqlPausa);
+sqlsrv_execute($resultPausa);
+
+
+           $x=0;
+          while ($dados = sqlsrv_fetch_array($resultPausa)) {
+            $vetorPausa[$x][0] = $dados['ID_TIPO_PAUSA'];
+            $vetorPausa[$x][1] = $dados['HORARIO_PAUSA'];
+            $vetorPausa[$x][2] = $dados['DT_VIGENCIA_INICIAL'];
+            $vetorPausa[$x][3] = $dados['DT_VIGENCIA_FINAL'];
+            $x++;
+          }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -168,9 +191,9 @@ sqlsrv_execute($result_Grupo);
                           <span>General</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="horarios.php">Horario</a></li>
-                          <li><a  href="buttons.html">Buttons</a></li>
-                          <li><a  href="panels.html">Panels</a></li>
+                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li><a  href="">Buttons</a></li>
+                          <li><a  href="">Panels</a></li>
                       </ul>
                   </li>
 
@@ -194,8 +217,8 @@ sqlsrv_execute($result_Grupo);
                       <div class="content-panel">
                          <form name="Form" method="post" id="formulario" action="ValidaEditaColaborador.php">
 <!-- DADOS PESSOAIS-->
-                         <fieldset>
-                          <legend> Dados do colaborador </legend>
+                          <fieldset>
+                          <legend> Dados do colaborador     <input type="checkbox" name="validaDadosColaborador" unchecked data-toggle="switch"  value="on"> </legend> 
                           <table cellspacing="10" style="vertical-align: middle">
                            <tr>
                             <td style="width:110px";>
@@ -344,11 +367,44 @@ sqlsrv_execute($result_Grupo);
                              </select>
                             </td>
                            </tr>
-
-
                           </table>
                          </fieldset>
-                         
+
+                        <table cellspacing="10" style="vertical-align: middle">
+                          <span style="padding-left:45px"></span>
+                          </tr>
+                           <legend> Escala de pausas <input type="checkbox" name="validaEscalaPausa" unchecked data-toggle="switch" /> </legend>
+                           
+                           <tr>
+                           <td>
+                             <label style="margin-left: 15px" >Pausa 1: </label>
+                            </td>
+                            <td align="left">
+                             <input type="time" name="pausa1" size="15" value="<?php echo date_format($vetorPausa[0][1],"H:i") ?>">
+                            </td>
+                        
+                           <td>
+                             <label style="margin-left: 15px" >Pausa 2: </label>
+                            </td>
+                            <td align="left">
+                             <input type="time" name="pausa2" size="15" value="<?php echo date_format($vetorPausa[1][1],"H:i") ?>">
+                            </td>
+                    
+                           <td>
+                             <label style="margin-left: 15px" >Lanche: </label>
+                            </td>
+                            <td align="left">
+                             <input type="time" name="lanche" size="15" value="<?php echo date_format($vetorPausa[2][1],"H:i") ?>">
+                             <input type="hidden" name="ID_COLABORADOR" value="<?php echo $ID_COLABORADOR ?>">
+                            </td>
+                           </tr>
+
+                             <tr>
+                           <td><br>
+                           </tr>
+
+
+                         </table>
                          <br/>
 
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $row['ID_MATRICULA']?>"  name="ID_MATRICULA">Confirmar</button> 
@@ -366,7 +422,7 @@ sqlsrv_execute($result_Grupo);
       <footer class="site-footer">
           <div class="text-center">
               2017 - CRM MASTER
-              <a href="basic_table.html#" class="go-top">
+              <a href="" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
           </div>
@@ -390,6 +446,18 @@ sqlsrv_execute($result_Grupo);
 </html>
 
 
+
+
+ 
+  <!--custom switch-->
+  <script src="assets/js/bootstrap-switch.js"></script>
+  
+  <!--custom tagsinput-->
+  <script src="assets/js/jquery.tagsinput.js"></script>
+  
+
+  <script src="assets/js/form-component.js"></script>   
+    
 
 <script type="text/javascript">
 (function(document) {

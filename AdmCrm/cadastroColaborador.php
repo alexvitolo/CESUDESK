@@ -136,9 +136,9 @@ sqlsrv_execute($result_Grupo);
                           <span>General</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="horarios.php">Horario</a></li>
-                          <li><a  href="buttons.html">Buttons</a></li>
-                          <li><a  href="panels.html">Panels</a></li>
+                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li><a  href="">Buttons</a></li>
+                          <li><a  href="">Panels</a></li>
                       </ul>
                   </li>
 
