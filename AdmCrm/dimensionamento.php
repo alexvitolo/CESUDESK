@@ -85,10 +85,15 @@
                   </li>
 
                   <li class="sub-menu">
-                      <a class="" href="colaboradores.php">
+                      <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
-                          <span>Colaboradores</span>
+                          <span>Schedule</span>
                       </a>
+                      <ul class="sub">
+                          <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
+                          <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
+                          <li class=""><a  href="">TEST</a></li>
+                      </ul>
                   </li>
    
                    <li class="sub-menu">
@@ -98,6 +103,7 @@
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li><a  href="colaboradores.php">Colaboradores</a></li>
                           
                       </ul>
                   </li>
@@ -114,12 +120,12 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Dimensionamento Colaboradores</h3>
-            <hr>
+            <!-- <h3><i class="fa fa-right"></i> Dimensionamento Colaboradores</h3>
+            <hr> -->
 
             <!-- criar formulario -->
               <div class="row mt">
-                      <iframe style="margin-left: 20px" width="1024" height="748" src="https://app.powerbi.com/view?r=eyJrIjoiOWEzNThjYWQtMjk0Yy00NGI4LTkwZTYtZTVmOTZiZGMxMzE4IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9" frameborder="0" allowFullScreen="true"></iframe>
+                      <iframe style="margin-left: 20px" width="1024" height="720" src="https://app.powerbi.com/view?r=eyJrIjoiOWEzNThjYWQtMjk0Yy00NGI4LTkwZTYtZTVmOTZiZGMxMzE4IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9" frameborder="0" allowFullScreen="true"></iframe>
               </div><!-- /row -->
 
           </section>

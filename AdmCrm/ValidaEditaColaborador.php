@@ -22,12 +22,19 @@ $grupo = $_POST["grupo"];
 
 
 
-
-
 $ID_COLABORADOR = $_POST["ID_COLABORADOR"];
 $pausa1 = $_POST["pausa1"]; 
 $pausa2 = $_POST["pausa2"]; 
 $lanche = $_POST["lanche"]; 
+
+
+
+
+$dtDesligamento = $_POST["dtDesligamento"]; 
+$motivoDesligamento = $_POST["motivoDesligamento"]; 
+$subMotivoDesligamento = $_POST["subMotivoDesligamento"];
+
+
 
 
 $today = date("Y-m-d");
@@ -47,6 +54,7 @@ if(isset($_POST['validaEscalaPausa']))
 
   $result_update1 = sqlsrv_query($conn, $updateSquilaPausa1);
    sqlsrv_free_stmt($result_update1);
+
 
 
  //inserts
@@ -119,20 +127,30 @@ $result_insert5 = sqlsrv_query($conn, $insertSquilaPausa5);
    sqlsrv_free_stmt($result_insert5);
 
 
-
 }
 
 
 
 if(isset($_POST['validaDadosColaborador']))
 {
+  $sqldicas2 = '';
+
+  if(isset($_POST['validaMotivoDesliga']) AND ($STATUS == "DESLIGADO"))
+   {$sqldicas2 = ",DT_DESLIGAMENTO = '{$dtDesligamento}'      
+                  ,MOTIVO_DESLIGAMENTO = '{$motivoDesligamento}'      
+                  ,ID_SUB_MOTIVO = '{$subMotivoDesligamento}' ";}
+
+    elseif (isset($_POST['validaMotivoDesliga']) AND ($STATUS <> "DESLIGADO")) {
+       echo  '<script type="text/javascript">alert("Status Invalido para a operação!");</script>';
+       echo  '<script type="text/javascript"> window.location.href = "colaboradores.php" </script>';exit;
+    }
 
 $updateSquila = " UPDATE tb_crm_colaborador
                      SET ID_MATRICULA = '{$MATRICULA}'
                         ,LOGIN_REDE = '{$loginRede}'
                         ,NOME = '{$NOME}'
                         ,STATUS_COLABORADOR = '{$STATUS}'
-                        ,ID_COLABORADOR_GESTOR = '{$supervisor}'
+                        ,ID_COLABORADOR_GESTOR = {$supervisor}
                         ,ID_CARGO = '{$cargo}'
                         ,NIVEL_CARGO = '{$nivelCargo}'
                         ,ID_GRUPO = '{$grupo}'
@@ -143,6 +161,7 @@ $updateSquila = " UPDATE tb_crm_colaborador
                         ,LOGIN_TELEFONIA = '{$loginTelefonia}'
                         ,CODIGO_PORTAL = '{$codPortal}'
                         ,ID_HORARIO = '{$horario}'
+                        ".$sqldicas2."
                   WHERE  ID_MATRICULA = '{$MATRICULA}'";
 
  $result_update = sqlsrv_query($conn, $updateSquila);

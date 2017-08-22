@@ -1,18 +1,31 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
-$squilaDicas = "SELECT  
-                      tp.ID_COLABORADOR
-                      ,tp.ID_TIPO_PAUSA
-                      ,tp.HORARIO_PAUSA
-                      ,tp.DT_VIGENCIA_INICIAL
-                      ,tp.DT_VIGENCIA_FINAL
-                      ,tc.NOME
-                      ,tc.ID_MATRICULA
-                      ,tt.DESCRICAO
-                      ,tt.DURACAO
-                 FROM tb_crm_escala_pausa tp
-           INNER JOIN tb_crm_colaborador tc on tc.ID_COLABORADOR = tp.ID_COLABORADOR 
-           INNER JOIN tb_crm_tipo_pausa tt on tt.ID_TIPO_PAUSA = tp.ID_TIPO_PAUSA";
+$squilaDicas = "SELECT 
+                         tc.ID_MATRICULA
+                        ,tc.ID_COLABORADOR
+                        ,tc.NOME
+                        ,th.ENTRADA
+                        ,th.SAIDA
+                        ,tc.STATUS_COLABORADOR
+                        ,tg.DESCRICAO as GRUPO
+            ,CASE WHEN tr.DESCRICAO is null THEN 'Sem Região' ELSE tr.DESCRICAO END REGIAO
+            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
+                  THEN 'SEM HORÁRIO' 
+                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA1
+            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='2'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL
+                  THEN 'SEM HORÁRIO' 
+                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='2'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA2
+            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='5'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
+                  THEN 'SEM HORÁRIO' 
+                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='5'AND DT_VIGENCIA_FINAL is NULL),24)) END LANCHE
+
+                    FROM tb_crm_colaborador tc
+              INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
+              INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
+               LEFT JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_GRUPO
+                   WHERE tc.STATUS_COLABORADOR <> 'DESLIGADO'
+
+                ORDER BY tc.NOME";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
@@ -102,22 +115,28 @@ sqlsrv_execute($result_squila);
                       </ul>
                   </li>
 
-                  <li class="sub-menu">
-                      <a class="" href="colaboradores.php">
+                 <li class="sub-menu">
+                      <a class="active" href="javascript:;">
                           <i class="fa fa-th"></i>
-                          <span>Colaboradores</span>
+                          <span>Schedule</span>
                       </a>
+                      <ul class="sub">
+                          <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
+                          <li class="active"><a  href="escalaPausa.php"> Escala de pausa </a></li>
+                      </ul>
                   </li>
    
+
                    <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          <li class="active"><a  href="escalaPausa.php">Escala Pausa</a></li>
-                          <li><a  href="">Panels</a></li>
+                          <li class=""><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="cargo.php">Cargo</a></li>
+                          
                       </ul>
                   </li>
 
@@ -144,33 +163,48 @@ sqlsrv_execute($result_squila);
                             <h4><i class="fa fa-right"></i> Tabela de Horários </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroColaborador.php"><input style="margin-left: 800px" type="button" value="Novo Horário" ></input></a>
                               <thead>
                               <tr>
-                                  <th><i class="fa fa-bullhorn"></i> Matrícula </th>
-                                  <th><i class="fa fa-bullhorn"></i> Nome </th>
-                                  <th><i class="fa fa-bookmark"></i> Entrada</th>
-                                  <th><i class=" fa fa-edit"></i> Saída</th>
-                                  <th><i class=" fa fa-edit"></i> Status</th>
+                                  <th><i class=""></i> Matrícula </th>
+                                  <th><i class=""></i> Nome </th>
+                                  <th><i class=""></i> Entrada </th>
+                                  <th><i class=""></i> Saída </th>
+                                  <th><i class=""></i> Status </th>
+                                  <th><i class=""></i> Grupo </th>
+                                  <th><i class=""></i> Região </th>
+                                  <th><i class=""></i> Pausa 1 </th>
+                                  <th><i class=""></i> Lanche </th>
+                                  <th><i class=""></i> Pausa 2 </th>
+ 
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
                                   <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-                                    if ($row['BO_ESCALA_FDS'] == "S") {
-                                      $corStatus = "label label-success label-mini";
-                                    }elseif ($row['BO_ESCALA_FDS'] == "N") {
-                                      $corStatus = "label label-danger  label-mini";
-                                    }
-
                                     ?>
+
+                                          <?php  
+                                         if ($row['STATUS_COLABORADOR'] == "ATIVO") {
+                                           $corStatus = "label label-success label-mini";
+                                         }elseif (($row['STATUS_COLABORADOR'] == "DESLIGADO") or ($row['STATUS_COLABORADOR'] == "Desligado")) {
+                                           $corStatus = "label label-danger  label-mini";
+                                         }else{
+                                           $corStatus = "label label-warning  label-mini";
+                                         }
+                                         ?>
+
+                                  <td><?php echo $row['ID_MATRICULA']; ?></a></td>
+                                  <td><?php echo utf8_encode($row['NOME']); ?></a></td>
                                   <td><?php echo date_format($row['ENTRADA'],"H:i"); ?></a></td>
-                                  <td><?php echo date_format($row['SAIDA'],"H:i"); ?></td>
-                                  <td><?php echo date_format($row['CARGA_HORARIO'],"H:i"); ?></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_ESCALA_FDS']?></span></td>
+                                  <td><?php echo date_format($row['SAIDA'],"H:i"); ?></a></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['STATUS_COLABORADOR']; ?></a></td>
+                                  <td><?php echo utf8_encode($row['GRUPO']); ?></a></td>
+                                  <td><?php echo utf8_encode($row['REGIAO']); ?></a></td>
+                                  <td><?php echo $row['PAUSA1']; ?></td>
+                                  <td><?php echo $row['LANCHE']; ?></td>
+                                  <td><?php echo $row['PAUSA2']; ?></td>
                                   <td>
-                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_HORARIO'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
+                                      
                                   </td>
                               </tr>
 

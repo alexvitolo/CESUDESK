@@ -17,7 +17,11 @@ $squiladica = "SELECT TC.ID_COLABORADOR,
                       TC.NIVEL_CARGO,
                       TC.ID_CARGO,
                       TC.ID_GRUPO,
-                      TC.ID_HORARIO
+                      TC.ID_HORARIO,
+                      TC.DT_DESLIGAMENTO,
+                      TC.MOTIVO_DESLIGAMENTO,
+                      TC.ID_SUB_MOTIVO
+
 
                  FROM tb_crm_colaborador TC
                 WHERE ID_COLABORADOR = '{$ID_COLABORADOR}' ";
@@ -29,6 +33,7 @@ $vetorSQL = sqlsrv_fetch_array($result_squila);
 
 $DT_NASCIMENTO = date_format($vetorSQL['DT_NASCIMENTO'], "Y-m-d");
 $DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
+
 
 
 
@@ -96,6 +101,27 @@ sqlsrv_execute($resultPausa);
             $vetorPausa[$x][3] = $dados['DT_VIGENCIA_FINAL'];
             $x++;
           }
+
+
+
+$sqlSubMotivo = "SELECT  td.ID_SUB_MOTIVO
+                        ,td.SUB_MOTIVO 
+              FROM tb_crm_desligamento_sub td";
+
+$result_SubMotivo = sqlsrv_prepare($conn, $sqlSubMotivo);
+sqlsrv_execute($result_SubMotivo);
+
+
+
+
+$sqlMotivoP = "SELECT td.ID_MOTIVO
+                      ,td.MOTIVO
+                      ,td.DT_SISTEMA
+                 FROM tb_crm_desligamento_motivo td";
+
+$result_MotivoP = sqlsrv_prepare($conn, $sqlMotivoP);
+sqlsrv_execute($result_MotivoP);
+
 
 
 ?>
@@ -183,10 +209,15 @@ sqlsrv_execute($resultPausa);
                   </li>
 
                   <li class="sub-menu">
-                      <a class="active" href="colaboradores.php">
+                      <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
-                          <span>Colaboradores</span>
+                          <span>Schedule</span>
                       </a>
+                      <ul class="sub">
+                          <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
+                          <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
+                          <li class=""><a  href="">TEST</a></li>
+                      </ul>
                   </li>
    
                     <li class="sub-menu">
@@ -196,6 +227,7 @@ sqlsrv_execute($resultPausa);
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li><a  href="colaboradores.php">Colaboradores</a></li>
                           
                       </ul>
                   </li>
@@ -296,6 +328,7 @@ sqlsrv_execute($resultPausa);
                             </td>
                             <td align="left">
                              <select name="supervisor">
+                                            <option value="null">Escolha um supervisor</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
                                             <option <?php if ($row['ID_SUP']==$vetorSQL['ID_COLABORADOR_GESTOR']) { echo 'selected'; } ?> value=<?php echo $row['ID_SUP']?> > <?php echo utf8_encode($row['NOME_SUP']) ?> </option>
                                          <?php }
@@ -409,6 +442,57 @@ sqlsrv_execute($resultPausa);
 
 
                          </table>
+                         <br/>
+
+
+                          <table cellspacing="10" style="vertical-align: middle">
+                          <span style="padding-left:45px"></span>
+                          </tr>
+                           <legend> Motivo Desligamento <input type="checkbox" name="validaMotivoDesliga" unchecked data-toggle="switch" /> </legend>
+                           
+                           <tr>
+
+                            <td>
+                             <label style="margin-left: 15px" >Data Desligamento :</label>
+                            </td>
+                            <td align="left">
+                             <input type="date" name="dtDesligamento" value="<?php if (($vetorSQL['DT_DESLIGAMENTO']) == null ){ echo ' ';}else {echo date_format($vetorSQL['DT_DESLIGAMENTO'], "Y-m-d") ;} ?>"> 
+                            </td>
+
+
+                           <td>
+                             <label style="margin-left: 20px" >Motivo Desligamento </label>
+                            </td>
+                            <td align="left">
+                              <select name="motivoDesligamento"> 
+                                            <?php while ($row = sqlsrv_fetch_array($result_MotivoP)){ ?>
+                                            <option <?php if ($row['ID_MOTIVO']==$vetorSQL['MOTIVO_DESLIGAMENTO']) { echo 'selected'; } ?> value=<?php echo $row['ID_MOTIVO']?> > <?php echo utf8_encode($row['MOTIVO']) ?> </option>
+                                         <?php }
+                                         ?> 
+                            </select>
+                            </td>
+
+                            <td>
+                             <label style="margin-left: 15px" >Sub-Motivo Desligamento </label>
+                            </td>
+                            <td align="left">
+                             <select style="margin-left: 15px"  name="subMotivoDesligamento">
+                                         <?php while ($row = sqlsrv_fetch_array($result_SubMotivo)){ ?>
+                                            <option <?php if ($row['ID_SUB_MOTIVO']==$vetorSQL['ID_SUB_MOTIVO']) { echo 'selected'; } ?> value=<?php echo $row['ID_SUB_MOTIVO']?> > <?php echo utf8_encode($row['SUB_MOTIVO']) ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
+                            </td>
+
+
+                             <tr>
+                           <td><br>
+                           </tr>
+
+
+                         </table>
+
+
                          <br/>
 
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $row['ID_MATRICULA']?>"  name="ID_MATRICULA">Confirmar</button> 

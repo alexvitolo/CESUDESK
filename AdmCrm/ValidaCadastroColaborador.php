@@ -35,39 +35,24 @@ $insertSquila = " INSERT INTO tb_crm_colaborador
                               ,ID_HORARIO)
                         
                        VALUES
-                              (?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?)";
+                        ('{$MATRICULA}'
+                        ,'{$loginRede}'
+                        ,'{$NOME}'
+                        ,'{$STATUS}'
+                        ,{$supervisor}
+                        ,'{$cargo}'
+                        ,'{$nivelCargo}'
+                        ,'{$grupo}'
+                        ,'{$email}'
+                        ,'{$telefone}'
+                        ,'{$dtAdmissao}'
+                        ,'{$dtNascimento}'
+                        ,'{$loginTelefonia}'
+                        ,'{$codPortal}'
+                        ,'{$horario}' )";
 
-       $params = array($MATRICULA
-                        ,$loginRede
-                        ,$NOME
-                        ,$STATUS
-                        ,$supervisor
-                        ,$cargo
-                        ,$nivelCargo
-                        ,$grupo
-                        ,$email
-                        ,$telefone
-                        ,$dtAdmissao
-                        ,$dtNascimento
-                        ,$loginTelefonia
-                        ,$codPortal
-                        ,$horario);
                    
- $result_insert = sqlsrv_query($conn, $insertSquila, $params);
+ $result_insert = sqlsrv_query($conn, $insertSquila);
 
       if (!($result_insert)) {
              echo ("Falha na inclusão do registro");

@@ -1,34 +1,5 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
-$squilaDicas = "SELECT 
-                         tc.ID_MATRICULA
-                        ,tc.ID_COLABORADOR
-                        ,tc.NOME
-                        ,th.ENTRADA
-                        ,th.SAIDA
-                        ,tc.STATUS_COLABORADOR
-                        ,tg.DESCRICAO as GRUPO
-                        ,tr.DESCRICAO as REGIAO
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA1
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='2'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='2'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA2
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='5'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='5'AND DT_VIGENCIA_FINAL is NULL),24)) END LANCHE
-
-                    FROM tb_crm_colaborador tc
-              INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
-              INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
-               LEFT JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_GRUPO
-
-                ORDER BY tc.NOME";
-
-$result_squila = sqlsrv_prepare($conn, $squilaDicas);
-sqlsrv_execute($result_squila);
-
 
 ?>
 
@@ -114,7 +85,7 @@ sqlsrv_execute($result_squila);
                       </ul>
                   </li>
 
-                 <li class="sub-menu">
+                  <li class="sub-menu">
                       <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
                           <span>Schedule</span>
@@ -126,16 +97,15 @@ sqlsrv_execute($result_squila);
                       </ul>
                   </li>
    
-
-                   <li class="sub-menu">
+                  <li class="sub-menu">
                       <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
                       <ul class="sub">
-                          <li class="active"><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
-                          <li class=""><a  href="cargo.php">Cargo</a></li>
+                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class="active"><a  href="cargo.php">Cargo</a></li>
                           
                       </ul>
                   </li>
@@ -152,59 +122,52 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Horários</h3>
+            <h3><i class="fa fa-right"></i> Cadastro de Cargo</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
-                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela de Horários </h4>
-                            <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                              <thead>
-                              <tr>
-                                  <th><i class="fa fa-bookmark"></i> Matrícula </th>
-                                  <th><i class="fa fa-bullhorn"></i> Nome </th>
-                                  <th><i class="fa fa-bookmark"></i> Entrada </th>
-                                  <th><i class=" fa fa-edit"></i> Saída </th>
-                                  <th><i class=" fa fa-edit"></i> Status </th>
-                                  <th><i class=" fa fa-edit"></i> Grupo </th>
-                                  <th><i class=" fa fa-edit"></i> Região </th>
-                                  <th><i class=" fa fa-edit"></i> Pausa 1 </th>
-                                  <th><i class=" fa fa-edit"></i> Lanche </th>
-                                  <th><i class=" fa fa-edit"></i> Pausa 2 </th>
- 
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-                                    ?>
+                         <form name="Form" method="post" id="formulario" action="ValidaCadastroCargo.php">
+<!-- DADOS PESSOAIS-->
+                         <fieldset>
+                          <legend> Dados do cargo </legend>
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" for="nome">Descrição: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="DESCRI">
+                            </td>
+                            <td>
+                             <label style="margin-left: 15px">BO Troca Horário :</label>
+                            </td>
+                            <td align="left">
+                             <select name="BOHORARIO" > 
+                             <option value="S">S</option>
+                             <option value="N">N</option> 
+                            </select>
+                            </td>
+                             <td>
+                             <label style="margin-left: 15px">BO Gestor :</label>
+                            </td>
+                            <td align="left">
+                             <select name="BOGESTOR"> 
+                             <option value="S">S</option>
+                             <option value="N">N</option> 
+                            </select>
+                            </td> 
+                           </tr>
 
-                                  <td><?php echo $row['ID_MATRICULA']; ?></a></td>
-                                  <td><?php echo utf8_encode($row['NOME']); ?></a></td>
-                                  <td><?php echo date_format($row['ENTRADA'],"H:i"); ?></a></td>
-                                  <td><?php echo date_format($row['SAIDA'],"H:i"); ?></a></td>
-                                  <td><?php echo $row['STATUS_COLABORADOR']; ?></a></td>
-                                  <td><?php echo utf8_encode($row['GRUPO']); ?></a></td>
-                                  <td><?php echo utf8_encode($row['REGIAO']); ?></a></td>
-                                  <td><?php echo $row['PAUSA1']; ?></td>
-                                  <td><?php echo $row['LANCHE']; ?></td>
-                                  <td><?php echo $row['PAUSA2']; ?></td>
-                                  <td>
-                                      
-                                  </td>
-                              </tr>
-
-                              <?php 
-                                    }
-                              ?>
-                              
-                              </tbody>
                           </table>
-                        </form>
+                         </fieldset>
+                         
+                         <br/>
+
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
+                         <a href="colaboradores.php"><input type="button" value="Cancelar"></a>
+                      </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
@@ -283,5 +246,19 @@ sqlsrv_execute($result_squila);
 
    })(document);
         
+
+
+    function getConfirmation(){
+       // var retVal = confirm("Do you want to continue ?");
+       if(  confirm(" Deseja Finalizar a Troca ? ") == true ){
+          return true;
+       }
+       else{
+          return false;
+       }
+    }
+        
+
+
 
 </script>

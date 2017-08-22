@@ -1,5 +1,8 @@
 <?php include '..\PlanilhaTrocas\connection.php';
 session_start();
+setlocale(LC_ALL, "pt_BR", "pt_BR.iso-8859-1", "pt_BR.utf-8", "portuguese");
+date_default_timezone_set('America/Sao_Paulo');
+
 $dataValida = date("Y-m-d" ,strtotime("+2 days")); // variavel criada para definir a data minima para selecionar no campo date 
 ?>
 <!DOCTYPE html>

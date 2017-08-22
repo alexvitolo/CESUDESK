@@ -7,7 +7,8 @@ $serverName = "W2K8R2-APP36\CRM_REPORTS"; //Hostname/IP,...
 $connectionOptions = array(
     "Database" => "DB_CRM_REPORT",
     "Uid" => "usr_cesudesk",
-    "PWD" => "ZRioYf68"
+    "PWD" => "ZRioYf68",
+    "CharacterSet"  => 'UTF-8'
 );
 
 //Establishes the connection
