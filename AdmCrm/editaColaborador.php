@@ -19,7 +19,7 @@ $squiladica = "SELECT TC.ID_COLABORADOR,
                       TC.ID_GRUPO,
                       TC.ID_HORARIO,
                       TC.DT_DESLIGAMENTO,
-                      TC.MOTIVO_DESLIGAMENTO,
+                      TC.ID_MOTIVO as MOTIVO_DESLIGAMENTO,
                       TC.ID_SUB_MOTIVO
 
 
@@ -71,7 +71,7 @@ sqlsrv_execute($result_Cargo);
 $sqlGrupo = "SELECT tg.ID_GRUPO
                    ,tg.DESCRICAO AS DESC_GRUPO
                    ,CASE
-                    WHEN tr.DESCRICAO = 'Sem região' THEN '' ELSE tr.DESCRICAO
+                    WHEN tr.DESCRICAO = 'Sem região' THEN 'Sem região' ELSE tr.DESCRICAO
                      END AS DESC_REGIAO
               FROM tb_crm_grupo tg
         INNER JOIN tb_crm_regiao tr on tg.ID_REGIAO = tr.ID_REGIAO";
@@ -121,7 +121,6 @@ $sqlMotivoP = "SELECT td.ID_MOTIVO
 
 $result_MotivoP = sqlsrv_prepare($conn, $sqlMotivoP);
 sqlsrv_execute($result_MotivoP);
-
 
 
 ?>
@@ -178,9 +177,9 @@ sqlsrv_execute($result_MotivoP);
                 <!--  notification end -->
             </div>
             <div class="top-menu">
-            	<ul class="nav pull-right top-menu">
+              <ul class="nav pull-right top-menu">
                     <li><a class="logout" href="login.php">Logout</a></li>
-            	</ul>
+              </ul>
             </div>
         </header>
       <!--header end-->
@@ -200,7 +199,7 @@ sqlsrv_execute($result_MotivoP);
                   <li class="sub-menu"">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Indicadores</span>
+                          <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
@@ -244,7 +243,7 @@ sqlsrv_execute($result_MotivoP);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-          	<h3><i class="fa fa-right"></i> Edição de colaboradores</h3>
+            <h3><i class="fa fa-right"></i> Edição de colaboradores</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
@@ -293,6 +292,7 @@ sqlsrv_execute($result_MotivoP);
 
                            <tr>
                            <td>
+                           <br>
                              <label style="margin-left: 15px" >Telefone: </label>
                             </td>
                             <td align="left">
@@ -330,7 +330,7 @@ sqlsrv_execute($result_MotivoP);
                              <select name="supervisor">
                                             <option value="null">Escolha um supervisor</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
-                                            <option <?php if ($row['ID_SUP']==$vetorSQL['ID_COLABORADOR_GESTOR']) { echo 'selected'; } ?> value=<?php echo $row['ID_SUP']?> > <?php echo utf8_encode($row['NOME_SUP']) ?> </option>
+                                            <option <?php if ($row['ID_SUP']==$vetorSQL['ID_COLABORADOR_GESTOR']) { echo 'selected'; } ?> value=<?php echo $row['ID_SUP']?> > <?php $row['NOME_SUP'] ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -346,7 +346,7 @@ sqlsrv_execute($result_MotivoP);
                             <td align="left">
                              <select name="cargo">
                                          <?php while ($row = sqlsrv_fetch_array($result_Cargo)){ ?>
-                                            <option <?php if ($row['ID_CARGO']==$vetorSQL['ID_CARGO']) { echo 'selected'; } ?> value=<?php echo $row['ID_CARGO']?> > <?php echo utf8_encode($row['DESC_CARGO']) ?> </option>
+                                            <option <?php if ($row['ID_CARGO']==$vetorSQL['ID_CARGO']) { echo 'selected'; } ?> value=<?php echo $row['ID_CARGO']?> > <?php echo $row['DESC_CARGO'] ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -355,12 +355,13 @@ sqlsrv_execute($result_MotivoP);
                              <label style="margin-left: 15px" for="status">Nível Cargo :</label>
                             </td>
                             <td align="left">
-                             <select name="nivelCargo" value="<?php echo $vetorSQL['NIVEL_CARGO']; ?>">
-                                    <option value="<?php echo $vetorSQL['NIVEL_CARGO']; ?>"><?php echo $vetorSQL['NIVEL_CARGO']; ?></option> 
+                             <select name="nivelCargo">
+                                    <option value="<?php echo $vetorSQL['NIVEL_CARGO']; ?>"><?php if ($vetorSQL['NIVEL_CARGO'] == null) { echo "Sem Nível" ;} else {echo $vetorSQL['NIVEL_CARGO'] ;} ?></option> 
                                     <option value="I">I</option>
                                     <option value="II">II</option> 
                                     <option value="III">III</option>
-                                    <option value="IV">IV</option>  
+                                    <option value="IV">IV</option>
+                                    <option value="null">Sem Nível</option>
                             </select>
                             </td>
                              <td>
@@ -397,7 +398,7 @@ sqlsrv_execute($result_MotivoP);
                             <td align="left">
                              <select  name="grupo">
                                          <?php while ($row = sqlsrv_fetch_array($result_Grupo)){ ?>
-                                           <option <?php if ($row['ID_GRUPO']==$vetorSQL['ID_GRUPO']) { echo 'selected'; } ?>  value=<?php echo $row['ID_GRUPO']?> > <?php echo 'Grupo: '. utf8_encode($row['DESC_GRUPO']).'  |   '. utf8_encode($row['DESC_REGIAO']) ?> </option>
+                                           <option <?php if ($row['ID_GRUPO']==$vetorSQL['ID_GRUPO']) { echo 'selected'; } ?>  value=<?php echo $row['ID_GRUPO']?> > <?php echo 'Grupo: '. $row['DESC_GRUPO'].'  |   '. $row['DESC_REGIAO'] ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -405,7 +406,7 @@ sqlsrv_execute($result_MotivoP);
                            </tr>
                           </table>
                          </fieldset>
-
+                        <br>
                         <table cellspacing="10" style="vertical-align: middle">
                           <span style="padding-left:45px"></span>
                           </tr>
@@ -434,10 +435,14 @@ sqlsrv_execute($result_MotivoP);
                             <td align="left">
                              <input type="time" name="pausa2" size="15" value="<?php echo date_format($vetorPausa[1][1],"H:i") ?>">
                             </td>
+
+                           <td>
+                            <a href="listaHorariosTrocaOK.php?ID_GRUPO=<?php echo $vetorSQL['ID_GRUPO']; ?>&ID_HORARIO=<?php echo $vetorSQL['ID_HORARIO']; ?>" target="_blank"><input style="margin-left: 55px" type="button" value="Horários Disponíveis" ></input></a>
+                            </td>
                            </tr>
 
                              <tr>
-                           <td><br>
+                           <td><br>                            
                            </tr>
 
 
@@ -466,7 +471,7 @@ sqlsrv_execute($result_MotivoP);
                             <td align="left">
                               <select name="motivoDesligamento"> 
                                             <?php while ($row = sqlsrv_fetch_array($result_MotivoP)){ ?>
-                                            <option <?php if ($row['ID_MOTIVO']==$vetorSQL['MOTIVO_DESLIGAMENTO']) { echo 'selected'; } ?> value=<?php echo $row['ID_MOTIVO']?> > <?php echo utf8_encode($row['MOTIVO']) ?> </option>
+                                            <option <?php if ($row['ID_MOTIVO']==$vetorSQL['MOTIVO_DESLIGAMENTO']) { echo 'selected'; } ?> value=<?php echo $row['ID_MOTIVO']?> > <?php echo $row['MOTIVO'] ?> </option>
                                          <?php }
                                          ?> 
                             </select>
@@ -478,7 +483,7 @@ sqlsrv_execute($result_MotivoP);
                             <td align="left">
                              <select style="margin-left: 15px"  name="subMotivoDesligamento">
                                          <?php while ($row = sqlsrv_fetch_array($result_SubMotivo)){ ?>
-                                            <option <?php if ($row['ID_SUB_MOTIVO']==$vetorSQL['ID_SUB_MOTIVO']) { echo 'selected'; } ?> value=<?php echo $row['ID_SUB_MOTIVO']?> > <?php echo utf8_encode($row['SUB_MOTIVO']) ?> </option>
+                                            <option <?php if ($row['ID_SUB_MOTIVO']==$vetorSQL['ID_SUB_MOTIVO']) { echo 'selected'; } ?> value=<?php echo $row['ID_SUB_MOTIVO']?> > <?php echo $row['SUB_MOTIVO'] ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -502,7 +507,7 @@ sqlsrv_execute($result_MotivoP);
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
 
-		</section>
+    </section>
       </section><!-- /MAIN CONTENT -->
 
       <!--main content end-->

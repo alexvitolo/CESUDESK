@@ -1,5 +1,14 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
+$squilaRegiao = "SELECT ID_REGIAO
+                       ,DESCRICAO
+                       ,DT_SISTEMA
+                  FROM tb_crm_regiao";
+
+$result_squilaRegiao = sqlsrv_prepare($conn, $squilaRegiao);
+sqlsrv_execute($result_squilaRegiao);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -74,13 +83,13 @@
                   <h5 class="centered">CRM EAD</h5>
                     
                   <li class="sub-menu"">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
                           <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
-                          <li class="active"><a  href="dimensionamento.php">Dimensionamento</a></li>
+                          <li><a  href="dimensionamento.php">Dimensionamento</a></li>
                       </ul>
                   </li>
 
@@ -97,14 +106,16 @@
                   </li>
    
                    <li class="sub-menu">
-                      <a href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          <li><a  href="colaboradores.php">Colaboradores</a></li>
-                          
+                          <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="cargo.php">Cargo</a></li>
+                          <li class=""><a  href="grupo.php">Grupo</a></li>
+                          <li class="active"><a  href="regiao.php">Região</a></li>
                       </ul>
                   </li>
 
@@ -120,15 +131,49 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <!-- <h3><i class="fa fa-right"></i> Dimensionamento Colaboradores</h3>
-            <hr> -->
+            <h3><i class="fa fa-right"></i> Lista de Regiões </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
-                      <iframe style="margin-left: 20px" width="1024" height="720" src="https://app.powerbi.com/view?r=eyJrIjoiOWEzNThjYWQtMjk0Yy00NGI4LTkwZTYtZTVmOTZiZGMxMzE4IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9" frameborder="0" allowFullScreen="true"></iframe>
+                  <div class="col-md-12">
+                      <div class="content-panel">
+                        <form name="Form" method="post" id="formulario" action="regiao.php">
+                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
+                            <h4><i class="fa fa-right"></i> Regiões </h4>
+                            <hr>
+                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
+                            <a href="cadastroRegiao.php"><input style="margin-left: 800px" type="button" value="Novo Grupo" ></input></a>
+                              <thead>
+                              <tr>
+                                  <th><i class="fa fa-bullhorn"></i> ID Região </th>
+                                  <th><i class="fa fa-bullhorn"></i> Descrição </th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <?php  while($row = sqlsrv_fetch_array($result_squilaRegiao)) { 
+                                    ?>
+
+                                  <td><?php echo $row['ID_REGIAO']; ?></a></td>
+                                  <td><?php echo $row['DESCRICAO']; ?></td>
+                                  <td>
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_COLABORADOR'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
+                                  </td>
+                              </tr>
+
+                              <?php 
+                                    }
+                              ?>
+                              
+                              </tbody>
+                          </table>
+                        </form>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
               </div><!-- /row -->
 
-          </section>
+    </section>
       </section><!-- /MAIN CONTENT -->
 
       <!--main content end-->

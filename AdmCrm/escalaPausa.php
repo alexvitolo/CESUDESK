@@ -8,7 +8,7 @@ $squilaDicas = "SELECT
                         ,th.SAIDA
                         ,tc.STATUS_COLABORADOR
                         ,tg.DESCRICAO as GRUPO
-            ,CASE WHEN tr.DESCRICAO is null THEN 'Sem Região' ELSE tr.DESCRICAO END REGIAO
+                        ,tr.DESCRICAO as REGIAO
             ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
                   THEN 'SEM HORÁRIO' 
                   ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA1
@@ -22,7 +22,7 @@ $squilaDicas = "SELECT
                     FROM tb_crm_colaborador tc
               INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
               INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
-               LEFT JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_GRUPO
+              INNER JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
                    WHERE tc.STATUS_COLABORADOR <> 'DESLIGADO'
 
                 ORDER BY tc.NOME";
@@ -107,7 +107,7 @@ sqlsrv_execute($result_squila);
                   <li class="sub-menu"">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Indicadores</span>
+                          <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
@@ -136,6 +136,8 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="listaHorarios.php">Lista Pausas</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
+                          <li class=""><a  href="grupo.php">Grupo</a></li>
+                          <li class=""><a  href="regiao.php">Região</a></li>
                           
                       </ul>
                   </li>
@@ -198,8 +200,8 @@ sqlsrv_execute($result_squila);
                                   <td><?php echo date_format($row['ENTRADA'],"H:i"); ?></a></td>
                                   <td><?php echo date_format($row['SAIDA'],"H:i"); ?></a></td>
                                   <td><span class="<?php echo $corStatus ?>"><?php echo $row['STATUS_COLABORADOR']; ?></a></td>
-                                  <td><?php echo utf8_encode($row['GRUPO']); ?></a></td>
-                                  <td><?php echo utf8_encode($row['REGIAO']); ?></a></td>
+                                  <td><?php echo $row['GRUPO']; ?></a></td>
+                                  <td><?php echo $row['REGIAO']; ?></a></td>
                                   <td><?php echo $row['PAUSA1']; ?></td>
                                   <td><?php echo $row['LANCHE']; ?></td>
                                   <td><?php echo $row['PAUSA2']; ?></td>

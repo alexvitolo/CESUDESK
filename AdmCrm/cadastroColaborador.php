@@ -119,7 +119,7 @@ sqlsrv_execute($result_Grupo);
                   <li class="sub-menu"">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Indicadores</span>
+                          <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
@@ -212,6 +212,7 @@ sqlsrv_execute($result_Grupo);
 
                            <tr>
                             <td>
+                            <br>
                              <label style="margin-left: 15px">Telefone: </label>
                             </td>
                             <td align="left">
@@ -284,7 +285,8 @@ sqlsrv_execute($result_Grupo);
                              <option value="I">I</option>
                              <option value="II">II</option> 
                              <option value="III">III</option>
-                             <option value="IV">IV</option>  
+                             <option value="IV">IV</option>
+                             <option value="null">Sem Nível</option>  
                             </select>
                             </td>
                              <td>
@@ -415,7 +417,7 @@ sqlsrv_execute($result_Grupo);
 
     function getConfirmation(){
        // var retVal = confirm("Do you want to continue ?");
-       if(  confirm(" Deseja Finalizar a Troca ? ") == true ){
+       if(  confirm(" Deseja Confirmar? ") == true ){
           return true;
        }
        else{

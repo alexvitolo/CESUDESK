@@ -88,7 +88,7 @@ sqlsrv_execute($result_squilac);
                   <li class="sub-menu"">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Indicadores</span>
+                          <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
@@ -117,6 +117,8 @@ sqlsrv_execute($result_squilac);
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class="active"><a  href="cargo.php">Cargo</a></li>
+                          <li class=""><a  href="grupo.php">Grupo</a></li>
+                          <li class=""><a  href="regiao.php">Região</a></li>
                       </ul>
                   </li>
 
@@ -138,7 +140,7 @@ sqlsrv_execute($result_squilac);
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
+                        <form name="Form" method="post" id="formulario" action="cargo.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Cargos </h4>
                             <hr>
@@ -167,8 +169,8 @@ sqlsrv_execute($result_squilac);
                                     }
                                     ?>
 
-                                  <td><?php echo utf8_encode($row['ID_CARGO']) ?></a></td>
-                                  <td><?php echo utf8_encode($row['DESCRICAO']) ?></td>
+                                  <td><?php echo $row['ID_CARGO'] ?></a></td>
+                                  <td><?php echo $row['DESCRICAO'] ?></td>
                                   <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_TROCA_HORARIO']?></span></td>
                                   <td><span class="<?php echo $corStatus2 ?>"><?php echo $row['BO_GESTOR']?></span></td>
                                   <td>

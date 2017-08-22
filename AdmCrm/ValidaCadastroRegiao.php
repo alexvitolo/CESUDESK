@@ -1,21 +1,17 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
 
-$DESCRI = $_POST["DESCRI"];
-$BOHORARIO = $_POST["BOHORARIO"]; 
-$BOGESTOR = $_POST["BOGESTOR"]; 
+$DESCRI = $_POST["DESCRI"]; 
 
 
 
-$insertSquila = " INSERT INTO tb_crm_cargo
+$insertSquila = " INSERT INTO tb_crm_regiao
                               (DESCRICAO
-                              ,BO_TROCA_HORARIO
-                              ,BO_GESTOR)
+                               )
                         
                        VALUES
                         ('{$DESCRI}'
-                        ,'{$BOHORARIO}'
-                        ,'{$BOGESTOR}' )";
+                        )";
 
                    
  $result_insert = sqlsrv_query($conn, $insertSquila);
@@ -27,6 +23,6 @@ $insertSquila = " INSERT INTO tb_crm_cargo
       else {
             sqlsrv_free_stmt($result_insert);
             sqlsrv_close($conn);
-            echo  '<script type="text/javascript">alert("Cargo cadastrado !");</script>';
-            echo  '<script type="text/javascript"> window.location.href = "cargo.php" </script>';
+            echo  '<script type="text/javascript">alert("Região cadastrada !");</script>';
+            echo  '<script type="text/javascript"> window.location.href = "regiao.php" </script>';
         }

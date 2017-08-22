@@ -77,7 +77,7 @@
                   <li class="sub-menu"">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Indicadores</span>
+                          <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
@@ -166,7 +166,7 @@
                          <br/>
 
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
-                         <a href="colaboradores.php"><input type="button" value="Cancelar"></a>
+                         <a href="cargo.php"><input type="button" value="Cancelar"></a>
                       </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
@@ -250,7 +250,7 @@
 
     function getConfirmation(){
        // var retVal = confirm("Do you want to continue ?");
-       if(  confirm(" Deseja Finalizar a Troca ? ") == true ){
+       if(  confirm(" Deseja Confirmar? ") == true ){
           return true;
        }
        else{

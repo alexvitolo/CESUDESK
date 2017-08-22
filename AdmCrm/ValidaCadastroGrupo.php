@@ -2,20 +2,19 @@
 
 
 $DESCRI = $_POST["DESCRI"];
-$BOHORARIO = $_POST["BOHORARIO"]; 
-$BOGESTOR = $_POST["BOGESTOR"]; 
+$regiao = $_POST["regiao"]; 
 
 
 
-$insertSquila = " INSERT INTO tb_crm_cargo
+$insertSquila = " INSERT INTO tb_crm_grupo
                               (DESCRICAO
-                              ,BO_TROCA_HORARIO
-                              ,BO_GESTOR)
+                              ,ID_REGIAO
+                               )
                         
                        VALUES
                         ('{$DESCRI}'
-                        ,'{$BOHORARIO}'
-                        ,'{$BOGESTOR}' )";
+                        ,'{$regiao}'
+                        )";
 
                    
  $result_insert = sqlsrv_query($conn, $insertSquila);
@@ -27,6 +26,6 @@ $insertSquila = " INSERT INTO tb_crm_cargo
       else {
             sqlsrv_free_stmt($result_insert);
             sqlsrv_close($conn);
-            echo  '<script type="text/javascript">alert("Cargo cadastrado !");</script>';
-            echo  '<script type="text/javascript"> window.location.href = "cargo.php" </script>';
+            echo  '<script type="text/javascript">alert("Grupo cadastrado !");</script>';
+            echo  '<script type="text/javascript"> window.location.href = "grupo.php" </script>';
         }

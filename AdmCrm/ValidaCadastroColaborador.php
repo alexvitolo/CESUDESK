@@ -17,6 +17,14 @@ $horario = $_POST["horario"];
 $grupo = $_POST["grupo"]; 
 
 
+
+if ($nivelCargo == 'null') {
+        $validaNivelCargo = ",NIVEL_CARGO = null ";
+      }else{
+        $validaNivelCargo = ",NIVEL_CARGO = '{$nivelCargo}' ";
+      }
+
+
 $insertSquila = " INSERT INTO tb_crm_colaborador
                               (ID_MATRICULA
                               ,LOGIN_REDE
@@ -41,7 +49,7 @@ $insertSquila = " INSERT INTO tb_crm_colaborador
                         ,'{$STATUS}'
                         ,{$supervisor}
                         ,'{$cargo}'
-                        ,'{$nivelCargo}'
+                        ".$validaNivelCargo."
                         ,'{$grupo}'
                         ,'{$email}'
                         ,'{$telefone}'

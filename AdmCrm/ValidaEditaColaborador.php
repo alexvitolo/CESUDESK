@@ -14,7 +14,7 @@ $telefone = $_POST["telefone"];
 $STATUS = $_POST["STATUS"]; 
 $supervisor = $_POST["supervisor"]; 
 $cargo = $_POST["cargo"];
-$nivelCargo = $_POST["nivelCargo"]; 
+$nivelCargo = $_POST["nivelCargo"];
 $dtAdmissao = $_POST["dtAdmissao"];
 $horario = $_POST["horario"];
 $grupo = $_POST["grupo"]; 
@@ -145,6 +145,15 @@ if(isset($_POST['validaDadosColaborador']))
        echo  '<script type="text/javascript"> window.location.href = "colaboradores.php" </script>';exit;
     }
 
+
+      if ($nivelCargo == 'null') {
+        $validaNivelCargo = ",NIVEL_CARGO = null ";
+      }else{
+        $validaNivelCargo = ",NIVEL_CARGO = '{$nivelCargo}' ";
+      }
+
+
+
 $updateSquila = " UPDATE tb_crm_colaborador
                      SET ID_MATRICULA = '{$MATRICULA}'
                         ,LOGIN_REDE = '{$loginRede}'
@@ -152,7 +161,7 @@ $updateSquila = " UPDATE tb_crm_colaborador
                         ,STATUS_COLABORADOR = '{$STATUS}'
                         ,ID_COLABORADOR_GESTOR = {$supervisor}
                         ,ID_CARGO = '{$cargo}'
-                        ,NIVEL_CARGO = '{$nivelCargo}'
+                        ".$validaNivelCargo."
                         ,ID_GRUPO = '{$grupo}'
                         ,EMAIL = '{$email}'
                         ,TELEFONE = '{$telefone}'
