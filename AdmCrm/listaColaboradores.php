@@ -127,6 +127,7 @@ sqlsrv_execute($result_squila);
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -184,16 +185,16 @@ sqlsrv_execute($result_squila);
                                     }
                                     ?>
                                   <td><?php echo $row['ID_MATRICULA'] ?></a></td>
-                                  <td><?php echo utf8_encode($row['NOME']) ?></td>
+                                  <td><?php echo $row['NOME'] ?></td>
                                   <td><?php echo $row['LOGIN_REDE'] ?></a></td>
                                   <td><?php echo $row['ENTRADA'] ?></a></td>
                                   <td><?php echo $row['SAIDA'] ?></a></td>
                                   <td><?php echo $row['CARGA_HORARIO'] ?></a></td>
                                   <td><span class="<?php echo $corStatus ?>"><?php echo $row['STATUS_COLABORADOR']?></span></td>
-                                  <td><?php echo utf8_encode($row['NOMEGESTOR'])?></td>
-                                  <td><?php echo utf8_encode($row['CARGO'])?></td>
-                                  <td><?php echo utf8_encode($row['GRUPO'])?></td>
-                                  <td><?php echo utf8_encode($row['REGIAO'])?></td>
+                                  <td><?php echo $row['NOMEGESTOR']?></td>
+                                  <td><?php echo $row['CARGO']?></td>
+                                  <td><?php echo $row['GRUPO']?></td>
+                                  <td><?php echo $row['REGIAO']?></td>
                               </tr>
 
                               <?php 

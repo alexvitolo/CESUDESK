@@ -74,13 +74,12 @@
                   <h5 class="centered">CRM EAD</h5>
                     
                   <li class="sub-menu"">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
                           <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
-                          <li class="active"><a  href="dimensionamento.php">Dimensionamento</a></li>
                       </ul>
                   </li>
 
@@ -97,13 +96,17 @@
                   </li>
    
                    <li class="sub-menu">
-                      <a href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                         <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                         <li class="active"><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="cargo.php">Cargo</a></li>
+                          <li class=""><a  href="grupo.php">Grupo</a></li>
+                          <li class=""><a  href="regiao.php">Região</a></li>
                           
                       </ul>
                   </li>
@@ -125,7 +128,7 @@
 
             <!-- criar formulario -->
               <div class="row mt">
-                      <iframe style="margin-left: 20px" width="1024" height="720" src="https://app.powerbi.com/view?r=eyJrIjoiOWEzNThjYWQtMjk0Yy00NGI4LTkwZTYtZTVmOTZiZGMxMzE4IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9" frameborder="0" allowFullScreen="true"></iframe>
+                      <iframe style="margin-left: 20px" width="1024" height="720" src="https://app.powerbi.com/view?r=eyJrIjoiMWJlMzkxNTMtMDJkNy00OGE2LWEzNmYtYzU4YWEzNjM0Y2E3IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"  frameborder="0" allowFullScreen="true"></iframe>
               </div><!-- /row -->
 
           </section>
