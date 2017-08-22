@@ -22,7 +22,8 @@ $squilaDicas = "SELECT
                     FROM tb_crm_colaborador tc
               INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
               INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
-              INNER JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_GRUPO
+              INNER JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
+                   WHERE tc.STATUS_COLABORADOR <> 'DESLIGADO'
 
                 ORDER BY tc.NOME";
 
@@ -106,7 +107,7 @@ sqlsrv_execute($result_squila);
                   <li class="sub-menu"">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Indicadores</span>
+                          <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
@@ -114,13 +115,19 @@ sqlsrv_execute($result_squila);
                       </ul>
                   </li>
 
-                  <li class="sub-menu">
-                      <a class="" href="colaboradores.php">
+                 <li class="sub-menu">
+                      <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
-                          <span>Colaboradores</span>
+                          <span>Schedule</span>
                       </a>
+                      <ul class="sub">
+                          <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
+                          <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
+                          <li class=""><a  href="">TEST</a></li>
+                      </ul>
                   </li>
    
+
                    <li class="sub-menu">
                       <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
@@ -128,6 +135,10 @@ sqlsrv_execute($result_squila);
                       </a>
                       <ul class="sub">
                           <li class="active"><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="cargo.php">Cargo</a></li>
+                          <li class=""><a  href="grupo.php">Grupo</a></li>
+                          <li class=""><a  href="regiao.php">Região</a></li>
                           
                       </ul>
                   </li>
@@ -163,7 +174,7 @@ sqlsrv_execute($result_squila);
                                   <th><i class=" fa fa-edit"></i> Saída </th>
                                   <th><i class=" fa fa-edit"></i> Status </th>
                                   <th><i class=" fa fa-edit"></i> Grupo </th>
-                                  <th><i class=" fa fa-edit"></i> Regição </th>
+                                  <th><i class=" fa fa-edit"></i> Região </th>
                                   <th><i class=" fa fa-edit"></i> Pausa 1 </th>
                                   <th><i class=" fa fa-edit"></i> Lanche </th>
                                   <th><i class=" fa fa-edit"></i> Pausa 2 </th>
@@ -176,12 +187,12 @@ sqlsrv_execute($result_squila);
                                     ?>
 
                                   <td><?php echo $row['ID_MATRICULA']; ?></a></td>
-                                  <td><?php echo utf8_encode($row['NOME']); ?></a></td>
+                                  <td><?php echo $row['NOME']; ?></a></td>
                                   <td><?php echo date_format($row['ENTRADA'],"H:i"); ?></a></td>
                                   <td><?php echo date_format($row['SAIDA'],"H:i"); ?></a></td>
                                   <td><?php echo $row['STATUS_COLABORADOR']; ?></a></td>
-                                  <td><?php echo utf8_encode($row['GRUPO']); ?></a></td>
-                                  <td><?php echo utf8_encode($row['REGIAO']); ?></a></td>
+                                  <td><?php echo $row['GRUPO']; ?></a></td>
+                                  <td><?php echo $row['REGIAO']; ?></a></td>
                                   <td><?php echo $row['PAUSA1']; ?></td>
                                   <td><?php echo $row['LANCHE']; ?></td>
                                   <td><?php echo $row['PAUSA2']; ?></td>

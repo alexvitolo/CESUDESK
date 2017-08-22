@@ -119,7 +119,7 @@ sqlsrv_execute($result_Grupo);
                   <li class="sub-menu"">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Indicadores</span>
+                          <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
@@ -128,10 +128,15 @@ sqlsrv_execute($result_Grupo);
                   </li>
 
                   <li class="sub-menu">
-                      <a class="active" href="colaboradores.php">
+                      <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
-                          <span>Colaboradores</span>
+                          <span>Schedule</span>
                       </a>
+                      <ul class="sub">
+                          <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
+                          <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
+                          <li class=""><a  href="">TEST</a></li>
+                      </ul>
                   </li>
    
                   <li class="sub-menu">
@@ -141,6 +146,7 @@ sqlsrv_execute($result_Grupo);
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li><a  href="colaboradores.php">Colaboradores</a></li>
                           
                       </ul>
                   </li>
@@ -206,6 +212,7 @@ sqlsrv_execute($result_Grupo);
 
                            <tr>
                             <td>
+                            <br>
                              <label style="margin-left: 15px">Telefone: </label>
                             </td>
                             <td align="left">
@@ -246,7 +253,7 @@ sqlsrv_execute($result_Grupo);
                             </td>
                             <td align="left">
                              <select name="supervisor">
-                                         <option value="">Escolha um supervisor</option>
+                                         <option value="null">Escolha um supervisor</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
                                             <option value=<?php echo $row['ID_SUP']?> > <?php echo utf8_encode($row['NOME_SUP']) ?> </option>
                                          <?php }
@@ -278,7 +285,8 @@ sqlsrv_execute($result_Grupo);
                              <option value="I">I</option>
                              <option value="II">II</option> 
                              <option value="III">III</option>
-                             <option value="IV">IV</option>  
+                             <option value="IV">IV</option>
+                             <option value="null">Sem Nível</option>  
                             </select>
                             </td>
                              <td>
@@ -409,7 +417,7 @@ sqlsrv_execute($result_Grupo);
 
     function getConfirmation(){
        // var retVal = confirm("Do you want to continue ?");
-       if(  confirm(" Deseja Finalizar a Troca ? ") == true ){
+       if(  confirm(" Deseja Confirmar? ") == true ){
           return true;
        }
        else{

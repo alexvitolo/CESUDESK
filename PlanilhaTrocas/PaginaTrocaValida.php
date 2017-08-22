@@ -1,5 +1,6 @@
 <?php include '..\PlanilhaTrocas\connection.php';
 session_start(); 
+ date_default_timezone_set('America/Sao_Paulo');
 $_SESSION['BO_TROCA']='S';
 
           $numero_PaginaTroca  = $_POST["ID_MATRICULA"]; //atribuição do campo name "numero_PaginaIni" vindo do formulário para variavel  

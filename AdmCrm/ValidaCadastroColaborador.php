@@ -17,6 +17,14 @@ $horario = $_POST["horario"];
 $grupo = $_POST["grupo"]; 
 
 
+
+if ($nivelCargo == 'null') {
+        $validaNivelCargo = ",NIVEL_CARGO = null ";
+      }else{
+        $validaNivelCargo = ",NIVEL_CARGO = '{$nivelCargo}' ";
+      }
+
+
 $insertSquila = " INSERT INTO tb_crm_colaborador
                               (ID_MATRICULA
                               ,LOGIN_REDE
@@ -35,39 +43,24 @@ $insertSquila = " INSERT INTO tb_crm_colaborador
                               ,ID_HORARIO)
                         
                        VALUES
-                              (?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?
-                              ,?)";
+                        ('{$MATRICULA}'
+                        ,'{$loginRede}'
+                        ,'{$NOME}'
+                        ,'{$STATUS}'
+                        ,{$supervisor}
+                        ,'{$cargo}'
+                        ".$validaNivelCargo."
+                        ,'{$grupo}'
+                        ,'{$email}'
+                        ,'{$telefone}'
+                        ,'{$dtAdmissao}'
+                        ,'{$dtNascimento}'
+                        ,'{$loginTelefonia}'
+                        ,'{$codPortal}'
+                        ,'{$horario}' )";
 
-       $params = array($MATRICULA
-                        ,$loginRede
-                        ,$NOME
-                        ,$STATUS
-                        ,$supervisor
-                        ,$cargo
-                        ,$nivelCargo
-                        ,$grupo
-                        ,$email
-                        ,$telefone
-                        ,$dtAdmissao
-                        ,$dtNascimento
-                        ,$loginTelefonia
-                        ,$codPortal
-                        ,$horario);
                    
- $result_insert = sqlsrv_query($conn, $insertSquila, $params);
+ $result_insert = sqlsrv_query($conn, $insertSquila);
 
       if (!($result_insert)) {
              echo ("Falha na inclusão do registro");

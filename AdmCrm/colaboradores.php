@@ -89,7 +89,7 @@ sqlsrv_execute($result_squila);
                   <li class="sub-menu"">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Indicadores</span>
+                          <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
@@ -98,20 +98,27 @@ sqlsrv_execute($result_squila);
                   </li>
 
                   <li class="sub-menu">
-                      <a class="active" href="colaboradores.php">
+                      <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
-                          <span>Colaboradores</span>
+                          <span>Schedule</span>
                       </a>
+                      <ul class="sub">
+                          <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
+                          <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
+                      </ul>
                   </li>
    
                    <li class="sub-menu">
-                      <a href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          
+                          <li class="active"><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="cargo.php">Cargo</a></li>
+                          <li class=""><a  href="grupo.php">Grupo</a></li>
+                          <li class=""><a  href="regiao.php">Região</a></li>
                       </ul>
                   </li>
 

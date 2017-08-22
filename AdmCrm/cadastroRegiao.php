@@ -1,5 +1,6 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
+
 ?>
 
 <!DOCTYPE html>
@@ -74,13 +75,13 @@
                   <h5 class="centered">CRM EAD</h5>
                     
                   <li class="sub-menu"">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
                           <span>Head Count</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
-                          <li class="active"><a  href="dimensionamento.php">Dimensionamento</a></li>
+                          <li><a  href="dimensionamento.php">Dimensionamento</a></li>
                       </ul>
                   </li>
 
@@ -96,14 +97,17 @@
                       </ul>
                   </li>
    
-                   <li class="sub-menu">
-                      <a href="javascript:;" >
+                  <li class="sub-menu">
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                           <li><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="cargo.php">Cargo</a></li>
+                          <li class=""><a  href="grupo.php">Grupo</a></li>
+                          <li class="active"><a  href="regiao.php">Região</a></li>
                           
                       </ul>
                   </li>
@@ -120,15 +124,37 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <!-- <h3><i class="fa fa-right"></i> Dimensionamento Colaboradores</h3>
-            <hr> -->
+            <h3><i class="fa fa-right"></i> Cadastro de Grupos</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
-                      <iframe style="margin-left: 20px" width="1024" height="720" src="https://app.powerbi.com/view?r=eyJrIjoiOWEzNThjYWQtMjk0Yy00NGI4LTkwZTYtZTVmOTZiZGMxMzE4IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9" frameborder="0" allowFullScreen="true"></iframe>
+                  <div class="col-md-12">
+                      <div class="content-panel">
+                         <form name="Form" method="post" id="formulario" action="ValidaCadastroRegiao.php">
+<!-- DADOS PESSOAIS-->
+                         <fieldset>
+                          <legend> Dados do grupo </legend>
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" for="nome">Descrição: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="DESCRI">
+                            </td>
+                          </table>
+                         </fieldset>
+                         
+                         <br/>
+
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
+                         <a href="regiao.php"><input type="button" value="Cancelar"></a>
+                      </form>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
               </div><!-- /row -->
 
-          </section>
+    </section>
       </section><!-- /MAIN CONTENT -->
 
       <!--main content end-->
@@ -202,5 +228,19 @@
 
    })(document);
         
+
+
+    function getConfirmation(){
+       // var retVal = confirm("Do you want to continue ?");
+       if(  confirm(" Deseja Confirmar? ") == true ){
+          return true;
+       }
+       else{
+          return false;
+       }
+    }
+        
+
+
 
 </script>
