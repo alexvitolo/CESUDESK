@@ -115,6 +115,7 @@ sqlsrv_execute($result_squila);
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class="active"><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -148,9 +149,9 @@ sqlsrv_execute($result_squila);
                             <a href="cadastroColaborador.php"><input style="margin-left: 800px" type="button" value="Novo Colaborador" ></input></a>
                               <thead>
                               <tr>
-                                  <th><i class="fa fa-bullhorn"></i> Status Colaborador </th>
                                   <th><i class="fa fa-bullhorn"></i> Nome </th>
                                   <th><i class="fa fa-bullhorn"></i> Matrícula </th>
+                                  <th><i class="fa fa-bullhorn"></i> Status Colaborador </th>
                                   <th><i class="fa fa-bookmark"></i> Login Rede</th>
                                   <th><i class=" fa fa-edit"></i> Codigo Portal</th>
                               </tr>

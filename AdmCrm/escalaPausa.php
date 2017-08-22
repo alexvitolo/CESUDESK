@@ -196,7 +196,7 @@ sqlsrv_execute($result_squila);
                                          ?>
 
                                   <td><?php echo $row['ID_MATRICULA']; ?></a></td>
-                                  <td><?php echo utf8_encode($row['NOME']); ?></a></td>
+                                  <td><?php echo $row['NOME']; ?></a></td>
                                   <td><?php echo date_format($row['ENTRADA'],"H:i"); ?></a></td>
                                   <td><?php echo date_format($row['SAIDA'],"H:i"); ?></a></td>
                                   <td><span class="<?php echo $corStatus ?>"><?php echo $row['STATUS_COLABORADOR']; ?></a></td>

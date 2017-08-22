@@ -146,6 +146,7 @@ sqlsrv_execute($result_Grupo);
                       </a>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li><a  href="colaboradores.php">Colaboradores</a></li>
                           
                       </ul>
