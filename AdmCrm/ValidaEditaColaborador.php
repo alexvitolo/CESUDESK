@@ -137,7 +137,7 @@ if(isset($_POST['validaDadosColaborador']))
 
   if(isset($_POST['validaMotivoDesliga']) AND ($STATUS == "DESLIGADO"))
    {$sqldicas2 = ",DT_DESLIGAMENTO = '{$dtDesligamento}'      
-                  ,MOTIVO_DESLIGAMENTO = '{$motivoDesligamento}'      
+                  ,ID_MOTIVO = '{$motivoDesligamento}'      
                   ,ID_SUB_MOTIVO = '{$subMotivoDesligamento}' ";}
 
     elseif (isset($_POST['validaMotivoDesliga']) AND ($STATUS <> "DESLIGADO")) {

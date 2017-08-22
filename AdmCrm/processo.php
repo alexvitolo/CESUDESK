@@ -1,16 +1,12 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
-$squilaDicas = "SELECT tc.ID_MATRICULA,
-                       tc.NOME,
-                       tc.STATUS_COLABORADOR,
-                       tc.LOGIN_REDE,
-                       tc.CODIGO_PORTAL,
-                       tc.ID_COLABORADOR
-                  FROM tb_crm_colaborador tc
-              ORDER BY tc.NOME";
+$squilaRegiao = "SELECT ID_REGIAO
+                       ,DESCRICAO
+                       ,DT_SISTEMA
+                  FROM tb_crm_regiao";
 
-$result_squila = sqlsrv_prepare($conn, $squilaDicas);
-sqlsrv_execute($result_squila);
+$result_squilaRegiao = sqlsrv_prepare($conn, $squilaRegiao);
+sqlsrv_execute($result_squilaRegiao);
 
 
 ?>
@@ -105,6 +101,7 @@ sqlsrv_execute($result_squila);
                       <ul class="sub">
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
+                          <li class=""><a  href="">TEST</a></li>
                       </ul>
                   </li>
    
@@ -116,10 +113,10 @@ sqlsrv_execute($result_squila);
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
-                          <li class="active"><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
-                          <li class=""><a  href="regiao.php">Região</a></li>
+                          <li class="active"><a  href="regiao.php">Região</a></li>
                       </ul>
                   </li>
 
@@ -135,43 +132,31 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Colaboradores</h3>
+            <h3><i class="fa fa-right"></i> Lista de Regiões </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
+                        <form name="Form" method="post" id="formulario" action="regiao.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela Colaboradores </h4>
+                            <h4><i class="fa fa-right"></i> Regiões </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroColaborador.php"><input style="margin-left: 800px" type="button" value="Novo Colaborador" ></input></a>
+                            <a href="cadastroRegiao.php"><input style="margin-left: 800px" type="button" value="Novo Grupo" ></input></a>
                               <thead>
                               <tr>
-                                  <th><i class="fa fa-bullhorn"></i> Nome </th>
-                                  <th><i class="fa fa-bullhorn"></i> Matrícula </th>
-                                  <th><i class="fa fa-bullhorn"></i> Status Colaborador </th>
-                                  <th><i class="fa fa-bookmark"></i> Login Rede</th>
-                                  <th><i class=" fa fa-edit"></i> Codigo Portal</th>
+                                  <th><i class="fa fa-bullhorn"></i> ID Região </th>
+                                  <th><i class="fa fa-bullhorn"></i> Descrição </th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-                                    if ($row['STATUS_COLABORADOR'] == "ATIVO") {
-                                      $corStatus = "label label-success label-mini";
-                                    }elseif (($row['STATUS_COLABORADOR'] == "DESLIGADO") or ($row['STATUS_COLABORADOR'] == "Desligado")) {
-                                      $corStatus = "label label-danger  label-mini";
-                                    }else{
-                                      $corStatus = "label label-warning  label-mini";
-                                    }
+                                  <?php  while($row = sqlsrv_fetch_array($result_squilaRegiao)) { 
                                     ?>
-                                  <td><?php echo $row['NOME'] ?></a></td>
-                                  <td><?php echo $row['ID_MATRICULA']?></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['STATUS_COLABORADOR']?></span></td>
-                                  <td><?php echo $row['LOGIN_REDE']?></td>
-                                  <td><?php echo $row['CODIGO_PORTAL']?></td>
+
+                                  <td><?php echo $row['ID_REGIAO']; ?></a></td>
+                                  <td><?php echo $row['DESCRICAO']; ?></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                       <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_COLABORADOR'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
