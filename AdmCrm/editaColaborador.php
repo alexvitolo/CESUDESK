@@ -35,9 +35,6 @@ $DT_NASCIMENTO = date_format($vetorSQL['DT_NASCIMENTO'], "Y-m-d");
 $DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
 
 
-
-
-
 $sqlSupervisores = "SELECT tc.ID_COLABORADOR AS ID_SUP
                       ,tc.NOME AS NOME_SUP
                   FROM tb_crm_colaborador tc
@@ -330,8 +327,8 @@ sqlsrv_execute($result_MotivoP);
                             <td align="left">
                              <select name="supervisor">
                                             <option value="null">Escolha um supervisor</option>
-                                         <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
-                                            <option <?php if ($row['ID_SUP']==$vetorSQL['ID_COLABORADOR_GESTOR']) { echo 'selected'; } ?> value=<?php echo $row['ID_SUP']?> > <?php $row['NOME_SUP'] ?> </option>
+                                           <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
+                                            <option <?php if ($row['ID_SUP'] == $vetorSQL['ID_COLABORADOR_GESTOR']) { echo 'selected'; } ?> value=<?php echo $row['ID_SUP']?> > <?php echo $row['NOME_SUP'] ?> </option>
                                          <?php }
                                          ?>
                              </select>
