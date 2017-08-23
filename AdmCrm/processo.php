@@ -1,12 +1,16 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
-$squilaRegiao = "SELECT ID_REGIAO
-                       ,DESCRICAO
-                       ,DT_SISTEMA
-                  FROM tb_crm_regiao";
+$squilaProcesso = "SELECT ID
+                        ,NOME
+                        ,MODALIDADE
+                        ,ATIVO
+                        ,DATA_INICIO
+                        ,DATA_FIM
+                        ,DT_SISTEMA
+                    FROM tb_crm_processo";
 
-$result_squilaRegiao = sqlsrv_prepare($conn, $squilaRegiao);
-sqlsrv_execute($result_squilaRegiao);
+$result_squilaProcesso = sqlsrv_prepare($conn, $squilaProcesso);
+sqlsrv_execute($result_squilaProcesso);
 
 
 ?>
@@ -116,7 +120,8 @@ sqlsrv_execute($result_squilaRegiao);
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
-                          <li class="active"><a  href="regiao.php">Região</a></li>
+                          <li class=""><a  href="regiao.php">Região</a></li>
+                          <li class="active"><a  href="processo.php">Processo</a></li>
                       </ul>
                   </li>
 
@@ -132,34 +137,51 @@ sqlsrv_execute($result_squilaRegiao);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Regiões </h3>
+            <h3><i class="fa fa-right"></i> Lista de Processo </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="regiao.php">
+                        <form name="Form" method="post" id="formulario" action="editaProcesso.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Regiões </h4>
+                            <h4><i class="fa fa-right"></i> Processos </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroRegiao.php"><input style="margin-left: 800px" type="button" value="Novo Grupo" ></input></a>
+                            <a href="cadastroProcesso.php"><input style="margin-left: 800px" type="button" value="Novo Processo" ></input></a>
                               <thead>
                               <tr>
-                                  <th><i class="fa fa-bullhorn"></i> ID Região </th>
+                                  <th><i class="fa fa-bullhorn"></i> ID Processo </th>
                                   <th><i class="fa fa-bullhorn"></i> Descrição </th>
+                                  <th><i class="fa fa-bullhorn"></i> Modalidade </th>
+                                  <th><i class="fa fa-bullhorn"></i> Ativo </th>
+                                  <th><i class="fa fa-bullhorn"></i> Data Início </th>
+                                  <th><i class="fa fa-bullhorn"></i> Data Fim </th>
+
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squilaRegiao)) { 
-                                    ?>
+                                  <?php  while($row = sqlsrv_fetch_array($result_squilaProcesso)) { 
+                                    
 
-                                  <td><?php echo $row['ID_REGIAO']; ?></a></td>
-                                  <td><?php echo $row['DESCRICAO']; ?></td>
+                                    if ($row['ATIVO'] == "1") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif ($row['ATIVO'] == "0"){
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
+
+                                 ?>
+
+                                  <td><?php echo $row['ID']; ?></a></td>
+                                  <td><?php echo $row['NOME']; ?></td>
+                                  <td><?php echo $row['MODALIDADE']; ?></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php if($row['ATIVO'] == '1') { echo "ATIVO" ;} else { echo "DESLIGADO" ;} ?></td>
+                                  <td><?php echo date_format($row['DATA_INICIO'], "d/m/Y"); ?></td>
+                                  <td><?php echo date_format($row['DATA_FIM'], "d/m/Y"); ?></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_COLABORADOR'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID'] ?>"  name="ID"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 

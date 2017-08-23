@@ -98,7 +98,7 @@
                   </li>
    
                   <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="active" href="javascript:;" onclick="" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
@@ -125,7 +125,7 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Cadastro de Grupos</h3>
+            <h3><i class="fa fa-right"></i> Cadastro de Regiões</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
@@ -134,7 +134,7 @@
                          <form name="Form" method="post" id="formulario" action="ValidaCadastroRegiao.php">
 <!-- DADOS PESSOAIS-->
                          <fieldset>
-                          <legend> Dados do grupo </legend>
+                          <legend> Dados Região </legend>
                           <table cellspacing="10" style="vertical-align: middle">
                            <tr>
                             <td style="width:110px";>

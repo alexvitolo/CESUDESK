@@ -1,5 +1,6 @@
 <?php include '..\PlanilhaTrocas\connection.php'; 
 
+
 ?>
 
 <!DOCTYPE html>
@@ -80,6 +81,7 @@
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
+                          <li><a  href="dimensionamento.php">Dimensionamento</a></li>
                       </ul>
                   </li>
 
@@ -95,20 +97,19 @@
                       </ul>
                   </li>
    
-                   <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                  <li class="sub-menu">
+                      <a class="active" href="javascript:;" onclick="" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
-                      <ul class="sub">
-                         <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                         <li class="active"><a  href="dimensionamento.php">Dimensionamento</a></li>
-                          <li><a  href="colaboradores.php">Colaboradores</a></li>
+                     <ul class="sub">
+                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
+                          <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
                           <li class=""><a  href="regiao.php">Região</a></li>
-                          <li class=""><a  href="processo.php">Processo</a></li>
-                          
+                          <li class="active"><a  href="processo.php">Processo</a></li>
                       </ul>
                   </li>
 
@@ -124,15 +125,72 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <!-- <h3><i class="fa fa-right"></i> Dimensionamento Colaboradores</h3>
-            <hr> -->
+            <h3><i class="fa fa-right"></i> Cadastro de Processo</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
-                      <iframe style="margin-left: 20px" width="1024" height="720" src="https://app.powerbi.com/view?r=eyJrIjoiMWJlMzkxNTMtMDJkNy00OGE2LWEzNmYtYzU4YWEzNjM0Y2E3IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"  frameborder="0" allowFullScreen="true"></iframe>
+                  <div class="col-md-12">
+                      <div class="content-panel">
+                         <form name="Form" method="post" id="formulario" action="ValidaCadastroProcesso.php">
+<!-- DADOS PESSOAIS-->
+                         <fieldset>
+                          <legend> Dados Processo </legend>
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" >Nome: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="NOME">
+                            </td>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" >Modalidade: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="MODALIDADE">
+                            </td>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" >Ativo: </label>
+                            </td>
+                            <td align="left">
+                             <select name="ATIVO"> 
+                                 <option value="1">ATIVO</option>
+                                 <option value="0">DESLIGADO</option> 
+                            </select>
+                            </td>
+                           </tr>
+
+                           <tr>
+                               <td style="width:110px";>
+                               <br>
+                                 <label style="margin-left: 15px" >Data Início: </label>
+                                </td>
+                                <td align="left">
+                                <br>
+                                 <input type="date" name="DT_INI">
+                                </td>
+                                <td style="width:110px";>
+                                <br>
+                                <label style="margin-left: 15px" >Data Fim: </label>
+                               </td>
+                               <td align="left">
+                               <br>
+                                <input type="date" name="DT_FIM">
+                            </td>
+                           </tr>
+                          </table>
+                         </fieldset>
+                         
+                         <br/>
+
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
+                         <a href="processo.php"><input type="button" value="Cancelar"></a>
+                      </form>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
               </div><!-- /row -->
 
-          </section>
+    </section>
       </section><!-- /MAIN CONTENT -->
 
       <!--main content end-->
@@ -206,5 +264,19 @@
 
    })(document);
         
+
+
+    function getConfirmation(){
+       // var retVal = confirm("Do you want to continue ?");
+       if(  confirm(" Deseja Confirmar? ") == true ){
+          return true;
+       }
+       else{
+          return false;
+       }
+    }
+        
+
+
 
 </script>
