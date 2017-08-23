@@ -1,17 +1,18 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 
 
-$DESCRI = $_POST["DESCRI"]; 
+$DESCRISUB = $_POST["DESCRISUB"]; 
 
 
 
-$insertSquila = " INSERT INTO tb_crm_regiao
-                              (DESCRICAO
+
+$insertSquila = " INSERT INTO tb_crm_desligamento_sub
+                              (SUB_MOTIVO
                                )
                         
                        VALUES
-                        ('{$DESCRI}'
-                        )";
+                        ('{$DESCRISUB}'
+                         )";
 
                    
  $result_insert = sqlsrv_query($conn, $insertSquila);
@@ -23,6 +24,6 @@ $insertSquila = " INSERT INTO tb_crm_regiao
       else {
             sqlsrv_free_stmt($result_insert);
             sqlsrv_close($conn);
-            echo  '<script type="text/javascript">alert("Região cadastrada !");</script>';
-            echo  '<script type="text/javascript"> window.location.href = "regiao.php" </script>';
+            echo  '<script type="text/javascript">alert("Sub-Motivo cadastrado !");</script>';
+            echo  '<script type="text/javascript"> window.location.href = "submotivo.php" </script>';
         }

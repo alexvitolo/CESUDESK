@@ -1,28 +1,11 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 
-$squilaDicas = "SELECT tc.ID_MATRICULA,
-                       tc.NOME,
-                       tc.LOGIN_REDE,
-                       CONVERT(VARCHAR(8),th.ENTRADA, 24) as ENTRADA,
-                       CONVERT(VARCHAR(8),th.SAIDA, 24) as SAIDA,
-                       CONVERT(VARCHAR(8),th.CARGA_HORARIO, 24) as CARGA_HORARIO,
-                       tc.STATUS_COLABORADOR,
-                       (SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tc.ID_COLABORADOR_GESTOR) as NOMEGESTOR,
-                       tc.CODIGO_PORTAL,
-                       CONCAT(tcar.DESCRICAO,' ',tc.NIVEL_CARGO) as CARGO,
-                       tg.DESCRICAO as GRUPO,
-                       tr.DESCRICAO as REGIAO
-                  FROM tb_crm_colaborador tc
-      INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
-       LEFT JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
-      INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tc.ID_CARGO 
-      INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
-           WHERE tcar.BO_GESTOR = 'N'
-                 AND tcar.ID_CARGO NOT IN ('1','2','3','4','5')
-        ORDER BY STATUS_COLABORADOR, NOME";
+$squilaMotivo = "SELECT ID_MOTIVO
+                         ,MOTIVO
+                     FROM tb_crm_desligamento_motivo";
 
-$result_squila = sqlsrv_prepare($conn, $squilaDicas);
-sqlsrv_execute($result_squila);
+$result_squilaMotivo = sqlsrv_prepare($conn, $squilaMotivo);
+sqlsrv_execute($result_squilaMotivo);
 
 
 ?>
@@ -109,20 +92,21 @@ sqlsrv_execute($result_squila);
                   </li>
 
                   <li class="sub-menu">
-                      <a class="active" href="javascript:;">
+                      <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
                           <span>Schedule</span>
                       </a>
                       <ul class="sub">
-                          <li class="active"><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
+                          <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          
                       </ul>
                   </li>
    
                    <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
@@ -134,7 +118,7 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="grupo.php">Grupo</a></li>
                           <li class=""><a  href="regiao.php">Região</a></li>
                           <li class=""><a  href="processo.php">Processo</a></li>
-                          <li class=""><a  href="motivo.php">Motivo</a></li>
+                          <li class="active"><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
                   </li>
@@ -151,54 +135,37 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Colaboradores</h3>
+            <h3><i class="fa fa-right"></i> Lista de Motivos </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
+                        <form name="Form" method="post" id="formulario" action="motivo.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Colaboradores Call-Center </h4>
+                            <h4><i class="fa fa-right"></i> Motivos </h4>
                             <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input><a href="UserReport_Export.php"><input style="margin-left: 800px" type="button" value="Exportar Excel" ></input></a>
+                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
+                            <a href="cadastroMotivo.php"><input style="margin-left: 800px" type="button" value="Novo Motivo" ></input></a>
                               <thead>
                               <tr>
-                                  <th><i class=""></i> Matrícula </th>
-                                  <th><i class=""></i> Nome </th>
-                                  <th><i class=""></i> Login Rede </th>
-                                  <th><i class=""></i> Entrada</th>
-                                  <th><i class=""></i> Saida</th>
-                                  <th><i class=""></i> Carga Horária</th>
-                                  <th><i class=""></i> Status</th>
-                                  <th><i class=""></i> Supervisor</th>
-                                  <th><i class=""></i> Cargo</th>
-                                  <th><i class=""></i> Grupo</th>
-                                  <th><i class=""></i> Região</th>
+                                  <th><i class="fa fa-bullhorn"></i> ID Motivo </th>
+                                  <th><i class="fa fa-bullhorn"></i> Descrição </th>
+
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-                                    if ($row['STATUS_COLABORADOR'] == "ATIVO") {
-                                      $corStatus = "label label-success label-mini";
-                                    }elseif (($row['STATUS_COLABORADOR'] == "DESLIGADO") or ($row['STATUS_COLABORADOR'] == "Desligado")) {
-                                      $corStatus = "label label-danger  label-mini";
-                                    }else{
-                                      $corStatus = "label label-warning  label-mini";
-                                    }
-                                    ?>
-                                  <td><?php echo $row['ID_MATRICULA'] ?></a></td>
-                                  <td><?php echo $row['NOME'] ?></td>
-                                  <td><?php echo $row['LOGIN_REDE'] ?></a></td>
-                                  <td><?php echo $row['ENTRADA'] ?></a></td>
-                                  <td><?php echo $row['SAIDA'] ?></a></td>
-                                  <td><?php echo $row['CARGA_HORARIO'] ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['STATUS_COLABORADOR']?></span></td>
-                                  <td><?php echo $row['NOMEGESTOR']?></td>
-                                  <td><?php echo $row['CARGO']?></td>
-                                  <td><?php echo $row['GRUPO']?></td>
-                                  <td><?php echo $row['REGIAO']?></td>
+                                  <?php  while($row = sqlsrv_fetch_array($result_squilaMotivo)) { 
+                                    
+                                 ?>
+
+                                  <td><?php echo $row['ID_MOTIVO']; ?></a></td>
+                                  <td><?php echo $row['MOTIVO']; ?></td>
+                                  <td>
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button class="btn btn-primary btn-xs" type="submit" value=""  name=""><i class="fa fa-pencil"></i></button>
+                                  </td>
                               </tr>
 
                               <?php 

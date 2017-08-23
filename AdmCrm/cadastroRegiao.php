@@ -1,4 +1,4 @@
-<?php include '..\PlanilhaTrocas\connection.php'; 
+<?php include '..\AdmCrm\connectionADM.php'; 
 
 
 ?>
@@ -81,7 +81,6 @@
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
-                          <li><a  href="dimensionamento.php">Dimensionamento</a></li>
                       </ul>
                   </li>
 
@@ -93,12 +92,14 @@
                       <ul class="sub">
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
-                          <li class=""><a  href="">TEST</a></li>
+                          <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
+                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          
                       </ul>
                   </li>
    
                   <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="active" href="javascript:;" onclick="" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span>
                       </a>
@@ -125,7 +126,7 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Cadastro de Grupos</h3>
+            <h3><i class="fa fa-right"></i> Cadastro de Regiões</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
@@ -134,7 +135,7 @@
                          <form name="Form" method="post" id="formulario" action="ValidaCadastroRegiao.php">
 <!-- DADOS PESSOAIS-->
                          <fieldset>
-                          <legend> Dados do grupo </legend>
+                          <legend> Dados Região </legend>
                           <table cellspacing="10" style="vertical-align: middle">
                            <tr>
                             <td style="width:110px";>
