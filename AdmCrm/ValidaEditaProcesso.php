@@ -1,4 +1,4 @@
-<?php include '..\PlanilhaTrocas\connection.php'; 
+<?php include '..\AdmCrm\connectionADM.php'; 
 
 date_default_timezone_set('America/Sao_Paulo');
 

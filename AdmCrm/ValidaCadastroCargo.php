@@ -1,4 +1,4 @@
-<?php include '..\PlanilhaTrocas\connection.php'; 
+<?php include '..\AdmCrm\connectionADM.php'; 
 
 
 $DESCRI = $_POST["DESCRI"];

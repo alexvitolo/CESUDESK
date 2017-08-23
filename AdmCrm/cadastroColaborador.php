@@ -1,4 +1,4 @@
-<?php include '..\PlanilhaTrocas\connection.php'; 
+<?php include '..\AdmCrm\connectionADM.php'; 
 
 
 $sqlSupervisores = "SELECT tc.ID_COLABORADOR AS ID_SUP
@@ -123,7 +123,6 @@ sqlsrv_execute($result_Grupo);
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
-                          <li><a  href="dimensionamento.php">Dimensionamento</a></li>
                       </ul>
                   </li>
 
@@ -135,7 +134,9 @@ sqlsrv_execute($result_Grupo);
                       <ul class="sub">
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
-                          <li class=""><a  href="">TEST</a></li>
+                          <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
+                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          
                       </ul>
                   </li>
    

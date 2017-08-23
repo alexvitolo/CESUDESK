@@ -1,4 +1,4 @@
-<?php include '..\PlanilhaTrocas\connection.php'; 
+<?php include '..\AdmCrm\connectionADM.php'; 
 
 
 $NOME = $_POST["NOME"]; 

@@ -1,4 +1,4 @@
-<?php include '..\PlanilhaTrocas\connection.php'; 
+<?php include '..\AdmCrm\connectionADM.php'; 
 
 $ID = $_POST["ID"]; // id colaborador
 
@@ -101,7 +101,6 @@ $DATA_FIM = date_format($vetorSQLProcesso['DATA_FIM'], "Y-m-d");
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
-                          <li><a  href="dimensionamento.php">Dimensionamento</a></li>
                       </ul>
                   </li>
 
@@ -113,7 +112,9 @@ $DATA_FIM = date_format($vetorSQLProcesso['DATA_FIM'], "Y-m-d");
                       <ul class="sub">
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
-                          <li class=""><a  href="">TEST</a></li>
+                          <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
+                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                         
                       </ul>
                   </li>
    

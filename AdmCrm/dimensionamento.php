@@ -1,4 +1,4 @@
-<?php include '..\PlanilhaTrocas\connection.php'; 
+<?php include '..\AdmCrm\connectionADM.php'; 
 
 ?>
 
@@ -91,7 +91,9 @@
                       <ul class="sub">
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
-                          <li class=""><a  href="">TEST</a></li>
+                          <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
+                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+         
                       </ul>
                   </li>
    
@@ -108,6 +110,8 @@
                           <li class=""><a  href="grupo.php">Grupo</a></li>
                           <li class=""><a  href="regiao.php">Região</a></li>
                           <li class=""><a  href="processo.php">Processo</a></li>
+                          <li class=""><a  href="motivo.php">Motivo</a></li>
+                          <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                           
                       </ul>
                   </li>

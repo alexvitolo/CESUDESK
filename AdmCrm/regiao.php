@@ -1,4 +1,4 @@
-<?php include '..\PlanilhaTrocas\connection.php'; 
+<?php include '..\AdmCrm\connectionADM.php'; 
 
 $squilaRegiao = "SELECT ID_REGIAO
                        ,DESCRICAO
@@ -89,7 +89,6 @@ sqlsrv_execute($result_squilaRegiao);
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.html">Resumo</a></li>
-                          <li><a  href="dimensionamento.php">Dimensionamento</a></li>
                       </ul>
                   </li>
 
@@ -101,7 +100,9 @@ sqlsrv_execute($result_squilaRegiao);
                       <ul class="sub">
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
-                          <li class=""><a  href="">TEST</a></li>
+                          <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
+                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          
                       </ul>
                   </li>
    
@@ -118,6 +119,8 @@ sqlsrv_execute($result_squilaRegiao);
                           <li class=""><a  href="grupo.php">Grupo</a></li>
                           <li class="active"><a  href="regiao.php">Região</a></li>
                           <li class=""><a  href="processo.php">Processo</a></li>
+                          <li class=""><a  href="motivo.php">Motivo</a></li>
+                          <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
                   </li>
 
