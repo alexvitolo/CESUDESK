@@ -1,4 +1,5 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+session_start();
 
 
 $ID_GRUPO = $_GET["ID_GRUPO"]; 

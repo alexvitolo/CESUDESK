@@ -24,7 +24,7 @@ if( $conn === false ) {
   
 
 $query = "SELECT	   tc.ID_COLABORADOR,
-					   tc.ID_MATRICULA,
+					             tc.ID_MATRICULA,
                        tc.NOME,
                        tc.LOGIN_REDE,
                        CONVERT(VARCHAR(8),th.ENTRADA, 24) as ENTRADA,
@@ -33,9 +33,15 @@ $query = "SELECT	   tc.ID_COLABORADOR,
                        tc.STATUS_COLABORADOR,
                        (SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tc.ID_COLABORADOR_GESTOR) as NOMEGESTOR,
                        tc.CODIGO_PORTAL,
+                       tc.LOGIN_TELEFONIA,
                        CONCAT(tcar.DESCRICAO,' ',tc.NIVEL_CARGO) as CARGO,
                        tg.DESCRICAO as GRUPO,
                        tr.DESCRICAO as REGIAO,
+                       tc.EMAIL,
+                       tc.TELEFONE,
+                       CONVERT(VARCHAR(10),tc.DT_ADMISSAO, 103) as DT_ADMISSAO,
+                       CONVERT(VARCHAR(10),tc.DT_NASCIMENTO, 103) as DT_NASCIMENTO,
+
 					   (SELECT convert(varchar,ttp.HORARIO_PAUSA,108) FROM tb_crm_escala_pausa ttp WHERE ttp.ID_COLABORADOR = tc.ID_COLABORADOR AND ttp.ID_TIPO_PAUSA = 1 AND ttp.DT_VIGENCIA_FINAL is null) AS PAUSA1,
 					   (SELECT convert(varchar,ttp.HORARIO_PAUSA,108) FROM tb_crm_escala_pausa ttp WHERE ttp.ID_COLABORADOR = tc.ID_COLABORADOR AND ttp.ID_TIPO_PAUSA = 5 AND ttp.DT_VIGENCIA_FINAL is null) AS LANCHE,
 					   (SELECT convert(varchar,ttp.HORARIO_PAUSA,108) FROM tb_crm_escala_pausa ttp WHERE ttp.ID_COLABORADOR = tc.ID_COLABORADOR AND ttp.ID_TIPO_PAUSA = 2 AND ttp.DT_VIGENCIA_FINAL is null) AS PAUSA2
@@ -46,6 +52,7 @@ $query = "SELECT	   tc.ID_COLABORADOR,
       INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tc.ID_CARGO 
       INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
            WHERE tcar.BO_GESTOR = 'N'
+             AND tc.STATUS_COLABORADOR <> 'DESLIGADO'
                  AND tcar.ID_CARGO NOT IN ('1','2','3','4','5')
         ORDER BY STATUS_COLABORADOR, NOME";
 
@@ -67,9 +74,14 @@ sqlsrv_execute($result);
                          <th>STATUS_COLABORADOR</th>
                          <th>NOME_GESTOR</th>
                          <th>CODIGO_PORTAL</th>
+                         <th>LOGIN_TELEFONIA</th>
                          <th>CARGO</th>
                          <th>GRUPO</th>
                          <th>REGIAO</th>
+                         <th>EMAIL</th>
+                         <th>TELEFONE</th>
+                         <th>DT_ADMISSAO</th>
+                         <th>DT_NASCIMENTO</th>
                          <th>PAUSA1</th>
                          <th>LANCHE</th>
                          <th>PAUSA2</th>
@@ -91,9 +103,14 @@ sqlsrv_execute($result);
                          <td>'.$row["STATUS_COLABORADOR"].'</td>  
                          <td>'.$row["NOMEGESTOR"].'</td>  
                          <td>'.$row["CODIGO_PORTAL"].'</td>  
+                         <td>'.$row["LOGIN_TELEFONIA"].'</td>  
                          <td>'.$row["CARGO"].'</td>  
                          <td>'.$row["GRUPO"].'</td>  
-                         <td>'.$row["REGIAO"].'</td>  
+                         <td>'.$row["REGIAO"].'</td>
+                         <td>'.$row["EMAIL"].'</td> 
+                         <td>'.$row["TELEFONE"].'</td> 
+                         <td>'.$row["DT_ADMISSAO"].'</td> 
+                         <td>'.$row["DT_NASCIMENTO"].'</td>   
                          <td>'.$row["PAUSA1"].'</td>  
                          <td>'.$row["LANCHE"].'</td>  
                          <td>'.$row["PAUSA2"].'</td>  

@@ -1,4 +1,5 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+session_start();
 
 
 $sqlSupervisores = "SELECT tc.ID_COLABORADOR AS ID_SUP
@@ -84,7 +85,7 @@ sqlsrv_execute($result_Grupo);
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
             <!--logo start-->
-            <a href="index.html" class="logo"><b>CRM MASTER</b></a>
+            <a href="index.php" class="logo"><b>CRM MASTER</b></a>
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
@@ -98,7 +99,7 @@ sqlsrv_execute($result_Grupo);
             </div>
             <div class="top-menu">
               <ul class="nav pull-right top-menu">
-                    <li><a class="logout" href="login.php">Logout</a></li>
+                    <li><a class="logout" href="validaLogout.php">Logout</a></li>
               </ul>
             </div>
         </header>
@@ -122,7 +123,7 @@ sqlsrv_execute($result_Grupo);
                           <span>Head Count</span>
                       </a>
                       <ul class ="sub">
-                          <li class=""><a  href="index.html">Resumo</a></li>
+                          <li class=""><a  href="index.php">Resumo</a></li>
                       </ul>
                   </li>
 
@@ -257,7 +258,7 @@ sqlsrv_execute($result_Grupo);
                              <select name="supervisor">
                                          <option value="null">Escolha um supervisor</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
-                                            <option value=<?php echo $row['ID_SUP']?> > <?php echo utf8_encode($row['NOME_SUP']) ?> </option>
+                                            <option value=<?php echo $row['ID_SUP']?> > <?php echo $row['NOME_SUP'] ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -274,7 +275,7 @@ sqlsrv_execute($result_Grupo);
                              <select name="cargo">
                                          <option value="">Escolha um Cargo</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_Cargo)){ ?>
-                                            <option value=<?php echo $row['ID_CARGO']?> > <?php echo utf8_encode($row['DESC_CARGO']) ?> </option>
+                                            <option value=<?php echo $row['ID_CARGO']?> > <?php echo $row['DESC_CARGO'] ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -321,7 +322,7 @@ sqlsrv_execute($result_Grupo);
                              <select  name="grupo">
                                          <option value="">Escolha um Grupo</option>
                                          <?php while ($row = sqlsrv_fetch_array($result_Grupo)){ ?>
-                                           <option value=<?php echo $row['ID_GRUPO']?> > <?php echo 'Grupo: '. utf8_encode($row['DESC_GRUPO']).'  |   '. utf8_encode($row['DESC_REGIAO']) ?> </option>
+                                           <option value=<?php echo $row['ID_GRUPO']?> > <?php echo 'Grupo: '. $row['DESC_GRUPO'].'  |   '. $row['DESC_REGIAO'] ?> </option>
                                          <?php }
                                          ?>
                              </select>

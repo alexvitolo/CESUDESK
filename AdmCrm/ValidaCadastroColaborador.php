@@ -1,4 +1,5 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+session_start();
 
 $MATRICULA = $_POST["MATRICULA"];
 $NOME = $_POST["NOME"]; 
@@ -19,9 +20,9 @@ $grupo = $_POST["grupo"];
 
 
 if ($nivelCargo == 'null') {
-        $validaNivelCargo = ",NIVEL_CARGO = null ";
+        $validaNivelCargo = null;
       }else{
-        $validaNivelCargo = ",NIVEL_CARGO = '{$nivelCargo}' ";
+        $validaNivelCargo = "'{$nivelCargo}'";
       }
 
 
@@ -49,7 +50,7 @@ $insertSquila = " INSERT INTO tb_crm_colaborador
                         ,'{$STATUS}'
                         ,{$supervisor}
                         ,'{$cargo}'
-                        ".$validaNivelCargo."
+                        ,".$validaNivelCargo."
                         ,'{$grupo}'
                         ,'{$email}'
                         ,'{$telefone}'

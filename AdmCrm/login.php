@@ -1,6 +1,20 @@
-<?php 
+<?php include '..\AdmCrm\connectionADM.php'; 
+session_start();
 
-$USUARIO = $_GET['USUARIO'];
+$USUARIO = $_GET["USUARIO"];
+
+
+$squilaUsuario = "SELECT 
+                      NOME
+                     ,USUARIO
+                     ,SENHA_USUARIO
+                     ,ACESSO_ADM
+                FROM tb_crm_login
+                WHERE USUARIO = '{$USUARIO}' ";
+
+$result_Usuario = sqlsrv_prepare($conn, $squilaUsuario);
+sqlsrv_execute($result_Usuario);
+
 
 ?>
 
@@ -41,12 +55,12 @@ $USUARIO = $_GET['USUARIO'];
 	  <div id="login-page">
 	  	<div class="container">
 	  	
-		      <form class="form-login" action="index.html">
+		      <form class="form-login" name="Form" method="post" id="formulario" action="validaSenhaLogin.php">
 		        <h2 class="form-login-heading">Tela de Login</h2>
 		        <div class="login-wrap">
-		            <input type="text" class="form-control" value="<?php echo $USUARIO ?>" autofocus>
+		            <input type="text" name="USERVALIDA" class="form-control" value="<?php echo $USUARIO ?>" autofocus>
 		            <br>
-		            <input type="password" class="form-control" placeholder="Password">
+		            <input type="password" name="SENHAVALIDA" class="form-control" placeholder="Password">
 		            <label class="checkbox">
 		                <span>
 		
