@@ -1,4 +1,5 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+session_start();
 
 $ID = $_POST["ID"]; // id colaborador
 
@@ -62,7 +63,7 @@ $DATA_FIM = date_format($vetorSQLProcesso['DATA_FIM'], "Y-m-d");
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
             <!--logo start-->
-            <a href="index.html" class="logo"><b>CRM MASTER</b></a>
+            <a href="index.php" class="logo"><b>CRM MASTER</b></a>
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
@@ -76,7 +77,7 @@ $DATA_FIM = date_format($vetorSQLProcesso['DATA_FIM'], "Y-m-d");
             </div>
             <div class="top-menu">
               <ul class="nav pull-right top-menu">
-                    <li><a class="logout" href="login.php">Logout</a></li>
+                    <li><a class="logout" href="validaLogout.php">Logout</a></li>
               </ul>
             </div>
         </header>
@@ -100,7 +101,7 @@ $DATA_FIM = date_format($vetorSQLProcesso['DATA_FIM'], "Y-m-d");
                           <span>Head Count</span>
                       </a>
                       <ul class ="sub">
-                          <li class=""><a  href="index.html">Resumo</a></li>
+                          <li class=""><a  href="index.php">Resumo</a></li>
                       </ul>
                   </li>
 
@@ -177,7 +178,7 @@ $DATA_FIM = date_format($vetorSQLProcesso['DATA_FIM'], "Y-m-d");
                              <select name="ATIVO"> 
                                  <option value="<?php echo $vetorSQLProcesso['ATIVO']; ?>">   <?php if($vetorSQLProcesso['ATIVO'] == '1') {echo "ATIVO" ;} else { echo "DESLIGADO";} ?>   </option>
                                  <option value="1">ATIVO</option>
-                                 <option value="0">DESLIGADO</option> 
+                                 <option value="0">INATIVO</option> 
                             </select>
                             </td>
                            </tr>

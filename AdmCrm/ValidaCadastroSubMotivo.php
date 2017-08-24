@@ -1,4 +1,5 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+session_start();
 
 
 $DESCRISUB = $_POST["DESCRISUB"]; 

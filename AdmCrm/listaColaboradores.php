@@ -1,4 +1,5 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+session_start();
 
 $squilaDicas = "SELECT tc.ID_MATRICULA,
                        tc.NOME,
@@ -66,7 +67,7 @@ sqlsrv_execute($result_squila);
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
             <!--logo start-->
-            <a href="index.html" class="logo"><b>CRM MASTER</b></a>
+            <a href="index.php" class="logo"><b>CRM MASTER</b></a>
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
@@ -80,7 +81,7 @@ sqlsrv_execute($result_squila);
             </div>
             <div class="top-menu">
               <ul class="nav pull-right top-menu">
-                    <li><a class="logout" href="login.php">Logout</a></li>
+                    <li><a class="logout" href="validaLogout.php">Logout</a></li>
               </ul>
             </div>
         </header>
@@ -104,7 +105,7 @@ sqlsrv_execute($result_squila);
                           <span>Head Count</span>
                       </a>
                       <ul class ="sub">
-                          <li class=""><a  href="index.html">Resumo</a></li>
+                          <li class=""><a  href="index.php">Resumo</a></li>
                       </ul>
                   </li>
 
