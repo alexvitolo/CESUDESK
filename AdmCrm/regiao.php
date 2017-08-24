@@ -30,7 +30,7 @@ sqlsrv_execute($result_squilaRegiao);
     <meta name="author" content="Dashboard">
     <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
 
-    <title>ADMINISTRATIVO CRM</title>
+    <title>Analytics EAD</title>
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
@@ -60,7 +60,7 @@ sqlsrv_execute($result_squilaRegiao);
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
             <!--logo start-->
-            <a href="index.php" class="logo"><b>CRM MASTER</b></a>
+            <a href="index.php" class="logo"><b> GCO – Gestão de Controle Operacional </b></a>
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
@@ -90,7 +90,7 @@ sqlsrv_execute($result_squilaRegiao);
               <ul class="sidebar-menu" id="nav-accordion">
               
                   <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.gif" class="img-circle" width="60"></a></p>
-                  <h5 class="centered">CRM EAD</h5>
+                  <h5 class="centered">Analytics EAD</h5>
                     
                   <li class="sub-menu"">
                       <a class="" href="javascript:;" >

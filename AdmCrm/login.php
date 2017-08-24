@@ -29,7 +29,7 @@ sqlsrv_execute($result_Usuario);
     <meta name="author" content="Dashboard">
     <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
 
-    <title>ADMINISTRATIVO CRM</title>
+    <title>Analytics EAD</title>
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
