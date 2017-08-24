@@ -1,6 +1,10 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 session_start();
 
+if ($_SESSION['ACESSO'] <> 1 )  {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+}
 
 ?>
 
@@ -99,11 +103,12 @@ session_start();
                       </ul>
                   </li>
    
-                  <li class="sub-menu">
+                  <?php if ($_SESSION['ACESSO'] == 1){ ?>
+                      <li class="sub-menu">
                       <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
-                          <span>General</span>
-                      </a>
+                          <span>General</span> 
+                      </a> <?php } ?>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>

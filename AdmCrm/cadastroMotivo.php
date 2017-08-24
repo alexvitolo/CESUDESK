@@ -1,6 +1,10 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 session_start();
 
+if ($_SESSION['ACESSO'] <> 1 )  {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+}
 
 ?>
 

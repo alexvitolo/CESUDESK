@@ -98,11 +98,11 @@ session_start();
                       </ul>
                   </li>
    
-                   <li class="sub-menu">
+                   <?php if ($_SESSION['ACESSO'] == 1){ ?><li class="sub-menu">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
-                          <span>General</span>
-                      </a>
+                          <span>General</span> 
+                      </a> <?php } ?>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>

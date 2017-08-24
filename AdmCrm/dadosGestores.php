@@ -124,11 +124,12 @@ sqlsrv_execute($result_squilaGestores);
                   </li>
    
 
-                   <li class="sub-menu">
+                   <?php if ($_SESSION['ACESSO'] == 1){ ?>
+                      <li class="sub-menu">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
-                          <span>General</span>
-                      </a>
+                          <span>General</span> 
+                      </a> 
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
@@ -140,7 +141,7 @@ sqlsrv_execute($result_squilaGestores);
                           <li class=""><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
-                  </li>
+                  </li><?php } ?>
 
               </ul>
               <!-- sidebar menu end-->
