@@ -1,6 +1,10 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 session_start();
 
+if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
+ // Ação a ser executada: mata o script e manda uma mensagem
+echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
+
 date_default_timezone_set('America/Sao_Paulo');
 
 $ID = $_POST["ID"]; 

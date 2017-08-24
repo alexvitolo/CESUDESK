@@ -1,6 +1,10 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 session_start();
 
+if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
+ // Ação a ser executada: mata o script e manda uma mensagem
+echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
+
 $squilaEscalaFDS = "SELECT
                        tc.NOME
                        ,tc.ID_MATRICULA
@@ -115,11 +119,12 @@ sqlsrv_execute($result_squilaFDS);
                   </li>
    
 
-                   <li class="sub-menu">
+                   <?php if ($_SESSION['ACESSO'] == 1){ ?>
+                      <li class="sub-menu">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
-                          <span>General</span>
-                      </a>
+                          <span>General</span> 
+                      </a> 
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
@@ -131,7 +136,7 @@ sqlsrv_execute($result_squilaFDS);
                           <li class=""><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
-                  </li>
+                  </li><?php } ?>
 
               </ul>
               <!-- sidebar menu end-->

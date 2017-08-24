@@ -3,6 +3,7 @@
 
 session_start();
 
+
 $USERVALIDA = $_POST["USERVALIDA"];
 $_SESSION['USUARIO'] = $USERVALIDA;
 
@@ -36,6 +37,12 @@ sqlsrv_execute($result_Usuario);
     if ($row['ACESSO_ADM'] == 1) 
   {
       $_SESSION['ACESSO'] = 1;
+
+  }
+
+  elseif ($row['ACESSO_ADM'] <> 1) 
+  {
+      $_SESSION['ACESSO'] = 0;
   }
 
  }
