@@ -102,7 +102,7 @@ session_start();
                       <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
-                      </a> <?php } ?>
+                      </a> 
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
@@ -114,7 +114,7 @@ session_start();
                           <li class=""><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
-                  </li>
+                  </li><?php } ?>
 
               </ul>
               <!-- sidebar menu end-->
