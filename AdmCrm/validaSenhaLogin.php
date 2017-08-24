@@ -3,6 +3,7 @@
 
 session_start();
 
+
 $USERVALIDA = $_POST["USERVALIDA"];
 $_SESSION['USUARIO'] = $USERVALIDA;
 
