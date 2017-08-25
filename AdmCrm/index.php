@@ -98,7 +98,8 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
-                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li> 
+                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
                       </ul>
                   </li>
    
