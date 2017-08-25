@@ -146,16 +146,22 @@ sqlsrv_execute($result_Grupo);
                       </ul>
                   </li>
    
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
+                   <?php if ($_SESSION['ACESSO'] == 1){ ?>
+                      <li class="sub-menu">
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
-                          <span>General</span>
-                      </a>
+                          <span>General</span> 
+                      </a> <?php } ?>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
-                          <li><a  href="colaboradores.php">Colaboradores</a></li>
-                          
+                          <li class="active"><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="cargo.php">Cargo</a></li>
+                          <li class=""><a  href="grupo.php">Grupo</a></li>
+                          <li class=""><a  href="regiao.php">Região</a></li>
+                          <li class=""><a  href="processo.php">Processo</a></li>
+                          <li class=""><a  href="motivo.php">Motivo</a></li>
+                          <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
                   </li>
 
