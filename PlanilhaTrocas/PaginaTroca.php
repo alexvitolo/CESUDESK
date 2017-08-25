@@ -22,7 +22,7 @@ $horaLimite = '17:00:00';
      echo  '<script type="text/javascript">alert("Impossível Realizar Troca no Sábado");</script>';
      echo  '<script type="text/javascript"> window.location.href = "PaginaIni.php" </script>';
   }
-  elseif(($diasemana_numero == 5) and ( (strtotime($hora_servidor) >= strtotime($horaLimite)) ) ) {
+  elseif(($diasemana_numero == 5) and ( (strtotime($hora_servidor) >= strtotime($horaLimite)) ) and ($diasemana_dataTroca == 1) ) {
     echo  '<script type="text/javascript">alert("Impossível Realizar Troca, Horário Excedido  ");</script>';
     echo  '<script type="text/javascript"> window.location.href = "PaginaIni.php" </script>';
   }
