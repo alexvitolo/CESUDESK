@@ -1,9 +1,6 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 session_start();
 
-if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
- // Ação a ser executada: mata o script e manda uma mensagem
-echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
 $USUARIO = $_GET["USUARIO"];
 
@@ -32,7 +29,7 @@ sqlsrv_execute($result_Usuario);
     <meta name="author" content="Dashboard">
     <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
 
-    <title>ADMINISTRATIVO CRM</title>
+    <title>Analytics EAD</title>
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">

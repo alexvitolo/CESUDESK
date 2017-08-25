@@ -7,10 +7,6 @@ date_default_timezone_set('America/Sao_Paulo');
 $hora_servidor = date("H:i:s");
 $horaLimite = '17:00:00';
 
-  if( (strtotime($hora_servidor) >= strtotime($horaLimite)))  {
-    echo  '<script type="text/javascript">alert("Impossível Realizar Troca, Horário Excedido  ");</script>';
-    echo  '<script type="text/javascript"> window.location.href = "PaginaIni.php" </script>';
-  }
 
 
           $nomeSoli            = $_POST["nomeSoli"]; 
