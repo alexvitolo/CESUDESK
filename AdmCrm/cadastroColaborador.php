@@ -5,10 +5,6 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
-if ($_SESSION['ACESSO'] <> 1 )  {
- // Ação a ser executada: mata o script e manda uma mensagem
- echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
-}
 
 
 $sqlSupervisores = "SELECT tc.ID_COLABORADOR AS ID_SUP
@@ -197,7 +193,7 @@ sqlsrv_execute($result_Grupo);
                              <label style="margin-left: 15px">Nome: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="NOME" size="35">
+                             <input type="text" name="NOME" size="40">
                             </td>
                              <td>
                              <label style="margin-left: 15px">Data Nascimento: </label>
@@ -238,7 +234,7 @@ sqlsrv_execute($result_Grupo);
                              <label style="margin-left: 15px">Login Rede: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="loginRede" size="25"> 
+                             <input type="text" name="loginRede" size="40"> 
                             </td>
                              <td>
                              <label style="margin-left: 15px" >Login Telefonia:</label>
@@ -249,6 +245,7 @@ sqlsrv_execute($result_Grupo);
                             <td>
                              <label style="margin-left: 15px">Status :</label>
                             </td>
+                        <?php if ($_SESSION['SUGESTAO_COLABORADOR'] <> 0){ ?>
                             <td align="left">
                              <select name="STATUS" value="ATIVO"> 
                              <option value="ATIVO">ATIVO</option>
@@ -257,6 +254,18 @@ sqlsrv_execute($result_Grupo);
                              <option value="INSS">INSS</option>  
                             </select>
                             </td>
+                        <?php } ?>
+
+
+                        <?php if ($_SESSION['SUGESTAO_COLABORADOR'] == 0){ ?>
+                            <td align="left">
+                             <select name="STATUS" value="SUGESTÃO"> 
+                             <option value="SUGESTÃO">SUGESTÃO</option> 
+                            </select>
+                            </td>
+                         <?php } ?>
+
+
                            </tr>
 
                            <tr>
@@ -345,7 +354,10 @@ sqlsrv_execute($result_Grupo);
                          <br/>
 
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $row['ID_MATRICULA']?>"  name="ID_MATRICULA">Confirmar</button> 
-                         <a href="colaboradores.php"><input type="button" value="Cancelar"></a>
+                 <?php if ($_SESSION['ACESSO'] == 1) { ?>   <a href="colaboradores.php"><input type="button" value="Cancelar"></a>   <?php } ?>
+                 <?php if ($_SESSION['ACESSO'] <> 1) { ?>   <a href="index.php"><input type="button" value="Cancelar"></a>   <?php } ?>
+
+
                       </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->

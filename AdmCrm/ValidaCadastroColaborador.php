@@ -5,6 +5,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
+
 $MATRICULA = $_POST["MATRICULA"];
 $NOME = $_POST["NOME"]; 
 $dtNascimento = $_POST["dtNascimento"]; 
@@ -71,9 +72,17 @@ $insertSquila = " INSERT INTO tb_crm_colaborador
              echo ("Falha na inclusão do registro");
              print_r(sqlsrv_errors());
       }   
-      else {
+      elseif  ($_SESSION['ACESSO'] == 1 ) {
             sqlsrv_free_stmt($result_insert);
             sqlsrv_close($conn);
             echo  '<script type="text/javascript">alert("Colaborador cadastrado !");</script>';
             echo  '<script type="text/javascript"> window.location.href = "Colaboradores.php" </script>';
         }
+
+        else  {
+          // Ação a ser executada: mata o script e manda uma mensagem
+          sqlsrv_free_stmt($result_insert);
+          sqlsrv_close($conn);
+          echo  '<script type="text/javascript">alert("Colaborador cadastrado !");</script>';
+          echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+         }

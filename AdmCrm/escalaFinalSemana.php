@@ -115,6 +115,7 @@ sqlsrv_execute($result_squilaFDS);
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class="active"><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
                       </ul>
                   </li>
    
