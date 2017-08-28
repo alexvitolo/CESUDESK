@@ -129,6 +129,7 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
                       </ul>
                   </li>
    
@@ -236,7 +237,7 @@ sqlsrv_execute($result_squila);
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
-              2017 - CRM MASTER
+              2017 - ANALYTICS EAD
               <a href="basic_table.html#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>

@@ -151,7 +151,7 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
-              2017 - CRM MASTER
+              2017 - ANALYTICS EAD
               <a href="index.php#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>

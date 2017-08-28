@@ -223,6 +223,7 @@ sqlsrv_execute($result_MotivoP);
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
                           
                       </ul>
                   </li>
@@ -233,9 +234,15 @@ sqlsrv_execute($result_MotivoP);
                           <span>General</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
-                          <li><a  href="colaboradores.php">Colaboradores</a></li>
+                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                           <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
+                          <li class="active"><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="cargo.php">Cargo</a></li>
+                          <li class=""><a  href="grupo.php">Grupo</a></li>
+                          <li class=""><a  href="regiao.php">Região</a></li>
+                          <li class=""><a  href="processo.php">Processo</a></li>
+                          <li class=""><a  href="motivo.php">Motivo</a></li>
+                          <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                           
                       </ul>
                   </li>
@@ -523,7 +530,7 @@ sqlsrv_execute($result_MotivoP);
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
-              2017 - CRM MASTER
+              2017 - ANALYTICS EAD
               <a href="" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
