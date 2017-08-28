@@ -28,7 +28,7 @@ $sqlPausaOK = " SELECT DISTINCT CONVERT(VARCHAR,DM1.HORARIO_PAUSA,108) As HORARI
                            INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO AND th.BO_ESCALA_FDS = 'N' AND TH.CARGA_HORARIO = '06:00:00'
                            INNER JOIN tb_crm_cargo tl on tl.ID_CARGO = tc.ID_CARGO AND tl.BO_GESTOR = 'N'
                            left JOIN tb_crm_horario_pausa tp ON tp.HORARIO_PAUSA BETWEEN th.ENTRADA AND th.SAIDA
-                           WHERE TC.STATUS_COLABORADOR = 'ATIVO'
+                           WHERE (TC.STATUS_COLABORADOR = 'ATIVO') OR (TC.STATUS_COLABORADOR = 'SUGESTÃO')
                         GROUP BY tc.ID_GRUPO
                                 ,tp.HORARIO_PAUSA) DM1
                   LEFT JOIN (SELECT SUM(RK.QT_COL_PAUSAS) AS QT_COL_PAUSAS
