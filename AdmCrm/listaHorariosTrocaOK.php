@@ -40,7 +40,7 @@ $sqlPausaOK = " SELECT DISTINCT CONVERT(VARCHAR,DM1.HORARIO_PAUSA,108) As HORARI
                                  ,tp.ID_TIPO_PAUSA
                                  ,tc.ID_GRUPO
                               FROM tb_crm_escala_pausa tp
-                          INNER JOIN tb_crm_colaborador tc ON tp.ID_COLABORADOR = tc.ID_COLABORADOR AND tc.STATUS_COLABORADOR = 'ATIVO'
+                          INNER JOIN tb_crm_colaborador tc ON tp.ID_COLABORADOR = tc.ID_COLABORADOR AND ((TC.STATUS_COLABORADOR = 'ATIVO') OR (TC.STATUS_COLABORADOR = 'SUGESTÃO'))
                           INNER JOIN tb_crm_cargo ta ON ta.ID_CARGO = tc.ID_CARGO AND ta.BO_GESTOR = 'N' 
                              WHERE tp.DT_VIGENCIA_FINAL IS NULL
                                AND tp.HORARIO_PAUSA IS NOT NULL
@@ -53,7 +53,7 @@ $sqlPausaOK = " SELECT DISTINCT CONVERT(VARCHAR,DM1.HORARIO_PAUSA,108) As HORARI
                                  ,tp.ID_TIPO_PAUSA
                                  ,tc.ID_GRUPO
                                FROM tb_crm_escala_pausa tp
-                           INNER JOIN tb_crm_colaborador tc ON tp.ID_COLABORADOR = tc.ID_COLABORADOR AND tc.STATUS_COLABORADOR = 'ATIVO'
+                           INNER JOIN tb_crm_colaborador tc ON tp.ID_COLABORADOR = tc.ID_COLABORADOR AND ((TC.STATUS_COLABORADOR = 'ATIVO') OR (TC.STATUS_COLABORADOR = 'SUGESTÃO'))
                            INNER JOIN tb_crm_cargo ta ON ta.ID_CARGO = tc.ID_CARGO AND ta.BO_GESTOR = 'N' 
                             WHERE tp.DT_VIGENCIA_FINAL IS NULL
                               AND tp.HORARIO_PAUSA IS NOT NULL
@@ -64,7 +64,7 @@ $sqlPausaOK = " SELECT DISTINCT CONVERT(VARCHAR,DM1.HORARIO_PAUSA,108) As HORARI
                         GROUP BY RK.HORARIO_PAUSA
                             ,RK.ID_GRUPO
                             ,RK.ID_TIPO_PAUSA) DM2 ON DM1.ID_GRUPO = DM2.ID_GRUPO AND DM1.HORARIO_PAUSA = DM2.HORARIO_PAUSA
-                      INNER JOIN tb_crm_colaborador nc ON nc.ID_GRUPO = DM1.ID_GRUPO AND nc.STATUS_COLABORADOR = 'ATIVO'
+                      INNER JOIN tb_crm_colaborador nc ON nc.ID_GRUPO = DM1.ID_GRUPO AND ((nc.STATUS_COLABORADOR = 'ATIVO') OR (nc.STATUS_COLABORADOR = 'SUGESTÃO'))
                       INNER JOIN tb_crm_horario tn ON nc.ID_HORARIO = tn.ID_HORARIO AND tn.BO_ESCALA_FDS = 'N' AND tn.CARGA_HORARIO = '06:00:00'
                   WHERE 1=1
                     AND DM1.ID_GRUPO = {$ID_GRUPO}
