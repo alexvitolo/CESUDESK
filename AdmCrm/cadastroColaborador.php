@@ -377,7 +377,7 @@ sqlsrv_execute($result_Grupo);
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
-              2017 - CRM MASTER
+              2017 - ANALYTICS EAD
               <a href="basic_table.html#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
