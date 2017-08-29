@@ -85,21 +85,21 @@ $_SESSION['BO_TROCA']='S';
             ) {
             
             if (($rowResul[0][5] == 1)){
-              $rowResul[0][4] = '15:00:00';
-              $rowResul[0][5] = 12;
-            }
-            else {
               $rowResul[0][4] = '09:00:00';
               $rowResul[0][5] = 4;
             }
+            else {
+              $rowResul[0][4] = '15:00:00';
+              $rowResul[0][5] = 12;
+            }
 
             if (($rowResul[1][5] == 13)){
-              $rowResul[1][4] = '09:00:00';
-              $rowResul[1][5] = 4;
-            } 
-            else {
               $rowResul[1][4] = '15:00:00';
               $rowResul[1][5] = 12;
+            } 
+            else {
+              $rowResul[1][4] = '09:00:00';
+              $rowResul[1][5] = 4;
             }
 
           }
