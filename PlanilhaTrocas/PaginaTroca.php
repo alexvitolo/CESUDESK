@@ -41,8 +41,8 @@ $horaLimite = '17:00:00';
                   ,CASE when (SELECT COUNT(1) 
                                     FROM tb_crm_trocas_new 
                                    WHERE tc.ID_COLABORADOR in (ID_COLABORADOR1,ID_COLABORADOR2)
-                                     AND DT_TROCA BETWEEN DATEADD(month, DATEDIFF(month, -1, getdate()) - 1, 0) -- PRIMEIRO DIA DO MÊS ATUAL
-                                                        AND DATEADD(ss, -1, DATEADD(month, DATEDIFF(month, 0, getdate())+1, 0)) -- ULTIMO DIA DO MÊS ATUAL        
+                                     AND DT_TROCA BETWEEN DATEADD(month, DATEDIFF(month, -1, '{$dateTroca_PaginaIni}' ) - 1, 0) -- PRIMEIRO DIA DO MÊS ATUAL
+                                                        AND DATEADD(ss, -1, DATEADD(month, DATEDIFF(month, 0, '{$dateTroca_PaginaIni}' )+1, 0)) -- ULTIMO DIA DO MÊS ATUAL        
                                      AND TP_STATUS <> 'CANCELADO' ) >=2 then 'INVALIDO' 
                                ELSE 'VALIDO'
                   END CONDICAO
@@ -81,8 +81,8 @@ $horaLimite = '17:00:00';
                            ,(SELECT COUNT(1) 
                                FROM tb_crm_trocas 
                               WHERE MATRICULA = tc.ID_MATRICULA 
-                                AND DATA_TROCA BETWEEN DATEADD(month, DATEDIFF(month, -1, getdate()) - 1, 0) -- PRIMEIRO DIA DO MÊS ATUAL
-                                                   AND DATEADD(ss, -1, DATEADD(month, DATEDIFF(month, 0, getdate())+1, 0)) -- ULTIMO DIA DO MÊS ATUAL
+                                AND DATA_TROCA BETWEEN DATEADD(month, DATEDIFF(month, -1, '{$dateTroca_PaginaIni}') - 1, 0) -- PRIMEIRO DIA DO MÊS ATUAL
+                                                   AND DATEADD(ss, -1, DATEADD(month, DATEDIFF(month, 0, '{$dateTroca_PaginaIni}')+1, 0)) -- ULTIMO DIA DO MÊS ATUAL
                                                       ) as QT_TROCA_MES_ATUAL
                       FROM tb_crm_colaborador tc
                 INNER JOIN tb_crm_grupo tg on tg.ID_GRUPO = tc.ID_GRUPO
@@ -189,7 +189,7 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     </p>
 
     <!-- Dentro desta DIV, inserir a Tabela para Visualizar -->
-<input type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input> <a style="padding-left: 460px"> Período Atual <?php echo date("01/m/Y") ?> Até <?php echo date("t/m/Y") ?>  </a>
+<input type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input> <a style="padding-left: 460px"> Período Troca <?php echo date("01/".date('m',strtotime($dateTroca_PaginaIni))."/Y") ?> Até <?php echo date("t/".date('m',strtotime($dateTroca_PaginaIni))."/Y") ?>  </a>
 <div style="color:black;" class="w3-responsive" id="table-scroll">
 <section class="container">
 
