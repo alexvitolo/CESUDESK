@@ -1,28 +1,15 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+
 session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
-$squilaEscalaFDS = "SELECT
-                       tc.NOME
-                       ,tc.ID_MATRICULA
-                       ,tfd.DT_FDS
-                       ,th.ENTRADA
-                       ,th.SAIDA
-                       ,th.CARGA_HORARIO
-      
-                  FROM tb_crm_escala_fds tfd
-            INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tfd.ID_COLABORADOR
-            INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tfd.ID_HORARIO AND th.BO_ESCALA_FDS ='S'
-              ORDER BY tfd.DT_FDS ";
-
-$result_squilaFDS = sqlsrv_prepare($conn, $squilaEscalaFDS);
-sqlsrv_execute($result_squilaFDS);
 
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -105,7 +92,7 @@ sqlsrv_execute($result_squilaFDS);
                       </ul>
                   </li>
 
-                 <li class="sub-menu">
+                  <li class="sub-menu">
                       <a class="active" href="javascript:;">
                           <i class="fa fa-th"></i>
                           <span>Schedule</span>
@@ -113,23 +100,22 @@ sqlsrv_execute($result_squilaFDS);
                       <ul class="sub">
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
-                          <li class="active"><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
-                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
+                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a></li> 
+                          <li class="active"><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
+                          
                       </ul>
                   </li>
    
-
-                   <?php if ($_SESSION['ACESSO'] == 1){ ?>
-                      <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                    <li class="sub-menu">
+                      <a href="javascript:;" >
                           <i class="fa fa-desktop"></i>
-                          <span>General</span> 
-                      </a> 
+                          <span>General</span>
+                      </a>
                       <ul class="sub">
-                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
+                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                           <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -137,8 +123,9 @@ sqlsrv_execute($result_squilaFDS);
                           <li class=""><a  href="processo.php">Processo</a></li>
                           <li class=""><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
+                          
                       </ul>
-                  </li><?php } ?>
+                  </li>
 
               </ul>
               <!-- sidebar menu end-->
@@ -152,51 +139,36 @@ sqlsrv_execute($result_squilaFDS);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista Escala de Final de Semana </h3>
+            <h3><i class="fa fa-right"></i> Formulário de Avaliação </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
-                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela Final de Semana  </h4>
-                            <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                              <thead>
-                              <tr>
-                                  <th><i class=""></i> Nome Consultor </th>
-                                  <th><i class=""></i> Matrícula </th>
-                                  <th><i class=""></i> Data Final de Semana </th>
-                                  <th><i class=""></i> Entrada </th>
-                                  <th><i class=""></i> Saída </th>
-                                  <th><i class=""></i> Carga Horária </th>
- 
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squilaFDS)) { 
-                                    ?>
+                         <form name="Form" method="post" id="formulario" action="formularioCadastroAvaliacao.php">
+<!-- DADOS PESSOAIS-->
+                          <fieldset>
+                          <legend> CADASTRO DA MONITORIA </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" for="nome">Matrícula: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="ID_MATRICULA_CONSULTOR" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                            </td>
+                            </tr>
 
-                                  <td><?php echo $row['NOME']; ?></a></td>
-                                  <td><?php echo $row['ID_MATRICULA']; ?></a></td>
-                                  <td><?php echo date_format($row['DT_FDS'],"d/m/Y"); ?></a></td>
-                                  <td><?php echo date_format($row['ENTRADA'],"H:i"); ?></a></td>
-                                  <td><?php echo date_format($row['SAIDA'],"H:i"); ?></a></td>
-                                  <td><?php echo date_format($row['CARGA_HORARIO'],"H:i"); ?></a></td>
-                                  <td>
-                                      
-                                  </td>
-                              </tr>
-
-                              <?php 
-                                    }
-                              ?>
-                              
-                              </tbody>
                           </table>
-                        </form>
+                         </fieldset>
+                        <br>
+                        
+
+                         <br/>
+
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
+                         <a href="colaboradores.php"><input type="button" value="Cancelar"></a>
+                      </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
@@ -209,7 +181,7 @@ sqlsrv_execute($result_squilaFDS);
       <footer class="site-footer">
           <div class="text-center">
               2017 - ANALYTICS EAD
-              <a href="basic_table.html#" class="go-top">
+              <a href="" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
           </div>
@@ -233,6 +205,18 @@ sqlsrv_execute($result_squilaFDS);
 </html>
 
 
+
+
+ 
+  <!--custom switch-->
+  <script src="assets/js/bootstrap-switch.js"></script>
+  
+  <!--custom tagsinput-->
+  <script src="assets/js/jquery.tagsinput.js"></script>
+  
+
+  <script src="assets/js/form-component.js"></script>   
+    
 
 <script type="text/javascript">
 (function(document) {
@@ -275,5 +259,19 @@ sqlsrv_execute($result_squilaFDS);
 
    })(document);
         
+
+
+    function getConfirmation(){
+       // var retVal = confirm("Do you want to continue ?");
+       if(  confirm(" Deseja confirmar a edição ? ") == true ){
+          return true;
+       }
+       else{
+          return false;
+       }
+    }
+        
+
+
 
 </script>
