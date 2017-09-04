@@ -19,11 +19,14 @@ if ($_POST["SENHAVALIDA"] == "") {
 
 
 $squilaUsuario = "SELECT 
-                      NOME
-                     ,USUARIO
-                     ,SENHA_USUARIO
-                     ,ACESSO_ADM
-                FROM tb_crm_login
+                      tl.NOME
+                     ,tl.USUARIO
+                     ,tl.SENHA_USUARIO
+                     ,tl.ACESSO_ADM
+                     ,tc.ID_MATRICULA
+                     ,tc.ID_COLABORADOR
+                FROM tb_crm_login tl
+          INNER JOIN tb_crm_colaborador tc on tc.LOGIN_REDE = tl.USUARIO
                 WHERE USUARIO = '{$USERVALIDA}' ";
 
 $result_Usuario = sqlsrv_prepare($conn, $squilaUsuario);
@@ -33,6 +36,9 @@ sqlsrv_execute($result_Usuario);
  while ($row = sqlsrv_fetch_array($result_Usuario)){
 
       $senhaCorreta = $row["SENHA_USUARIO"];
+      $_SESSION['ID_COLABORADOR'] = $row["ID_COLABORADOR"];
+      $_SESSION['MATRICULA'] = $row["ID_MATRICULA"];
+
 
     if ($row['ACESSO_ADM'] == 1) 
   {

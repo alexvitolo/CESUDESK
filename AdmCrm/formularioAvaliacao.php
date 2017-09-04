@@ -1,37 +1,15 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+
 session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
-$squiladadosGestores = "SELECT tc.ID_MATRICULA,
-                       tc.NOME,
-                       tc.LOGIN_REDE,
-                       tc.EMAIL,
-                       tc.DT_ADMISSAO,
-                       tc.DT_NASCIMENTO,
-                       CONVERT(VARCHAR(8),th.ENTRADA, 24) as ENTRADA,
-                       CONVERT(VARCHAR(8),th.SAIDA, 24) as SAIDA,
-                       CONVERT(VARCHAR(8),th.CARGA_HORARIO, 24) as CARGA_HORARIO,
-                       (SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tc.ID_COLABORADOR_GESTOR) as NOMEGESTOR,
-                       CONCAT(tcar.DESCRICAO,' ',tc.NIVEL_CARGO) as CARGO,
-                       tg.DESCRICAO as GRUPO,
-                       tr.DESCRICAO as REGIAO
-                  FROM tb_crm_colaborador tc
-            INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
-             LEFT JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
-            INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tc.ID_CARGO 
-            INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
-                 WHERE tcar.BO_GESTOR = 'S'
-                   AND tc.STATUS_COLABORADOR <> 'DESLIGADO'
-              ORDER BY STATUS_COLABORADOR, NOME";
-
-$result_squilaGestores = sqlsrv_prepare($conn, $squiladadosGestores);
-sqlsrv_execute($result_squilaGestores);
 
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -114,7 +92,7 @@ sqlsrv_execute($result_squilaGestores);
                       </ul>
                   </li>
 
-                 <li class="sub-menu">
+                  <li class="sub-menu">
                       <a class="active" href="javascript:;">
                           <i class="fa fa-th"></i>
                           <span>Schedule</span>
@@ -123,19 +101,32 @@ sqlsrv_execute($result_squilaGestores);
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
-                          <li class="active"><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a></li>
+                          <li class="active"><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
+                          
                       </ul>
                   </li>
-   
 
-                   <?php if ($_SESSION['ACESSO'] == 1){ ?>
+                  <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
+                      <li class="sub-menu">
+                      <a class="" href="javascript:;" >
+                          <i class="fa fa-signal"></i>
+                          <span>Qualidade</span> 
+                      </a> <?php } ?>
+                      <ul class="sub">
+                          <li class=""><a  href="itensMonitoria.php">Itens Monitoria</a></li>
+                      </ul>
+                  </li>
+
+
+   
+                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
-                      </a> 
+                      </a> <?php } ?>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
@@ -147,7 +138,7 @@ sqlsrv_execute($result_squilaGestores);
                           <li class=""><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
-                  </li><?php } ?>
+                  </li>
 
               </ul>
               <!-- sidebar menu end-->
@@ -161,61 +152,36 @@ sqlsrv_execute($result_squilaGestores);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Dados Gestores </h3>
+            <h3><i class="fa fa-right"></i> Formulário de Avaliação </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="">
-                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Lista Gestores  </h4>
-                            <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                              <thead>
-                              <tr>
-                                  <th><i class=""></i> Matrícula </th>
-                                  <th><i class=""></i> Nome </th>
-                                  <th><i class=""></i> Login Rede </th>
-                                  <th><i class=""></i> Data Admissão </th>
-                                  <th><i class=""></i> Data Nascimento </th>
-                                  <th><i class=""></i> Entrada </th>
-                                  <th><i class=""></i> Saída </th>
-                                  <th><i class=""></i> Nome Gestor </th>
-                                  <th><i class=""></i> Cargo </th>
-                                  <th><i class=""></i> Grupo </th>
-                                  <th style="margin-right: 50px"><i class=""></i> Região </th>
- 
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squilaGestores)) { 
-                                    ?>
+                         <form name="Form" method="post" id="formulario" action="formularioCadastroAvaliacao.php">
+<!-- DADOS PESSOAIS-->
+                          <fieldset>
+                          <legend> CADASTRO DA MONITORIA </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" for="nome">Matrícula: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" name="ID_MATRICULA_CONSULTOR" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                            </td>
+                            </tr>
 
-                                  <td><?php echo $row['ID_MATRICULA']; ?></a></td>
-                                  <td><?php echo $row['NOME']; ?></a></td>
-                                  <td><?php echo $row['LOGIN_REDE']; ?></a></td>
-                                  <td><?php echo date_format($row['DT_ADMISSAO'],"d/m/Y"); ?></a></td>
-                                  <td><?php echo date_format($row['DT_NASCIMENTO'],"d/m/Y"); ?></a></td>
-                                  <td><?php echo $row['ENTRADA']; ?></a></td>
-                                  <td><?php echo $row['SAIDA']; ?></a></td>
-                                  <td><?php echo $row['NOMEGESTOR']; ?></a></td>
-                                  <td><?php echo $row['CARGO']; ?></a></td>
-                                  <td><?php echo $row['GRUPO']; ?></a></td>
-                                  <td style="margin-right: 50px"><?php echo $row['REGIAO']; ?></a></td>
-                                  <td>
-                                      
-                                  </td>
-                              </tr>
-
-                              <?php 
-                                    }
-                              ?>
-                              
-                              </tbody>
                           </table>
-                        </form>
+                         </fieldset>
+                        <br>
+                        
+
+                         <br/>
+
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
+                         <a href="colaboradores.php"><input type="button" value="Cancelar"></a>
+                      </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
@@ -228,7 +194,7 @@ sqlsrv_execute($result_squilaGestores);
       <footer class="site-footer">
           <div class="text-center">
               2017 - ANALYTICS EAD
-              <a href="basic_table.html#" class="go-top">
+              <a href="" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
           </div>
@@ -252,6 +218,18 @@ sqlsrv_execute($result_squilaGestores);
 </html>
 
 
+
+
+ 
+  <!--custom switch-->
+  <script src="assets/js/bootstrap-switch.js"></script>
+  
+  <!--custom tagsinput-->
+  <script src="assets/js/jquery.tagsinput.js"></script>
+  
+
+  <script src="assets/js/form-component.js"></script>   
+    
 
 <script type="text/javascript">
 (function(document) {
@@ -294,5 +272,19 @@ sqlsrv_execute($result_squilaGestores);
 
    })(document);
         
+
+
+    function getConfirmation(){
+       // var retVal = confirm("Do you want to continue ?");
+       if(  confirm(" Deseja confirmar a edição ? ") == true ){
+          return true;
+       }
+       else{
+          return false;
+       }
+    }
+        
+
+
 
 </script>
