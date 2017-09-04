@@ -101,6 +101,16 @@ $result_squilaQuestaoCritico = sqlsrv_prepare($conn, $squilaQuestaoCritico);
 sqlsrv_execute($result_squilaQuestaoCritico);
 
 
+$squilaResultLigacao = "SELECT trs.ID_RESULT_LIG
+                               ,tg.DESCRICAO
+                               ,trs.DESCRICAO AS DESC_RESUL_LIGACAO
+                          FROM tb_qld_resultado_ligacao trs
+                    INNER JOIN tb_crm_grupo tg ON (CASE WHEN tg.ID_GRUPO IN (1,2,3,4,5) THEN 1 ELSE tg.ID_GRUPO END) = trs.ID_GRUPO
+                    INNER JOIN tb_crm_colaborador tc ON tc.ID_GRUPO = tg.ID_GRUPO
+                         WHERE tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'  ";
+
+$result_squilaResultLigacao = sqlsrv_prepare($conn, $squilaResultLigacao);
+sqlsrv_execute($result_squilaResultLigacao);
 
 
 
@@ -397,20 +407,30 @@ sqlsrv_execute($result_squilaQuestaoCritico);
                           <table cellspacing="10" style="vertical-align: middle">
                            <tr>
                              <td style="width:110px";> 
-                              <label style="margin-left: 15px" for="nome">   colocar nome do grupo  </label>
+                              <label style="margin-left: 15px">  Grupo  </label>
                              </td>
-                             <td align="left">
-                              <input type="date" name="DT_ATENDIMENTO"  maxlength="15"  >
+                             <td>
+                             <select name="ID_RESULT_LIG">
+                                            <option value="null">Escolha uma Avaliacao</option>
+                                           <?php while ($row = sqlsrv_fetch_array($result_squilaResultLigacao)){ ?>
+                                            <option value=<?php echo $row['ID_RESULT_LIG']?> > <?php echo $row['DESC_RESUL_LIGACAO'] ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
                              </td>
                               </tr>
+
+
                             <tr>
-                             <td style="width:110px";> 
+                             <td style="width:110px";><br>
                               <label style="margin-left: 15px" for="nome">Observação: </label>
                              </td>
-                             <td align="left">
-                              <input type="date" name="OBSERVACAO"  maxlength="800"  >
+                             <td align="left"><br>
+                              <input type="text" style="height: 100px" style="width: 1200px" name="OBSERVACAO_PESQUISA"  maxlength="3200"  >
                              </td>
                             </tr>
+                           </table>
+                         </fieldset><br><br><br>
             
                         
 
