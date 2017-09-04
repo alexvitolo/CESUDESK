@@ -23,7 +23,7 @@ $squilaDicas = "SELECT tq.ID_QUESTAO
                         ,tq.BO_QUESTAO_ATIVA
                     FROM tb_qld_questoes tq
                   INNER JOIN tb_crm_grupo tc ON tc.ID_GRUPO = TQ.ID_GRUPO
-                  ORDER BY DESC_GRUPOE";
+                  ORDER BY DESC_GRUPO";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
@@ -123,7 +123,7 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                            <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a></li> Formulário de Avaliação </a></li>
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
                           
                       </ul>
                   </li>

@@ -391,6 +391,26 @@ sqlsrv_execute($result_squilaQuestaoCritico);
                           </table>
                          </fieldset><br><br><br>
 
+
+                         <fieldset>
+                          <legend> Resultado da Ligação </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                             <td style="width:110px";> 
+                              <label style="margin-left: 15px" for="nome">   colocar nome do grupo  </label>
+                             </td>
+                             <td align="left">
+                              <input type="date" name="DT_ATENDIMENTO"  maxlength="15"  >
+                             </td>
+                              </tr>
+                            <tr>
+                             <td style="width:110px";> 
+                              <label style="margin-left: 15px" for="nome">Observação: </label>
+                             </td>
+                             <td align="left">
+                              <input type="date" name="OBSERVACAO"  maxlength="800"  >
+                             </td>
+                            </tr>
             
                         
 
