@@ -22,6 +22,9 @@ $ID_GRAVADOR = $_POST['ID_GRAVADOR'];
 $RAMAL_PA = $_POST['RAMAL_PA'];
 $DT_ATENDIMENTO = $_POST['DT_ATENDIMENTO'];
 
+$OBSERVACAO_PESQUISA = $_POST['OBSERVACAO_PESQUISA'];
+$ID_RESULT_LIG = $_POST['ID_RESULT_LIG'];
+
 
 $squilaProcesso = "SELECT ID
                          ,NOME
@@ -71,6 +74,8 @@ $insertSquilaPesquisa = " INSERT INTO tb_qld_pesquisa
                                             ,RAMAL_PA
                                             ,ID_GRAVADOR
                                             ,DT_ATENDIMENTO
+                                            ,ID_RESULT_LIG
+                                            ,OBSERVACAO_PESQUISA
                                             )
                                       VALUES
                                             ({$ID_CONSULTOR}
@@ -84,6 +89,8 @@ $insertSquilaPesquisa = " INSERT INTO tb_qld_pesquisa
                                             ,'{$RAMAL_PA}'
                                             ,{$ID_GRAVADOR}
                                             ,{$DT_ATENDIMENTO}
+                                            ,{$ID_RESULT_LIG}
+                                            ,'{$OBSERVACAO_PESQUISA}'
                                             )";
 
                    
