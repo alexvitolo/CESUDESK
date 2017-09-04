@@ -107,15 +107,29 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
                           
                       </ul>
                   </li>
-   
-                    <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-desktop"></i>
-                          <span>General</span>
-                      </a>
+
+                  <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
+                      <li class="sub-menu">
+                      <a class="" href="javascript:;" >
+                          <i class="fa fa-signal"></i>
+                          <span>Qualidade</span> 
+                      </a> <?php } ?>
                       <ul class="sub">
-                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                           <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
+                          <li class=""><a  href="itensMonitoria.php">Itens Monitoria</a></li>
+                      </ul>
+                  </li>
+
+
+   
+                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
+                      <li class="sub-menu">
+                      <a class="" href="javascript:;" >
+                          <i class="fa fa-desktop"></i>
+                          <span>General</span> 
+                      </a> <?php } ?>
+                      <ul class="sub">
+                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -123,7 +137,6 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
                           <li class=""><a  href="processo.php">Processo</a></li>
                           <li class=""><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
-                          
                       </ul>
                   </li>
 
