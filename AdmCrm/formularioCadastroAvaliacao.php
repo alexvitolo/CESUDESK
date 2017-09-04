@@ -16,7 +16,10 @@ $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];  // será passado pa
   $sqlValida ="SELECT tc.ID_MATRICULA
                                 ,tc.ID_COLABORADOR
                                 ,tc.NOME
+                                ,tg.DESCRICAO AS NOME_GRUPO
+                                ,(SELECT NOME FROM tb_crm_colaborador WHERE tc.ID_COLABORADOR_GESTOR = ID_COLABORADOR ) NOME_GESTOR
                         FROM tb_crm_colaborador tc
+                INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO 
                        WHERE ID_MATRICULA ='{$ID_MATRICULA_CONSULTOR}'
                          AND tc.STATUS_COLABORADOR = 'ATIVO'";
 
@@ -30,6 +33,9 @@ $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];  // será passado pa
               //header('location: PaginaIni.php');   não funciona
           }
 $ID_CONSULTOR = $resultadoSQL['ID_COLABORADOR'];
+$NOME_GESTOR =  $resultadoSQL['NOME_GESTOR'];
+$NOME_CONSULTOR =  $resultadoSQL['NOME'];
+$NOME_GRUPO =  $resultadoSQL['NOME_GRUPO'];
 
 
 
@@ -39,8 +45,12 @@ $squilaAvaliacao = "SELECT ta.NUMERO
                           ,ta.BO_STATUS
                      FROM tb_qld_cronograma_avaliacao ta
                INNER JOIN tb_crm_colaborador tc ON tc.ID_CARGO = ta.ID_CARGO
-                    WHERE tc.ID_MATRICULA = '{$ID_MATRICULA_AVALIADOR}'
-                      AND ta.BO_STATUS = 'S' ";
+                    WHERE tc.ID_COLABORADOR = '{$_SESSION['ID_COLABORADOR']}'
+                      AND ta.BO_STATUS = 'S'
+                      AND NOT EXISTS (SELECT 1 
+                     FROM tb_qld_pesquisa tp
+                    WHERE tp.ID_AVALIACAO = ta.ID_AVALIACAO
+                      AND tp.ID_COLABORADOR = '{$ID_CONSULTOR}') ";
                   
 $result_squilaAvaliacao = sqlsrv_prepare($conn, $squilaAvaliacao);
 sqlsrv_execute($result_squilaAvaliacao);
@@ -209,7 +219,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class="active"><a  href="formularioAvaliacao.php"> Formulário Monitoria </a></li>
+                          <li class="active"><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
                           
                       </ul>
                   </li>
@@ -264,6 +274,42 @@ sqlsrv_execute($result_squilaResultLigacao);
                   <div class="col-md-12">
                       <div class="content-panel">
                          <form name="Form" method="post" id="formulario" action="formularioCadastroAvaliacaoValida.php">
+
+
+                         <fieldset>
+                          <legend> Dados do Consultor  </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                           <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome">Nome Consultor: </label>
+                            </td>
+                            <td align="left"><br>
+                            <?php echo $NOME_CONSULTOR ?></a>            
+                            </td>
+                             </tr>
+
+                            <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome" > Supervisor: </label>
+                            </td>
+                            <td align="left"><br>
+                            <?php echo $NOME_GESTOR ?></a>            
+                            </td>
+                            </tr>
+
+                              <tr>
+                           <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome">Grupo: </label>
+                            </td>
+                            <td align="left"><br>
+                            <?php echo $NOME_GRUPO ?></a>            
+                            </td>
+                             </tr>
+
+                          </table>
+                         </fieldset><br><br>
+                        <br>
+
 <!-- DADOS PESSOAIS-->
                           <fieldset>
                           <legend> AVALIAÇÃO DA MONITORIA </legend> 
@@ -326,13 +372,13 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">Gravador: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="ID_GRAVADOR"  maxlength="15"  >
+                             <input type="text" name="ID_GRAVADOR"  maxlength="15"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'  >
                             </td>
                             <td style="width:110px";> 
                              <label style="margin-left: 15px" for="nome">Ramal PA: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="RAMAL_PA"  maxlength="15"  >
+                             <input type="text" name="RAMAL_PA"  maxlength="15"   onkeypress='return event.charCode >= 48 && event.charCode <= 57' >
                             </td>
                              <td style="width:110px";> 
                              <label style="margin-left: 15px" for="nome">Data Atendimento: </label>
@@ -426,7 +472,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                               <label style="margin-left: 15px" for="nome">Observação: </label>
                              </td>
                              <td align="left"><br>
-                              <input type="text" style="height: 100px" style="width: 1200px" name="OBSERVACAO_PESQUISA"  maxlength="3200"  >
+                              <textarea name="OBSERVACAO_PESQUISA" cols="120" rows="10" > TEXTO </textarea>
                              </td>
                             </tr>
                            </table>

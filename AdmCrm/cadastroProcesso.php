@@ -208,7 +208,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
       <footer class="site-footer">
           <div class="text-center">
               2017 - ANALYTICS EAD
-              <a href="basic_table.html#" class="go-top">
+              <a href="" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
           </div>

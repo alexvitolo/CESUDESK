@@ -125,7 +125,7 @@ sqlsrv_execute($result_squilaGestores);
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                           <li class="active"><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a></li> Formulário Monitoria </a></li>
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
                       </ul>
                   </li>
 
@@ -240,7 +240,7 @@ sqlsrv_execute($result_squilaGestores);
       <footer class="site-footer">
           <div class="text-center">
               2017 - ANALYTICS EAD
-              <a href="basic_table.html#" class="go-top">
+              <a href="" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
           </div>
