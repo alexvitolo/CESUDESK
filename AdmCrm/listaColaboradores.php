@@ -124,7 +124,7 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                            <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class=""><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a></li> Formulário de Avaliação </a></li>
                           
                       </ul>
                   </li>
@@ -139,9 +139,6 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="itensMonitoria.php">Itens Monitoria</a></li>
                       </ul>
                   </li>
-                      </ul>
-                  </li>
-   
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
                       <a class="" href="javascript:;" >

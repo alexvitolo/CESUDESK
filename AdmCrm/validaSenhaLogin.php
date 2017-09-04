@@ -47,6 +47,15 @@ sqlsrv_execute($result_Usuario);
 
   }
 
+
+     if ($row['ACESSO_ADM'] == 2) 
+  {
+      $_SESSION['ACESSO'] = 2;
+      $_SESSION['SUGESTAO_COLABORADOR'] = 0;
+
+  }
+
+
   elseif ($row['ACESSO_ADM'] <> 1) 
   {
       $_SESSION['ACESSO'] = 0;

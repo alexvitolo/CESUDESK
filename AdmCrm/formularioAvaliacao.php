@@ -276,7 +276,7 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
 
     function getConfirmation(){
        // var retVal = confirm("Do you want to continue ?");
-       if(  confirm(" Deseja confirmar a edição ? ") == true ){
+       if(  confirm(" Iniciar Monitoria ? ") == true ){
           return true;
        }
        else{
