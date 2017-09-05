@@ -219,7 +219,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class="active"><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
+                          <li class="active"><a  href="formularioAvaliacao1.php"> Formulário de Avaliação </a></li>
                           
                       </ul>
                   </li>
@@ -484,7 +484,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                           <input type="hidden" name="ID_MATRICULA_CONSULTOR" value="<?php echo $ID_MATRICULA_CONSULTOR ?>"> 
                           <input type="hidden" name="ID_CONSULTOR" value="<?php echo $ID_CONSULTOR ?>"> 
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
-                         <a href="formularioAvaliacao.php"><input type="button" value="Cancelar"></a>
+                         <a href="formularioAvaliacao1.php"><input type="button" value="Cancelar"></a>
                       </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
