@@ -6,10 +6,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
-if ( ($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2 ) )  {
- // Ação a ser executada: mata o script e manda uma mensagem
- echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
-}
+
 
 
 $squilaDicas = "SELECT tq.ID_QUESTAO
@@ -123,7 +120,7 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                            <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
+                          <li class=""><a  href="formularioAvaliacao1.php"> Formulário Monitoria </a>
                           
                       </ul>
                   </li>
@@ -183,41 +180,44 @@ sqlsrv_execute($result_squila);
                             <a href="cadastroColaborador.php"><input style="margin-left: 800px" type="button" value="Novo Colaborador" ></input></a>
                               <thead>
                               <tr>
-                                  <th><i class=""></i> ID Questão </th>
                                   <th><i class=""></i> Descrição </th>
                                   <th><i class=""></i> Observação </th>
                                   <th><i class=""></i> Grupo </th>
                                   <th><i class=""></i> Peso </th>
                                   <th><i class=""></i> Falha Crítica</th>
-                                  <th><i class=""></i> Status </th>
-                                  <th><i class=""></i> Supervisor </th>
-                                  <th><i class=""></i> Cargo </th>
-                                  <th><i class=""></i> Grupo </th>
-                                  <th><i class=""></i> Região </th>
+                                  <th><i class=""></i> Possui Parcial  </th>
+                                  <th><i class=""></i> Ativa </th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
                                   <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-                                    if ($row['STATUS_COLABORADOR'] == "ATIVO") {
+                                    if ($row['BO_FALHA_CRITICA'] == "S") {
                                       $corStatus = "label label-success label-mini";
-                                    }elseif (($row['STATUS_COLABORADOR'] == "DESLIGADO") or ($row['STATUS_COLABORADOR'] == "Desligado")) {
+                                    }elseif ($row['BO_FALHA_CRITICA'] == "N")  {
                                       $corStatus = "label label-danger  label-mini";
-                                    }else{
-                                      $corStatus = "label label-warning  label-mini";
                                     }
+
+                                    if ($row['BO_PARCIAL'] == "S") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif ($row['BO_PARCIAL'] == "N")  {
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
+
+                                    if ($row['BO_QUESTAO_ATIVA'] == "S") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif ($row['BO_QUESTAO_ATIVA'] == "N")  {
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
+
                                     ?>
-                                  <td><?php echo $row['ID_MATRICULA'] ?></a></td>
-                                  <td><?php echo $row['NOME'] ?></td>
-                                  <td><?php echo $row['LOGIN_REDE'] ?></a></td>
-                                  <td><?php echo $row['ENTRADA'] ?></a></td>
-                                  <td><?php echo $row['SAIDA'] ?></a></td>
-                                  <td><?php echo $row['CARGA_HORARIO'] ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['STATUS_COLABORADOR']?></span></td>
-                                  <td><?php echo $row['NOMEGESTOR']?></td>
-                                  <td><?php echo $row['CARGO']?></td>
-                                  <td><?php echo $row['GRUPO']?></td>
-                                  <td><?php echo $row['REGIAO']?></td>
+                                  <td style="width: 100px"><?php echo $row['DESCRICAO'] ?></a></td>
+                                  <td style="width: 500px"><?php echo $row['DESC_OBSERVACAO'] ?></td>
+                                  <td><?php echo $row['DESC_GRUPO'] ?></a></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_FALHA_CRITICA'] ?></span></td>
+                                  <td><?php echo $row['PESO'] ?></a></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_PARCIAL'] ?></span></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_QUESTAO_ATIVA']?></span></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                       <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_COLABORADOR'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
