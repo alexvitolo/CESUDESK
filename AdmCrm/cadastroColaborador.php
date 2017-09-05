@@ -143,7 +143,7 @@ sqlsrv_execute($result_Grupo);
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                            <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class=""><a  href="formularioAvaliacao1.php"> Formulário Monitoria </a>
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
                           
                       </ul>
                   </li>
@@ -155,7 +155,8 @@ sqlsrv_execute($result_Grupo);
                           <span>Qualidade</span> 
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class=""><a  href="itensMonitoria.php">Itens Monitoria</a></li>
+                          <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
+                          <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                       </ul>
                   </li>
                           

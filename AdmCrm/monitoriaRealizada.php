@@ -1,39 +1,42 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+
 session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
-$squilaDicas = "SELECT 
-                         tc.ID_MATRICULA
-                        ,tc.ID_COLABORADOR
-                        ,tc.NOME
-                        ,th.ENTRADA
-                        ,th.SAIDA
-                        ,tc.STATUS_COLABORADOR
-                        ,tg.DESCRICAO as GRUPO
-                        ,tr.DESCRICAO as REGIAO
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA1
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='2'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='2'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA2
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='5'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='5'AND DT_VIGENCIA_FINAL is NULL),24)) END LANCHE
 
-                    FROM tb_crm_colaborador tc
-              INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
-              INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
-              INNER JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
-                   WHERE tc.STATUS_COLABORADOR <> 'DESLIGADO'
+if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+}
 
-                ORDER BY tc.NOME";
+
+
+$squilaDicas = "SELECT tp.ID_PESQUISA
+                      ,tp.ID_COLABORADOR
+                      ,tc.NOME as NOME_CONSULTOR
+                      ,tc.ID_MATRICULA as MATRICULA_CONSULTOR
+                      ,tp.ID_COLABORADOR_APLICA
+                      ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tp.ID_COLABORADOR_APLICA) as NOME_QUEM_APLICOU
+                      ,tp.ID_PROCESSO
+                      ,tpro.NOME as NOME_PROCESSO
+                      ,tp.ID_GRUPO
+                      ,tg.DESCRICAO
+                      ,tp.CPF_MONITORIA
+                      ,tp.RAMAL_PA
+                      ,tp.DT_ATENDIMENTO
+                FROM tb_qld_pesquisa tp
+          INNER JOIN tb_crm_processo tpro ON tpro.ID = tp.ID_PROCESSO AND tpro.ATIVO = 1
+          INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tp.ID_COLABORADOR
+          INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tp.ID_GRUPO
+            ORDER BY tp.DT_ATENDIMENTO desc";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
+
+
 
 
 ?>
@@ -119,14 +122,14 @@ sqlsrv_execute($result_squila);
                       </ul>
                   </li>
 
-                 <li class="sub-menu">
-                      <a class="active" href="javascript:;">
+                  <li class="sub-menu">
+                      <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
                           <span>Schedule</span>
                       </a>
                       <ul class="sub">
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
-                          <li class="active"><a  href="escalaPausa.php"> Escala de pausa </a></li>
+                          <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                            <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
@@ -137,16 +140,15 @@ sqlsrv_execute($result_squila);
 
                   <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                       <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-signal"></i>
                           <span>Qualidade</span> 
                       </a> <?php } ?>
                       <ul class="sub">
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
-                          <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class="active"><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                       </ul>
                   </li>
-
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
                       <a class="" href="javascript:;" >
@@ -154,7 +156,8 @@ sqlsrv_execute($result_squila);
                           <span>General</span> 
                       </a> 
                       <ul class="sub">
-                          <li class=""><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -162,9 +165,9 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="processo.php">Processo</a></li>
                           <li class=""><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
-                          
                       </ul>
-                  </li><?php } ?>
+                  </li>
+               <?php } ?>
 
               </ul>
               <!-- sidebar menu end-->
@@ -178,59 +181,47 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Horários</h3>
+            <h3><i class="fa fa-right"></i> Lista de Formulários </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
+
+
+                        <form name="Form" method="post" id="formulario" action="editaMonitoriaRealizada.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela de Horários </h4>
+                            <h4><i class="fa fa-right"></i> Avaliações </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
                               <thead>
                               <tr>
-                                  <th><i class=""></i> Matrícula </th>
-                                  <th><i class=""></i> Nome </th>
-                                  <th><i class=""></i> Entrada </th>
-                                  <th><i class=""></i> Saída </th>
-                                  <th><i class=""></i> Status </th>
+                                  <th><i class=""></i> ID Pesquisa </th>
+                                  <th><i class=""></i> Consultor </th>
                                   <th><i class=""></i> Grupo </th>
-                                  <th><i class=""></i> Região </th>
-                                  <th><i class=""></i> Pausa 1 </th>
-                                  <th><i class=""></i> Lanche </th>
-                                  <th><i class=""></i> Pausa 2 </th>
- 
+                                  <th><i class=""></i> Matrícula Consultor </th>
+                                  <th><i class=""></i> Quem Aplicou </th>
+                                  <th><i class=""></i> Ramal </th>
+                                  <th><i class=""></i> CPF do Aluno  </th>
+                                  <th><i class=""></i> Data Atendimento Cliente </th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
                                   <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
+              
                                     ?>
-
-                                          <?php  
-                                         if ($row['STATUS_COLABORADOR'] == "ATIVO") {
-                                           $corStatus = "label label-success label-mini";
-                                         }elseif (($row['STATUS_COLABORADOR'] == "DESLIGADO") or ($row['STATUS_COLABORADOR'] == "Desligado")) {
-                                           $corStatus = "label label-danger  label-mini";
-                                         }else{
-                                           $corStatus = "label label-warning  label-mini";
-                                         }
-                                         ?>
-
-                                  <td><?php echo $row['ID_MATRICULA']; ?></a></td>
-                                  <td><?php echo $row['NOME']; ?></a></td>
-                                  <td><?php echo date_format($row['ENTRADA'],"H:i"); ?></a></td>
-                                  <td><?php echo date_format($row['SAIDA'],"H:i"); ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['STATUS_COLABORADOR']; ?></a></td>
-                                  <td><?php echo $row['GRUPO']; ?></a></td>
-                                  <td><?php echo $row['REGIAO']; ?></a></td>
-                                  <td><?php echo $row['PAUSA1']; ?></td>
-                                  <td><?php echo $row['LANCHE']; ?></td>
-                                  <td><?php echo $row['PAUSA2']; ?></td>
+                                  <td style="width: 100px"><?php echo $row['ID_PESQUISA'] ?></a></td>
+                                  <td style="width: 300px"><?php echo $row['NOME_CONSULTOR'] ?></td>
+                                  <td><?php echo $row['DESCRICAO'] ?></a></td>
+                                  <td><a><?php echo $row['MATRICULA_CONSULTOR'] ?></a></td>
+                                  <td><?php echo $row['NOME_QUEM_APLICOU'] ?></a></td>
+                                  <td><?php echo $row['RAMAL_PA'] ?></td>
+                                  <td><?php echo $row['CPF_MONITORIA'] ?></td>
+                                  <td><?php echo date_format($row['DT_ATENDIMENTO'],"d/m/Y");?></td>
                                   <td>
-                                      
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_PESQUISA'] ?>"  name="ID_PESQUISA"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 

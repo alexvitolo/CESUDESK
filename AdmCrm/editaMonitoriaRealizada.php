@@ -7,125 +7,97 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
 
-
-$ID_MATRICULA_AVALIADOR = $_SESSION['MATRICULA'];
-
-$ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];  // será passado para proxima pág por hidden
-
-
-  $sqlValida ="SELECT tc.ID_MATRICULA
-                                ,tc.ID_COLABORADOR
-                                ,tc.NOME
-                                ,tg.DESCRICAO AS NOME_GRUPO
-                                ,(SELECT NOME FROM tb_crm_colaborador WHERE tc.ID_COLABORADOR_GESTOR = ID_COLABORADOR ) NOME_GESTOR
-                        FROM tb_crm_colaborador tc
-                INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO 
-                       WHERE ID_MATRICULA ='{$ID_MATRICULA_CONSULTOR}'
-                         AND tc.STATUS_COLABORADOR = 'ATIVO'";
-
-          $stmtValida = sqlsrv_prepare($conn, $sqlValida);
-          $resultValida = sqlsrv_execute($stmtValida);
-          $resultadoSQL = sqlsrv_fetch_array($stmtValida);
-
-          if ( $resultadoSQL == 0) {
-              echo  '<script type="text/javascript">alert("Numero de Matricula não Existe");</script>';
-              echo  '<script type="text/javascript"> window.location.href = "formularioAvaliacao.php" </script>';
-              //header('location: PaginaIni.php');   não funciona
-          }
-$ID_CONSULTOR = $resultadoSQL['ID_COLABORADOR'];
-$NOME_GESTOR =  $resultadoSQL['NOME_GESTOR'];
-$NOME_CONSULTOR =  $resultadoSQL['NOME'];
-$NOME_GRUPO =  $resultadoSQL['NOME_GRUPO'];
+if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+}
 
 
+$ID_PESQUISA = $_POST['ID_PESQUISA'];
 
-$squilaAvaliacao = "SELECT ta.NUMERO
-                          ,ta.ID_AVALIACAO
-                          ,ta.ID_CARGO
-                          ,ta.BO_STATUS
-                     FROM tb_qld_cronograma_avaliacao ta
-               INNER JOIN tb_crm_colaborador tc ON tc.ID_CARGO = ta.ID_CARGO
-                    WHERE tc.ID_COLABORADOR = '{$_SESSION['ID_COLABORADOR']}'
-                      AND ta.BO_STATUS = 'S'
-                      AND NOT EXISTS (SELECT 1 
-                     FROM tb_qld_pesquisa tp
-                    WHERE tp.ID_AVALIACAO = ta.ID_AVALIACAO
-                      AND tp.ID_COLABORADOR = '{$ID_CONSULTOR}') ";
-                  
-$result_squilaAvaliacao = sqlsrv_prepare($conn, $squilaAvaliacao);
-sqlsrv_execute($result_squilaAvaliacao);
+
+$squilaPesquisaQuestoes = "SELECT tp.ID_PESQUISA
+                                 ,tp.ID_COLABORADOR
+                                 ,tc.NOME as NOME_CONSULTOR
+                                 ,tc.ID_MATRICULA as MATRICULA_CONSULTOR
+                                 ,tp.ID_COLABORADOR_APLICA
+                                 ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tc.ID_COLABORADOR_GESTOR) as NOME_SUPERVISOR
+                                ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tp.ID_COLABORADOR_APLICA) as NOME_QUEM_APLICA
+                                 ,tp.ID_PROCESSO
+                                 ,tpro.NOME  as NOME_PROCESSO
+                                 ,tp.ID_GRUPO
+                                 ,tg.DESCRICAO
+                                 ,tp.ID_AVALIACAO
+                                 ,tcro.NUMERO as NUMERO_AVALIACAO
+                                 ,tp.ID_OBJETO_TALISMA
+                                 ,ttal.DESCRICAO as NOME_OBJETOTALISMA
+                                 ,tp.DESC_ID_TALISMA
+                                 ,tp.CPF_MONITORIA
+                                 ,tp.RAMAL_PA
+                                 ,tp.ID_GRAVADOR
+                                 ,tp.NOTA_FINAL
+                                 ,tp.DT_ATENDIMENTO
+                                 ,tp.DT_SISTEMA
+                                 ,tp.ID_RESULT_LIG
+                                 ,tp.OBSERVACAO_PESQUISA
+                           FROM tb_qld_pesquisa tp
+                     INNER JOIN tb_crm_processo tpro ON tpro.ID = tp.ID_PROCESSO AND tpro.ATIVO = 1
+                     INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tp.ID_COLABORADOR
+                     INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tp.ID_GRUPO 
+                     INNER JOIN tb_qld_cronograma_avaliacao tcro ON tcro.ID_AVALIACAO = tp.ID_AVALIACAO
+                     INNER JOIN tb_qld_objeto_talisma ttal ON ttal.ID_OBJETO_TALISMA = tp.ID_OBJETO_TALISMA
+                          WHERE tp.ID_PESQUISA = {$ID_PESQUISA} " ;
+
+$result_squilaPesquisaQuestoes = sqlsrv_prepare($conn, $squilaPesquisaQuestoes);
+sqlsrv_execute($result_squilaPesquisaQuestoes);
+$resultadoSQL = sqlsrv_fetch_array($result_squilaPesquisaQuestoes);
 
 
 
 
+$squilaItensQuestoes = "SELECT tq.ID_ITEM_PESQUISA
+                                 ,tq.ID_QUESTAO
+                                 ,tque.DESCRICAO
+                                 ,tque.DESC_OBSERVACAO
+                                 ,tq.RESPOSTA
+                                 ,tq.NOTA_RESULTADO
+                                 ,tq.ID_PESQUISA
+                                 ,tque.PESO
+                                 ,tque.BO_PARCIAL
+                            FROM tb_qld_itens_questoes tq
+                      INNER JOIN tb_qld_questoes tque ON tque.ID_QUESTAO = tq.ID_QUESTAO
+                           WHERE tq.ID_PESQUISA = {$ID_PESQUISA}
+                            AND tque.BO_QUESTAO_ATIVA = 'S'
+                            AND tque.BO_FALHA_CRITICA = 'N'  " ;
 
-
-$squilaQuestao = "SELECT ID_QUESTAO
-                           ,tc.ID_MATRICULA
-                           ,tq.ID_QUESTAO
-                           ,tq.DESCRICAO
-                           ,tq.PESO
-                           ,tq.DESC_OBSERVACAO
-                           ,tq.BO_FALHA_CRITICA
-                           ,tq.BO_PARCIAL
-                           ,CASE WHEN tc.ID_GRUPO in (1,2,3,4,5) THEN 1 ELSE tc.ID_GRUPO END GRUPO_COLABORADOR
-                      FROM tb_qld_questoes tq 
-                INNER JOIN tb_crm_colaborador tc ON CASE 
-                                                    WHEN tc.ID_GRUPO IN (1,2,3,4,5) THEN 1 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
-                     WHERE BO_FALHA_CRITICA = 'N'
-                       AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'
-                       AND tc.STATUS_COLABORADOR ='ATIVO' ";
-
-$result_squilaQuestao = sqlsrv_prepare($conn, $squilaQuestao);
-sqlsrv_execute($result_squilaQuestao);
+$result_squilaItensQuestoes = sqlsrv_prepare($conn, $squilaItensQuestoes);
+sqlsrv_execute($result_squilaItensQuestoes);
 
 
 
-$squilaObjetoTalisma = "SELECT ID_OBJETO_TALISMA
-                              ,DESCRICAO
-                              ,TABELA_TALISMA
-                          FROM tb_qld_objeto_talisma";
 
-$result_squilaObjetoTalisma = sqlsrv_prepare($conn, $squilaObjetoTalisma);
-sqlsrv_execute($result_squilaObjetoTalisma);
+$squilaItensQuestoesCrit = "SELECT tq.ID_ITEM_PESQUISA
+                                 ,tq.ID_QUESTAO
+                                 ,tque.DESCRICAO
+                                 ,tque.DESC_OBSERVACAO
+                                 ,tq.RESPOSTA
+                                 ,tq.NOTA_RESULTADO
+                                 ,tq.ID_PESQUISA
+                                 ,tque.PESO
+                                 ,tque.BO_PARCIAL
+                            FROM tb_qld_itens_questoes tq
+                      INNER JOIN tb_qld_questoes tque ON tque.ID_QUESTAO = tq.ID_QUESTAO
+                           WHERE tq.ID_PESQUISA = {$ID_PESQUISA}
+                            AND tque.BO_QUESTAO_ATIVA = 'S'
+                            AND tque.BO_FALHA_CRITICA = 'S'  " ;
 
+$result_squilaItensQuestoesCrit = sqlsrv_prepare($conn, $squilaItensQuestoesCrit);
+sqlsrv_execute($result_squilaItensQuestoesCrit);
 
-
-$squilaQuestaoCritico = "SELECT ID_QUESTAO
-                           ,tc.ID_MATRICULA
-                           ,tq.ID_QUESTAO
-                           ,tq.DESCRICAO
-                           ,tq.PESO
-                           ,tq.DESC_OBSERVACAO
-                           ,tq.BO_FALHA_CRITICA
-                           ,tq.BO_PARCIAL
-                           ,CASE WHEN tc.ID_GRUPO in (1,2,3,4,5) THEN 1 ELSE tc.ID_GRUPO END GRUPO_COLABORADOR
-                      FROM tb_qld_questoes tq 
-                INNER JOIN tb_crm_colaborador tc ON CASE 
-                                                    WHEN tc.ID_GRUPO IN (1,2,3,4,5) THEN 1 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
-                     WHERE BO_FALHA_CRITICA = 'S'
-                       AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'
-                       AND tc.STATUS_COLABORADOR ='ATIVO' ";
-
-$result_squilaQuestaoCritico = sqlsrv_prepare($conn, $squilaQuestaoCritico);
-sqlsrv_execute($result_squilaQuestaoCritico);
-
-
-$squilaResultLigacao = "SELECT trs.ID_RESULT_LIG
-                               ,tg.DESCRICAO
-                               ,trs.DESCRICAO AS DESC_RESUL_LIGACAO
-                          FROM tb_qld_resultado_ligacao trs
-                    INNER JOIN tb_crm_grupo tg ON (CASE WHEN tg.ID_GRUPO IN (1,2,3,4,5) THEN 1 ELSE tg.ID_GRUPO END) = trs.ID_GRUPO
-                    INNER JOIN tb_crm_colaborador tc ON tc.ID_GRUPO = tg.ID_GRUPO
-                         WHERE tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'  ";
-
-$result_squilaResultLigacao = sqlsrv_prepare($conn, $squilaResultLigacao);
-sqlsrv_execute($result_squilaResultLigacao);
 
 
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -209,7 +181,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                   </li>
 
                   <li class="sub-menu">
-                      <a class="active" href="javascript:;">
+                      <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
                           <span>Schedule</span>
                       </a>
@@ -219,20 +191,20 @@ sqlsrv_execute($result_squilaResultLigacao);
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class="active"><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
                           
                       </ul>
                   </li>
 
                    <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                       <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-signal"></i>
                           <span>Qualidade</span> 
                       </a> <?php } ?>
                       <ul class="sub">
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
-                          <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class="active"><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                       </ul>
                   </li>
 
@@ -285,7 +257,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">Nome Consultor: </label>
                             </td>
                             <td align="left"><br>
-                            <?php echo $NOME_CONSULTOR ?></a>            
+                            <?php echo $resultadoSQL['NOME_CONSULTOR'] ?></a>            
                             </td>
                              </tr>
 
@@ -294,7 +266,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome" > Supervisor: </label>
                             </td>
                             <td align="left"><br>
-                            <?php echo $NOME_GESTOR ?></a>            
+                            <?php echo $resultadoSQL['NOME_SUPERVISOR']  ?></a>    
                             </td>
                             </tr>
 
@@ -303,7 +275,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">Grupo: </label>
                             </td>
                             <td align="left"><br>
-                            <?php echo $NOME_GRUPO ?></a>            
+                            <?php echo $resultadoSQL['DESCRICAO'] ?></a>            
                             </td>
                              </tr>
 
@@ -320,13 +292,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">Avaliação: </label>
                             </td>
                             <td align="left"><br>
-                             <select name="ID_AVALIACAO">
-                                            <option value="null">Escolha uma Avaliacao</option>
-                                           <?php while ($row = sqlsrv_fetch_array($result_squilaAvaliacao)){ ?>
-                                            <option value="<?php echo $row['ID_AVALIACAO']?> "> <?php echo $row['NUMERO'] ?> </option>
-                                         <?php }
-                                         ?>
-                             </select>
+                            <?php echo $resultadoSQL['NUMERO_AVALIACAO'] ?></a> 
                             </td>
                              </tr>
                           </table>
@@ -338,22 +304,18 @@ sqlsrv_execute($result_squilaResultLigacao);
                           <table cellspacing="10" style="vertical-align: middle">
                            <tr>
                            <td style="width:110px";><br>
-                             <label style="margin-left: 15px" for="nome">OBJETO: </label>
+                             <label style="margin-left: 15px" for="nome">OBJETO: </label> 
                             </td>
                             <td align="left"><br>
-                             <select name="ID_OBJETO_TALISMA">
-                                            <option value="null">Escolha uma Avaliacao</option>
-                                           <?php while ($row = sqlsrv_fetch_array($result_squilaObjetoTalisma)){ ?>
-                                            <option value=<?php echo $row['ID_OBJETO_TALISMA']?> > <?php echo $row['DESCRICAO'] ?> </option>
-                                         <?php }
-                                         ?>
-                             </select>
+                             <?php echo $resultadoSQL['NOME_OBJETOTALISMA'] ?></a> 
                             </td>
+                            </tr>
+                            <tr>
                              <td style="width:110px";><br>
                              <label style="margin-left: 15px" for="nome">ID Objeto: </label>
                             </td>
                             <td align="left"><br>
-                             <input type="text" name="DESC_ID_TALISMA" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                             <?php echo $resultadoSQL['DESC_ID_TALISMA'] ?></a> 
                             </td>
                              </tr>
                           </table>
@@ -366,26 +328,32 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <td style="width:110px";> <br>
                              <label style="margin-left: 15px" for="nome">CPF do Candidato: </label>
                             </td>
-                            <td align="left">
-                             <input type="text" name="CPF_MONITORIA"  maxlength="14" OnKeyPress="formatar('###.###.###-##', this)" >
+                            <td align="left"><br>
+                             <?php echo $resultadoSQL['CPF_MONITORIA'] ?></a> 
                             </td>
-                             <td style="width:110px";> 
+                            </tr>
+                            <tr>
+                             <td style="width:110px";> <br>
                              <label style="margin-left: 15px" for="nome">Gravador: </label>
                             </td>
-                            <td align="left">
-                             <input type="text" name="ID_GRAVADOR"  maxlength="15"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'  >
+                            <td align="left"><br>
+                            <?php echo $resultadoSQL['ID_GRAVADOR'] ?></a> 
                             </td>
-                            <td style="width:110px";> 
+                            </tr>
+                            <tr>
+                            <td style="width:110px";> <br>
                              <label style="margin-left: 15px" for="nome">Ramal PA: </label>
                             </td>
-                            <td align="left">
-                             <input type="text" name="RAMAL_PA"  maxlength="15"   onkeypress='return event.charCode >= 48 && event.charCode <= 57' >
+                            <td align="left"><br>
+                           <?php echo $resultadoSQL['RAMAL_PA'] ?></a> 
                             </td>
-                             <td style="width:110px";> 
+                            </tr>
+                            <tr>
+                             <td style="width:110px";> <br>
                              <label style="margin-left: 15px" for="nome">Data Atendimento: </label>
                             </td>
-                            <td align="left">
-                             <input type="date" name="DT_ATENDIMENTO"  maxlength="15"  >
+                            <td align="left"><br>
+                             <?php echo date_format($resultadoSQL['DT_ATENDIMENTO'],"d/m/Y"); ?></a> 
                             </td>
                              </tr>
                           </table>
@@ -393,26 +361,19 @@ sqlsrv_execute($result_squilaResultLigacao);
 
                          <!--  variaveis php auxiliares    -->
 
-                         <?php
-
-                          $numeroItem = 1;
-                          $numeroItemCrit = 1;
-                    
-
-                         ?>
-
+                          <?php $numeroItem = 1 ;  $numeroItemCrit = 1 ; ?>
 
                         <fieldset>
                           <legend> Itens da Monitoria </legend> 
                           <table cellspacing="10" style="vertical-align: middle">
                            <tr>
-                     <?php while ($row1 = sqlsrv_fetch_array($result_squilaQuestao)) { ?>
+                     <?php while ($row1 = sqlsrv_fetch_array($result_squilaItensQuestoes)) { ?>
                              <td style="width:420px";> <br><hr>
                              <label style="margin-left: 15px" for="nome">Item <?php echo $numeroItem ?> : <?php echo $row1['DESCRICAO'] ?> </label>
                             </td>
                             <td><br><hr>
-                              <select name="vetorRespostas[<?php echo $row1['ID_QUESTAO']?>][<?php echo $row1['PESO']?>]"> 
-                                 <option value="" > Selecione uma Opção </option> 
+                              <select name="vetorRespostasCrit[<?php echo $row1['ID_QUESTAO']?>][<?php echo $row1['PESO']?>]""> 
+                                 <option value=" <?php echo $row1['RESPOSTA'] ?> " >  <?php echo $row1['RESPOSTA'] ?>  </option> 
                                  <option value="S">SIM</option>
                                  <option value="N">NÃO</option> 
                           <?php if ( $row1['BO_PARCIAL'] == 'S') { ?>
@@ -430,12 +391,13 @@ sqlsrv_execute($result_squilaResultLigacao);
                           <legend> Falhas Críticas </legend> 
                           <table cellspacing="10" style="vertical-align: middle">
                            <tr>
-                     <?php while ($row2 = sqlsrv_fetch_array($result_squilaQuestaoCritico)){ ?>
+                     <?php while ($row2 = sqlsrv_fetch_array($result_squilaItensQuestoesCrit)){ ?>
                              <td style="width:420px";><br><hr>
                              <label style="margin-left: 15px" for="nome">Item <?php echo $numeroItemCrit ?> : <?php echo $row2['DESCRICAO'] ?> </label>
                             </td>
                             <td><br><hr>
                               <select name="vetorRespostasCrit[<?php echo $row2['ID_QUESTAO']?>][<?php echo $row2['PESO']?>]"> 
+                               <option value=" <?php echo $row2['RESPOSTA'] ?> " >  <?php echo $row2['RESPOSTA'] ?>  </option>
                                  <option value="N" >NÃO</option> 
                                  <option value="S">SIM</option>
                                   <?php if ( $row2['BO_PARCIAL'] == 'S') { ?>

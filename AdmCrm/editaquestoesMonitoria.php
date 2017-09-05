@@ -7,23 +7,44 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
 
+if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+}
 
 
-$squilaDicas = "SELECT tq.ID_QUESTAO
+$ID_QUESTAO = $_POST['ID_QUESTAO'];
+
+
+$squilaQuestoes = "SELECT tq.ID_QUESTAO
                         ,tq.DESCRICAO
                         ,tq.DESC_OBSERVACAO
                         ,tc.DESCRICAO AS DESC_GRUPO
+                        ,tc.ID_GRUPO
                         ,tq.PESO
                         ,tq.BO_FALHA_CRITICA
                         ,tq.BO_PARCIAL
-                        ,tq.DT_SISTEMA
                         ,tq.BO_QUESTAO_ATIVA
                     FROM tb_qld_questoes tq
                   INNER JOIN tb_crm_grupo tc ON tc.ID_GRUPO = TQ.ID_GRUPO
+                   WHERE tq.ID_QUESTAO = {$ID_QUESTAO}
                   ORDER BY DESC_GRUPO";
 
-$result_squila = sqlsrv_prepare($conn, $squilaDicas);
-sqlsrv_execute($result_squila);
+$result_squilaQuestoes = sqlsrv_prepare($conn, $squilaQuestoes);
+sqlsrv_execute($result_squilaQuestoes);
+$resultadoSQL = sqlsrv_fetch_array($result_squilaQuestoes);
+
+
+
+$squilaGrupo = "SELECT DISTINCT 
+                            CASE WHEN ID_GRUPO in (1,2,3,4,5) THEN 1 ELSE ID_GRUPO END ID_GRUPO_COLABORADOR
+                            ,DESCRICAO
+                       FROM tb_crm_grupo";
+
+$result_squilaGrupo= sqlsrv_prepare($conn, $squilaGrupo);
+sqlsrv_execute($result_squilaGrupo);
+
+
 
 
 ?>
@@ -120,31 +141,32 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                            <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class=""><a  href="formularioAvaliacao1.php"> Formulário Monitoria </a>
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
                           
                       </ul>
                   </li>
 
                   <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                       <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-signal"></i>
                           <span>Qualidade</span> 
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class=""><a  href="itensMonitoria.php">Itens Monitoria</a></li>
+                          <li class="active"><a  href="questoesMonitoria.php">Questões</a></li>
+                          <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                       </ul>
                   </li>
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
-                      </a> <?php } ?>
+                      </a> 
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
-                          <li class="active"><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
                           <li class=""><a  href="regiao.php">Região</a></li>
@@ -153,6 +175,7 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
                   </li>
+               <?php } ?>
 
               </ul>
               <!-- sidebar menu end-->
@@ -172,68 +195,106 @@ sqlsrv_execute($result_squila);
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
+
+                        <form name="Form" method="post" id="formulario" action="ValidaEditaquestoesMonitoria.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela Colaboradores </h4>
-                            <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroColaborador.php"><input style="margin-left: 800px" type="button" value="Novo Colaborador" ></input></a>
-                              <thead>
-                              <tr>
-                                  <th><i class=""></i> Descrição </th>
-                                  <th><i class=""></i> Observação </th>
-                                  <th><i class=""></i> Grupo </th>
-                                  <th><i class=""></i> Peso </th>
-                                  <th><i class=""></i> Falha Crítica</th>
-                                  <th><i class=""></i> Possui Parcial  </th>
-                                  <th><i class=""></i> Ativa </th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-                                    if ($row['BO_FALHA_CRITICA'] == "S") {
-                                      $corStatus = "label label-success label-mini";
-                                    }elseif ($row['BO_FALHA_CRITICA'] == "N")  {
-                                      $corStatus = "label label-danger  label-mini";
-                                    }
+                            <h4><i class="fa fa-right"></i> Edição de Ítens </h4>
+                            <fieldset>
+                          <legend> Editar </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" >Descrição: </label>
+                            </td>
+                            <td align="left">
+                             <input type="text" size="80" name="DESCRICAO" value="<?php echo $resultadoSQL['DESCRICAO']; ?>">
+                            </td>
+                            </tr>
+                            <tr>
+                            <td>
+                             <label style="margin-left: 15px" for="nome">Oberservação: </label>
+                            </td>
+                            <td align="left"><br><br>
+                             <textarea name="DESC_OBSERVACAO" cols="120" rows="10" > <?php echo $resultadoSQL['DESC_OBSERVACAO']; ?> </textarea>
+                            </td>
+                           </tr>
 
-                                    if ($row['BO_PARCIAL'] == "S") {
-                                      $corStatus = "label label-success label-mini";
-                                    }elseif ($row['BO_PARCIAL'] == "N")  {
-                                      $corStatus = "label label-danger  label-mini";
-                                    }
+                           <tr>
+                            <td style="width:120px";><br>
+                             <label style="margin-left: 15px">Grupo:</label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="ID_GRUPO">
+                                            <option value="<?php echo $resultadoSQL['ID_GRUPO']; ?>"> <?php echo $resultadoSQL['DESC_GRUPO']; ?> </option>
+                                           <?php while ($row = sqlsrv_fetch_array($result_squilaGrupo)){ ?>
+                                            <option value=<?php echo $row['ID_GRUPO_COLABORADOR']?> > <?php echo $row['DESCRICAO'] ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
+                            </td>
+                            </td>
+                           </tr>
 
-                                    if ($row['BO_QUESTAO_ATIVA'] == "S") {
-                                      $corStatus = "label label-success label-mini";
-                                    }elseif ($row['BO_QUESTAO_ATIVA'] == "N")  {
-                                      $corStatus = "label label-danger  label-mini";
-                                    }
+                            <tr>
+                            <td><br>
+                             <label style="margin-left: 15px"> Peso: </label>
+                            </td>
+                            <td align="left"><br>
+                             <input type="text" name="PESO" value="<?php echo $resultadoSQL['PESO']; ?>">
+                            </td>
+                            </tr>
+                            <tr>
+                            <td><br>
+                             <label style="margin-left: 15px" for="status">Falha Crítica:</label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="BO_FALHA_CRITICA">
+                                    <option value="<?php echo $resultadoSQL['BO_FALHA_CRITICA']; ?>"><?php if ($resultadoSQL['BO_FALHA_CRITICA'] == 'S') { echo "SIM" ;} else {echo "NÃO" ;} ?></option> 
+                                    <option value="S">SIM</option>
+                                    <option value="N">NÃO</option> 
+                            </select>
+                            </td>
+                            </tr>
+                            <tr>
+                              <td><br>
+                             <label style="margin-left: 15px" for="status">Questão Parcial: </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="BO_PARCIAL">
+                                    <option value="<?php echo $resultadoSQL['BO_PARCIAL']; ?>"><?php if ($resultadoSQL['BO_PARCIAL'] == 'S') { echo "SIM" ;} else {echo "NÃO" ;} ?></option> 
+                                    <option value="S">SIM</option>
+                                    <option value="N">NÃO</option> 
+                            </select>
+                            </td>
+                           </tr>
 
-                                    ?>
-                                  <td style="width: 100px"><?php echo $row['DESCRICAO'] ?></a></td>
-                                  <td style="width: 500px"><?php echo $row['DESC_OBSERVACAO'] ?></td>
-                                  <td><?php echo $row['DESC_GRUPO'] ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_FALHA_CRITICA'] ?></span></td>
-                                  <td><?php echo $row['PESO'] ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_PARCIAL'] ?></span></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_QUESTAO_ATIVA']?></span></td>
-                                  <td>
-                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_COLABORADOR'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
-                                  </td>
-                              </tr>
+                           <tr>
+                              <td><br>
+                             <label style="margin-left: 15px" for="status">Status: </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="BO_QUESTAO_ATIVA">
+                                    <option value="<?php echo $resultadoSQL['BO_QUESTAO_ATIVA']; ?>"><?php if ($resultadoSQL['BO_QUESTAO_ATIVA'] == 'S') { echo "ATIVO" ;} else {echo "DESATIVO" ;} ?></option> 
+                                    <option value="S">ATIVO</option>
+                                    <option value="N">DESATIVO</option> 
+                            </select>
+                            </td>
+                           </tr>
 
-                              <?php 
-                                    }
-                              ?>
-                              
-                              </tbody>
-                          </table>
-                        </form>
+                         </table><br><br>
+
+
+                         <br/>
+
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $resultadoSQL['ID_QUESTAO'] ?>"  name="ID_QUESTAO">Confirmar</button> 
+                         <a href="questoesMonitoria.php"><input type="button" value="Cancelar"></a>
+                      </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
+
+    </section>
+      </section><!-- /MAIN CONTENT -->
 
     </section>
       </section><!-- /MAIN CONTENT -->
