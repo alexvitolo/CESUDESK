@@ -14,27 +14,13 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 
 
 
-$squilaDicas = "SELECT tp.ID_PESQUISA
-                      ,tp.ID_COLABORADOR
-                      ,tc.NOME as NOME_CONSULTOR
-                      ,tc.ID_MATRICULA as MATRICULA_CONSULTOR
-                      ,tp.ID_COLABORADOR_APLICA
-                      ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tp.ID_COLABORADOR_APLICA) as NOME_QUEM_APLICOU
-                      ,tp.ID_PROCESSO
-                      ,tpro.NOME as NOME_PROCESSO
-                      ,tp.ID_GRUPO
-                      ,tcron.NUMERO as NUMERO_AVALIACAO
-                      ,tg.DESCRICAO
-                      ,tp.CPF_MONITORIA
-                      ,tp.RAMAL_PA
-                      ,tp.DT_ATENDIMENTO
-                      ,tp.NOTA_FINAL
-                FROM tb_qld_pesquisa tp
-          INNER JOIN tb_crm_processo tpro ON tpro.ID = tp.ID_PROCESSO AND tpro.ATIVO = 1
-          INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tp.ID_COLABORADOR
-          INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tp.ID_GRUPO
-          INNER JOIN tb_qld_cronograma_avaliacao tcron ON tcron.ID_AVALIACAO = tp.ID_AVALIACAO
-            ORDER BY tp.DT_ATENDIMENTO desc";
+$squilaDicas = "SELECT tcron.ID_AVALIACAO
+                      ,tcron.NUMERO
+                      ,tcron.ID_CARGO
+                      ,tcar.DESCRICAO
+                      ,tcron.BO_STATUS
+                FROM tb_qld_cronograma_avaliacao tcron
+          INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tcron.ID_CARGO";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
@@ -134,7 +120,7 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
-                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
                           <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
                           
@@ -149,7 +135,8 @@ sqlsrv_execute($result_squila);
                       </a> <?php } ?>
                       <ul class="sub">
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
-                          <li class="active"><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class="active"><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
                       </ul>
                   </li>
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
@@ -199,36 +186,30 @@ sqlsrv_execute($result_squila);
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
                               <thead>
                               <tr>
-                                  <th><i class=""></i> ID Pesquisa </th>
-                                  <th><i class=""></i> Consultor </th>
-                                  <th><i class=""></i> Avaliação </th>
-                                  <th><i class=""></i> Grupo </th>
-                                  <th><i class=""></i> Matrícula Consultor </th>
-                                  <th><i class=""></i> Quem Aplicou </th>
-                                  <th><i class=""></i> Ramal </th>
-                                  <th><i class=""></i> CPF do Aluno  </th>
-                                  <th><i class=""></i> Data Atendimento Cliente </th>
-                                  <th><i class=""></i> Nota Final </th>
+                                  <th><i class=""></i> ID Avaliação </th>
+                                  <th><i class=""></i> Numero </th>
+                                  <th><i class=""></i> Cargo </th>
+                                  <th><i class=""></i> Status </th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
                                   <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
+
+                                    if ($row['BO_STATUS'] == "S") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif ($row['BO_STATUS'] == "N")  {
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
               
                                     ?>
-                                  <td style="width: 100px"><?php echo $row['ID_PESQUISA'] ?></a></td>
-                                  <td style="width: 250px"><?php echo $row['NOME_CONSULTOR'] ?></td>
-                                  <td style="text-align: center;"><?php echo $row['NUMERO_AVALIACAO'] ?></a></td>
+                                  <td style="width: 100px"><?php echo $row['ID_AVALIACAO'] ?></a></td>
+                                  <td><?php echo $row['NUMERO'] ?></td>
                                   <td><?php echo $row['DESCRICAO'] ?></a></td>
-                                  <td><a><?php echo $row['MATRICULA_CONSULTOR'] ?></a></td>
-                                  <td><?php echo $row['NOME_QUEM_APLICOU'] ?></a></td>
-                                  <td><?php echo $row['RAMAL_PA'] ?></td>
-                                  <td><?php echo $row['CPF_MONITORIA'] ?></td>
-                                  <td><?php echo date_format($row['DT_ATENDIMENTO'],"d/m/Y");?></td>
-                                  <td><?php echo $row['NOTA_FINAL'] ?></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_STATUS'] ?></span></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_PESQUISA'] ?>"  name="ID_PESQUISA"><i class="fa fa-pencil"></i></button>
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_AVALIACAO'] ?>"  name="ID_AVALIACAO"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 

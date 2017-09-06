@@ -144,6 +144,7 @@ sqlsrv_execute($result_squila);
                       <ul class="sub">
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
                       </ul>
                   </li>
 

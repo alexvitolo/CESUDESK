@@ -97,6 +97,20 @@ sqlsrv_execute($result_squilaItensQuestoesCrit);
 
 
 
+
+$squilaResultLigacao = "SELECT tlig.ID_RESULT_LIG
+                              ,tlig.ID_GRUPO
+                              ,tlig.DESCRICAO
+                          FROM tb_qld_resultado_ligacao tlig
+                          WHERE tlig.ID_GRUPO = {$resultadoSQL['ID_GRUPO']}  " ;
+
+$result_squilaResultLigacao = sqlsrv_prepare($conn, $squilaResultLigacao);
+sqlsrv_execute($result_squilaResultLigacao);
+
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -246,7 +260,7 @@ sqlsrv_execute($result_squilaItensQuestoesCrit);
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="formularioCadastroAvaliacaoValida.php">
+                         <form name="Form" method="post" id="formulario" action="ValidaEditaMonitoriaRealizada.php">
 
 
                          <fieldset>
@@ -372,8 +386,8 @@ sqlsrv_execute($result_squilaItensQuestoesCrit);
                              <label style="margin-left: 15px" for="nome">Item <?php echo $numeroItem ?> : <?php echo $row1['DESCRICAO'] ?> </label>
                             </td>
                             <td><br><hr>
-                              <select name="vetorRespostasCrit[<?php echo $row1['ID_QUESTAO']?>][<?php echo $row1['PESO']?>]""> 
-                                 <option value=" <?php echo $row1['RESPOSTA'] ?> " >  <?php echo $row1['RESPOSTA'] ?>  </option> 
+                              <select name="vetorRespostas[<?php echo $row1['ID_QUESTAO']?>][<?php echo $row1['PESO']?>]""> 
+                                 <option value="<?php echo $row1['RESPOSTA'] ?>"><?php echo $row1['RESPOSTA'] ?></option> 
                                  <option value="S">SIM</option>
                                  <option value="N">NÃO</option> 
                           <?php if ( $row1['BO_PARCIAL'] == 'S') { ?>
@@ -397,7 +411,7 @@ sqlsrv_execute($result_squilaItensQuestoesCrit);
                             </td>
                             <td><br><hr>
                               <select name="vetorRespostasCrit[<?php echo $row2['ID_QUESTAO']?>][<?php echo $row2['PESO']?>]"> 
-                               <option value=" <?php echo $row2['RESPOSTA'] ?> " >  <?php echo $row2['RESPOSTA'] ?>  </option>
+                               <option value="<?php echo $row2['RESPOSTA'] ?>" ><?php echo $row2['RESPOSTA'] ?></option>
                                  <option value="N" >NÃO</option> 
                                  <option value="S">SIM</option>
                                   <?php if ( $row2['BO_PARCIAL'] == 'S') { ?>
@@ -420,9 +434,8 @@ sqlsrv_execute($result_squilaItensQuestoesCrit);
                              </td>
                              <td>
                              <select name="ID_RESULT_LIG">
-                                            <option value="null">Escolha uma Avaliacao</option>
                                            <?php while ($row = sqlsrv_fetch_array($result_squilaResultLigacao)){ ?>
-                                            <option value=<?php echo $row['ID_RESULT_LIG']?> > <?php echo $row['DESC_RESUL_LIGACAO'] ?> </option>
+                                            <option <?php if ($resultadoSQL['ID_RESULT_LIG'] == $row['ID_RESULT_LIG']) { echo 'selected'; } ?> value=<?php echo $row['ID_RESULT_LIG']?> > <?php echo $row['DESCRICAO'] ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -435,7 +448,7 @@ sqlsrv_execute($result_squilaItensQuestoesCrit);
                               <label style="margin-left: 15px" for="nome">Observação: </label>
                              </td>
                              <td align="left"><br>
-                              <textarea name="OBSERVACAO_PESQUISA" cols="120" rows="10" > TEXTO </textarea>
+                              <textarea name="OBSERVACAO_PESQUISA" cols="120" rows="10" > <?php echo $resultadoSQL['OBSERVACAO_PESQUISA'] ?> </textarea>
                              </td>
                             </tr>
                            </table>
@@ -444,10 +457,9 @@ sqlsrv_execute($result_squilaItensQuestoesCrit);
                         
 
                          <br/>
-                          <input type="hidden" name="ID_MATRICULA_CONSULTOR" value="<?php echo $ID_MATRICULA_CONSULTOR ?>"> 
-                          <input type="hidden" name="ID_CONSULTOR" value="<?php echo $ID_CONSULTOR ?>"> 
+                          <input type="hidden" name="ID_PESQUISA" value="<?php echo $ID_PESQUISA ?>"> 
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
-                         <a href="formularioAvaliacao.php"><input type="button" value="Cancelar"></a>
+                         <a href="monitoriaRealizada.php"><input type="button" value="Cancelar"></a>
                       </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
