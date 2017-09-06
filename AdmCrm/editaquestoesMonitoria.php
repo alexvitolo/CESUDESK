@@ -190,7 +190,7 @@ sqlsrv_execute($result_squilaGrupo);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Colaboradores</h3>
+            <h3><i class="fa fa-right"></i> Questões </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
@@ -199,7 +199,7 @@ sqlsrv_execute($result_squilaGrupo);
 
                         <form name="Form" method="post" id="formulario" action="ValidaEditaquestoesMonitoria.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Edição de Ítens </h4>
+                            <h4><i class="fa fa-right"></i> Tela de Edição de Ítens </h4>
                             <fieldset>
                           <legend> Editar </legend> 
                           <table cellspacing="10" style="vertical-align: middle">

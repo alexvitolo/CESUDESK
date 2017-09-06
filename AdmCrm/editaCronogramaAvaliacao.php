@@ -13,19 +13,41 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 }
 
 
+$ID_AVALIACAO = $_POST['ID_AVALIACAO'];
 
-$squilaDicas = "SELECT tcron.ID_AVALIACAO
+
+$squilaAvaliacao = "SELECT tcron.ID_AVALIACAO
                       ,tcron.NUMERO
                       ,tcron.ID_CARGO
                       ,tcar.DESCRICAO
                       ,tcron.BO_STATUS
                 FROM tb_qld_cronograma_avaliacao tcron
-          INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tcron.ID_CARGO";
+          INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tcron.ID_CARGO
+               WHERE ID_AVALIACAO = {$ID_AVALIACAO} ";
 
-$result_squila = sqlsrv_prepare($conn, $squilaDicas);
-sqlsrv_execute($result_squila);
+$result_squilaAvaliacao = sqlsrv_prepare($conn, $squilaAvaliacao);
+sqlsrv_execute($result_squilaAvaliacao);
+$resultadoSQL = sqlsrv_fetch_array($result_squilaAvaliacao);
 
 
+$squilaNumeroAvaliacao = "SELECT 
+                                tcron.NUMERO
+                FROM tb_qld_cronograma_avaliacao tcron ";
+
+$result_squilaNumeroAvaliacao = sqlsrv_prepare($conn, $squilaNumeroAvaliacao);
+sqlsrv_execute($result_squilaNumeroAvaliacao);
+
+
+
+$squilaCargoAvaliacao = "SELECT 
+                              tcron.ID_CARGO
+                             ,tcar.DESCRICAO
+                FROM tb_qld_cronograma_avaliacao tcron
+                INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tcron.ID_CARGO
+                GROUP BY  tcar.DESCRICAO, tcron.ID_CARGO";
+
+$result_squilaCargoAvaliacao = sqlsrv_prepare($conn, $squilaCargoAvaliacao);
+sqlsrv_execute($result_squilaCargoAvaliacao);
 
 
 ?>
@@ -120,7 +142,7 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
-                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
                           <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
                           
@@ -171,58 +193,84 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Formulários </h3>
+            <h3><i class="fa fa-right"></i> Tela de Edição de Cronograma </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
 
-
-                        <form name="Form" method="post" id="formulario" action="editaCronogramaAvaliacao.php">
+                        <form name="Form" method="post" id="formulario" action="ValidaEditaCronogramaAvaliacao.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Avaliações </h4>
-                            <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                              <thead>
-                              <tr>
-                                  <th><i class=""></i> ID Avaliação </th>
-                                  <th><i class=""></i> Numero </th>
-                                  <th><i class=""></i> Cargo </th>
-                                  <th><i class=""></i> Status </th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
+                            <h4><i class="fa fa-right"></i></h4>
+                            <fieldset>
+                          <legend> Cronograma Avaliação </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" >ID Pesquisa: </label>
+                            </td>
+                            <td align="left">
+                             <a><?php echo $resultadoSQL['ID_AVALIACAO']; ?> </a>
+                            </td>
+                            </tr>
+                            <tr>
+                            <td><br>
+                             <label style="margin-left: 15px"> Numero: </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="NUMERO">
+                                            <option value="<?php echo $resultadoSQL['NUMERO']; ?>"> <?php echo $resultadoSQL['NUMERO']; ?> </option>
+                                           <?php while ($row = sqlsrv_fetch_array($result_squilaNumeroAvaliacao)){ ?>
+                                            <option value=<?php echo $row['NUMERO']?> > <?php echo $row['NUMERO'] ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
+                            </td>
+                           </tr>
 
-                                    if ($row['BO_STATUS'] == "S") {
-                                      $corStatus = "label label-success label-mini";
-                                    }elseif ($row['BO_STATUS'] == "N")  {
-                                      $corStatus = "label label-danger  label-mini";
-                                    }
-              
-                                    ?>
-                                  <td style="width: 100px"><?php echo $row['ID_AVALIACAO'] ?></a></td>
-                                  <td><?php echo $row['NUMERO'] ?></td>
-                                  <td><?php echo $row['DESCRICAO'] ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_STATUS'] ?></span></td>
-                                  <td>
-                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_AVALIACAO'] ?>"  name="ID_AVALIACAO"><i class="fa fa-pencil"></i></button>
-                                  </td>
-                              </tr>
+                           <tr>
+                            <td style="width:120px";><br>
+                             <label style="margin-left: 15px">Cargo Funcionário:</label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="ID_CARGO">
+                                            <option value="<?php echo $resultadoSQL['ID_CARGO']; ?>"> <?php echo $resultadoSQL['DESCRICAO']; ?> </option>
+                                           <?php while ($row = sqlsrv_fetch_array($result_squilaCargoAvaliacao)){ ?>
+                                            <option value=<?php echo $row['ID_CARGO']?> > <?php echo $row['DESCRICAO'] ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
+                            </td>
+                            </td>
+                           </tr>
+                           <tr>
+                           <td style="width:120px";><br>
+                            <label style="margin-left: 15px"> Ativo: </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="BO_STATUS">
+                                    <option value="<?php echo $resultadoSQL['BO_STATUS']; ?>"><?php if ($resultadoSQL['BO_STATUS'] == 'S') { echo "SIM" ;} else {echo "NÃO" ;} ?></option> 
+                                    <option value="S">SIM</option>
+                                    <option value="N">NÃO</option> 
+                            </select>
+                            </td>
+                            </tr>
 
-                              <?php 
-                                    }
-                              ?>
-                              
-                              </tbody>
-                          </table>
-                        </form>
+                         </table><br><br>
+
+
+                         <br/>
+
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $resultadoSQL['ID_AVALIACAO'] ?>"  name="ID_AVALIACAO">Confirmar</button> 
+                         <a href="cronogramaAvaliacao.php"><input type="button" value="Cancelar"></a>
+                      </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
+
+    </section>
+      </section><!-- /MAIN CONTENT -->
 
     </section>
       </section><!-- /MAIN CONTENT -->
