@@ -114,6 +114,7 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
                       <ul class="sub">
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
                       </ul>
                   </li>
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>

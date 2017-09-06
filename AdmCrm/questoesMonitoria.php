@@ -153,6 +153,7 @@ sqlsrv_execute($result_SomaPesos);
                       <ul class="sub">
                           <li class="active"><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
                       </ul>
                   </li>
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
