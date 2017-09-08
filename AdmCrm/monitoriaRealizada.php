@@ -28,13 +28,14 @@ $squilaDicas = "SELECT tp.ID_PESQUISA
                       ,tp.CPF_MONITORIA
                       ,tp.RAMAL_PA
                       ,tp.DT_ATENDIMENTO
+                      ,tp.DT_SISTEMA
                       ,tp.NOTA_FINAL
                 FROM tb_qld_pesquisa tp
           INNER JOIN tb_crm_processo tpro ON tpro.ID = tp.ID_PROCESSO AND tpro.ATIVO = 1
           INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tp.ID_COLABORADOR
           INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tp.ID_GRUPO
           INNER JOIN tb_qld_cronograma_avaliacao tcron ON tcron.ID_AVALIACAO = tp.ID_AVALIACAO
-            ORDER BY tp.DT_ATENDIMENTO desc";
+            ORDER BY tp.DT_SISTEMA desc";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);

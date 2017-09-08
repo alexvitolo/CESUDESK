@@ -368,7 +368,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">CPF do Candidato: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="CPF_MONITORIA"  maxlength="14" OnKeyPress="formatar('###.###.###-##', this)" >
+                             <input type="text" name="CPF_MONITORIA"  maxlength="18">
                             </td>
                              <td style="width:110px";> 
                              <label style="margin-left: 15px" for="nome">Gravador: </label>
