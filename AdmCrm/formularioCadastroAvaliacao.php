@@ -430,7 +430,7 @@ sqlsrv_execute($result_squilaResultLigacao);
 
 
                          <fieldset>
-                          <legend> Falhas Críticas </legend> 
+                          <legend> Possui Falhas Críticas ?</legend> 
                           <table cellspacing="10" style="vertical-align: middle">
                            <tr>
                      <?php while ($row2 = sqlsrv_fetch_array($result_squilaQuestaoCritico)){ ?>
