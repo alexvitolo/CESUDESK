@@ -114,11 +114,25 @@ sqlsrv_execute($result_squilac);
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
-                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
                           
                       </ul>
                   </li>
-   
+
+                  <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
+                      <li class="sub-menu">
+                      <a class="" href="javascript:;" >
+                          <i class="fa fa-signal"></i>
+                          <span>Qualidade</span> 
+                      </a> <?php } ?>
+                      <ul class="sub">
+                          <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
+                          <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
+                      </ul>
+                  </li>
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
                       <a class="active" href="javascript:;" >

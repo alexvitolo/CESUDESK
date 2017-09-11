@@ -172,6 +172,9 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
                             <td align="left">
                              <input type="text" name="ID_MATRICULA_CONSULTOR" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                             </td>
+                            <td>
+                             <a style="margin-left: 80px" href="monitoriaJaRealizada.php" target="_blank"><input style="margin-left: 55px" type="button" value="Avaliações Já Realizadas" ></input></a>
+                            </td>
                             </tr>
 
                           </table>

@@ -75,7 +75,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
       MAIN SIDEBAR MENU
       *********************************************************************************************************************************************************** -->
       <!--sidebar start-->
-      <aside>
+       <aside>
           <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
@@ -102,11 +102,25 @@ if ($_SESSION['ACESSO'] <> 1 )  {
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
-                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
-         
+                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
+                          
                       </ul>
                   </li>
-   
+
+                  <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
+                      <li class="sub-menu">
+                      <a class="" href="javascript:;" >
+                          <i class="fa fa-signal"></i>
+                          <span>Qualidade</span> 
+                      </a> <?php } ?>
+                      <ul class="sub">
+                          <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
+                          <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
+                      </ul>
+                  </li>
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
                       <a class="active" href="javascript:;" >
@@ -114,16 +128,15 @@ if ($_SESSION['ACESSO'] <> 1 )  {
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">
-                         <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class="active"><a  href="dimensionamento.php">Dimensionamento</a></li>
-                          <li><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
                           <li class=""><a  href="regiao.php">Região</a></li>
                           <li class=""><a  href="processo.php">Processo</a></li>
                           <li class=""><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
-                          
                       </ul>
                   </li>
 
