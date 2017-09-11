@@ -356,7 +356,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">ID Objeto: </label>
                             </td>
                             <td align="left"><br>
-                             <input type="text" name="DESC_ID_TALISMA" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                             <input type="text" required value="" name="DESC_ID_TALISMA" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                             </td>
                              </tr>
                           </table>
@@ -370,25 +370,25 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">CPF do Candidato: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="CPF_MONITORIA"  maxlength="18">
+                             <input type="text" required value="" name="CPF_MONITORIA"  maxlength="18">
                             </td>
                              <td style="width:110px";> 
                              <label style="margin-left: 15px" for="nome">Gravador: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="ID_GRAVADOR"  maxlength="15"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'  >
+                             <input type="text" required value="" name="ID_GRAVADOR"  maxlength="15"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'  >
                             </td>
                             <td style="width:110px";> 
                              <label style="margin-left: 15px" for="nome">Ramal PA: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="RAMAL_PA"  maxlength="15"   onkeypress='return event.charCode >= 48 && event.charCode <= 57' >
+                             <input type="text" required value="" name="RAMAL_PA"  maxlength="15"   onkeypress='return event.charCode >= 48 && event.charCode <= 57' >
                             </td>
                              <td style="width:110px";> 
                              <label style="margin-left: 15px" for="nome">Data Atendimento: </label>
                             </td>
                             <td align="left">
-                             <input type="date" name="DT_ATENDIMENTO"  maxlength="15"  >
+                             <input type="date" required value=""  name="DT_ATENDIMENTO"  maxlength="15"  >
                             </td>
                              </tr>
                           </table>
@@ -476,7 +476,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                               <label style="margin-left: 15px" for="nome">Observação: </label>
                              </td>
                              <td align="left"><br>
-                              <textarea name="OBSERVACAO_PESQUISA" cols="120" rows="10" > TEXTO </textarea>
+                              <textarea name="OBSERVACAO_PESQUISA" required value="" cols="120" rows="10" > TEXTO </textarea>
                              </td>
                             </tr>
                            </table>
@@ -487,7 +487,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                          <br/>
                           <input type="hidden" name="ID_MATRICULA_CONSULTOR" value="<?php echo $ID_MATRICULA_CONSULTOR ?>"> 
                           <input type="hidden" name="ID_CONSULTOR" value="<?php echo $ID_CONSULTOR ?>"> 
-                          <input type="hidden" name="ID_GRUPO " value="<?php echo $ID_GRUPO  ?>">
+                          <input type="hidden" name="ID_GRUPO" value="<?php echo $ID_GRUPO ?>">
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
                          <a href="formularioAvaliacao.php"><input type="button" value="Cancelar"></a>
                       </form>
