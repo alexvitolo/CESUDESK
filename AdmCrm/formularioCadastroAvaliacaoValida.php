@@ -171,7 +171,6 @@ foreach( $_POST['vetorRespostasCrit'] as  $key => $value ){
 }
 
 
-
 //UPDATE NOTA FINAL TABELA PESQUISA
 
 $updateSquilaPesquisa = " UPDATE tb_qld_pesquisa
