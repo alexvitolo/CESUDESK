@@ -41,21 +41,7 @@ sqlsrv_execute($result_squilaProcesso);
 
  $ID_PROCESSO = $resultadoSQL['ID'];
 
-
-
-// Select para identicar o Grupo ( CARGO ) da pesquisa
-$squilaGrupo = "SELECT tcar.ID_CARGO          
-                      ,tcar.DESCRICAO
-                 FROM tb_crm_cargo tcar
-           INNER JOIN tb_crm_colaborador tc ON tc.ID_CARGO = tcar.ID_CARGO AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}' ";
-
-$result_squilaGrupo = sqlsrv_prepare($conn, $squilaGrupo);
-sqlsrv_execute($result_squilaGrupo);
- $resultadoSQLGrupo = sqlsrv_fetch_array($result_squilaGrupo);
-
-
-
- $ID_GRUPO = $resultadoSQLGrupo['ID_CARGO'];
+ $ID_GRUPO =  $_POST['ID_GRUPO'];
 
 
 
