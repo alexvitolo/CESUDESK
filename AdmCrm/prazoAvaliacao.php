@@ -14,13 +14,18 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 
 
 
-$squilaDicas = "SELECT tcron.ID_AVALIACAO
-                      ,tcron.NUMERO
-                      ,tcron.ID_CARGO
-                      ,tcar.DESCRICAO
-                      ,tcron.BO_STATUS
-                FROM tb_qld_cronograma_avaliacao tcron
-          INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tcron.ID_CARGO";
+$squilaDicas = "SELECT 
+                       tcron.ID_AVALIACAO
+                       ,tcron.ID_DT_CRONO
+                       ,tcron.ID_PROCESSO
+                       ,tp.NOME
+                       ,tca.NUMERO
+                       ,tcron.DT_INICIO
+                       ,tcron.DT_FIM
+                       ,tcron.BO_STATUS
+                  FROM tb_qld_cronograma_avaliacao_prazo tcron
+            INNER JOIN tb_crm_processo tp ON tp.ID = tcron.ID_PROCESSO
+            INNER JOIN tb_qld_cronograma_avaliacao tca ON tca.ID_AVALIACAO = tcron.ID_AVALIACAO";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
@@ -136,8 +141,8 @@ sqlsrv_execute($result_squila);
                       <ul class="sub">
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
-                          <li class="active"><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
-                          <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
+                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
+                          <li class="active"><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
                       </ul>
                   </li>
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
@@ -180,16 +185,18 @@ sqlsrv_execute($result_squila);
                       <div class="content-panel">
 
 
-                        <form name="Form" method="post" id="formulario" action="editaCronogramaAvaliacao.php">
+                        <form name="Form" method="post" id="formulario" action="editaPrazo.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Avaliações </h4>
                             <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
+                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input><a href="cadastroPrazo.php"><input style="margin-left: 800px" type="button" value="Novo Prazo" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class=""></i> ID Avaliação </th>
-                                  <th><i class=""></i> Numero </th>
-                                  <th><i class=""></i> Cargo </th>
+                                  <th><i class=""></i> Numero da Avaliação </th>
+                                  <th><i class=""></i> Processo </th>
+                                  <th><i class=""></i> Data Início </th>
+                                  <th><i class=""></i> Data Fim </th>
                                   <th><i class=""></i> Status </th>
                               </tr>
                               </thead>
@@ -206,11 +213,13 @@ sqlsrv_execute($result_squila);
                                     ?>
                                   <td style="width: 100px"><?php echo $row['ID_AVALIACAO'] ?></a></td>
                                   <td><?php echo $row['NUMERO'] ?></td>
-                                  <td><?php echo $row['DESCRICAO'] ?></a></td>
+                                  <td><?php echo $row['NOME'] ?></a></td>
+                                  <td><?php echo date_format($row['DT_INICIO'],"d/m/Y") ?></a></td>
+                                  <td><?php echo date_format($row['DT_FIM'],"d/m/Y") ?></a></td>
                                   <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_STATUS'] ?></span></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_AVALIACAO'] ?>"  name="ID_AVALIACAO"><i class="fa fa-pencil"></i></button>
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_DT_CRONO'] ?>"  name="ID_DT_CRONO"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 
