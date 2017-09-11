@@ -135,6 +135,7 @@ sqlsrv_execute($result_squilaFDS);
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
+                          <li class="active"><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
                       </ul>
                   </li>
 

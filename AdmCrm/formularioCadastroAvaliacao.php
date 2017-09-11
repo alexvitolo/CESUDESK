@@ -236,6 +236,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
+                          <li class="active"><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
                       </ul>
                   </li>
 
@@ -370,7 +371,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">CPF do Candidato: </label>
                             </td>
                             <td align="left">
-                             <input type="text" required value="" name="CPF_MONITORIA"  maxlength="18">
+                             <input type="text" required value="" name="CPF_MONITORIA"  maxlength="15">
                             </td>
                              <td style="width:110px";> 
                              <label style="margin-left: 15px" for="nome">Gravador: </label>

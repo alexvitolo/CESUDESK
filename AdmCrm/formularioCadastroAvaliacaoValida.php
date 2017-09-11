@@ -70,7 +70,7 @@ $insertSquilaPesquisa = " INSERT INTO tb_qld_pesquisa
                                             ,{$ID_GRUPO}
                                             ,{$ID_AVALIACAO}
                                             ,{$ID_OBJETO_TALISMA}
-                                            ,'{$DESC_ID_TALISMA}'
+                                            ,convert(int ,replace('{$DESC_ID_TALISMA}','-',''))
                                             ,'{$CPF_MONITORIA}'
                                             ,'{$RAMAL_PA}'
                                             ,{$ID_GRAVADOR}
