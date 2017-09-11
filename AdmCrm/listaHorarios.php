@@ -124,7 +124,7 @@ sqlsrv_execute($result_squila);
                       </ul>
                   </li>
 
-                 <li class="sub-menu">
+                  <li class="sub-menu">
                       <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
                           <span>Schedule</span>
@@ -133,12 +133,25 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
-                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
                           
                       </ul>
                   </li>
-   
 
+                  <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
+                      <li class="sub-menu">
+                      <a class="" href="javascript:;" >
+                          <i class="fa fa-signal"></i>
+                          <span>Qualidade</span> 
+                      </a> <?php } ?>
+                      <ul class="sub">
+                          <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
+                          <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
+                      </ul>
+                  </li>
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
                       <a class="active" href="javascript:;" >
@@ -146,8 +159,8 @@ sqlsrv_execute($result_squila);
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">
-                           <li class="active"><a  href="listaHorarios.php">Lista Pausas</a></li>
-                         <li><a  href="dimensionamento.php">Dimensionamento</a></li>
+                          <li class="active"><a  href="listaHorarios.php">Lista Pausas</a></li>
+                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -155,7 +168,6 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="processo.php">Processo</a></li>
                           <li class=""><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
-                          
                       </ul>
                   </li>
 

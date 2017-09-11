@@ -5,6 +5,9 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
+
+$mesAtual = date('m');
+
 $squilaEscalaFDS = "SELECT
                        tc.NOME
                        ,tc.ID_MATRICULA
@@ -12,11 +15,12 @@ $squilaEscalaFDS = "SELECT
                        ,th.ENTRADA
                        ,th.SAIDA
                        ,th.CARGA_HORARIO
-      
                   FROM tb_crm_escala_fds tfd
             INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tfd.ID_COLABORADOR
             INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tfd.ID_HORARIO AND th.BO_ESCALA_FDS ='S'
+                 WHERE MONTH(tfd.DT_FDS) = {$mesAtual}
               ORDER BY tfd.DT_FDS ";
+
 
 $result_squilaFDS = sqlsrv_prepare($conn, $squilaEscalaFDS);
 sqlsrv_execute($result_squilaFDS);
