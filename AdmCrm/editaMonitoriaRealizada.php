@@ -217,8 +217,9 @@ sqlsrv_execute($result_squilaResultLigacao);
                           <span>Qualidade</span> 
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
+                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class="active"><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
                       </ul>
                   </li>
 
