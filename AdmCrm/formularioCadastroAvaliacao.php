@@ -15,6 +15,7 @@ $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];  // será passado pa
 
   $sqlValida ="SELECT tc.ID_MATRICULA
                                 ,tc.ID_COLABORADOR
+                                ,tg.ID_GRUPO
                                 ,tc.NOME
                                 ,tg.DESCRICAO AS NOME_GRUPO
                                 ,(SELECT NOME FROM tb_crm_colaborador WHERE tc.ID_COLABORADOR_GESTOR = ID_COLABORADOR ) NOME_GESTOR
@@ -36,6 +37,7 @@ $ID_CONSULTOR = $resultadoSQL['ID_COLABORADOR'];
 $NOME_GESTOR =  $resultadoSQL['NOME_GESTOR'];
 $NOME_CONSULTOR =  $resultadoSQL['NOME'];
 $NOME_GRUPO =  $resultadoSQL['NOME_GRUPO'];
+$ID_GRUPO = $resultadoSQL['ID_GRUPO'];
 
 
 
@@ -485,6 +487,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                          <br/>
                           <input type="hidden" name="ID_MATRICULA_CONSULTOR" value="<?php echo $ID_MATRICULA_CONSULTOR ?>"> 
                           <input type="hidden" name="ID_CONSULTOR" value="<?php echo $ID_CONSULTOR ?>"> 
+                          <input type="hidden" name="ID_GRUPO " value="<?php echo $ID_GRUPO  ?>">
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
                          <a href="formularioAvaliacao.php"><input type="button" value="Cancelar"></a>
                       </form>
