@@ -36,7 +36,7 @@ $sqlListaMonitorias = "  SELECT
                       ,tp.ID_GRUPO
                       ,tcron.NUMERO as NUMERO_DA_AVALIACAO
                       ,tg.DESCRICAO
-                      ,tp.CPF_MONITORIA
+                      ,tp.NOTA_FINAL
                       ,tp.RAMAL_PA
                       ,tp.DT_ATENDIMENTO
                       ,tp.DT_SISTEMA
@@ -97,13 +97,12 @@ sqlsrv_execute($result_ListaMonitoria);
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
                               <thead>
                               <tr>
-                                  <th><i class=""></i> Nome Supervisor </th>
+                                  <th><i class=""></i> Nome Avaliador </th>
                                   <th><i class=""></i> Nome Consultor </th>
                                   <th><i class=""></i> Matrícula Consultor </th>
                                   <th><i class=""></i> Numero Avaliação </th>
                                   <th><i class=""></i> Grupo </th>
-                                  <th><i class=""></i> CPF Monitoria </th>
-                                  <th><i class=""></i> Ramal PA </th>
+                                  <th><i class=""></i> Nota Final</th>
                                   <th><i class=""></i> Data Atendimento </th>
                                   <th><i class=""></i> Data Cadastro Monitoria </th>
 
@@ -118,8 +117,7 @@ sqlsrv_execute($result_ListaMonitoria);
                                   <td><?php echo $row['MATRICULA_CONSULTOR'] ?></td>
                                   <td><?php echo $row['NUMERO_DA_AVALIACAO'] ?></td>
                                   <td><?php echo $row['DESCRICAO'] ?></a></td>
-                                  <td><?php echo $row['CPF_MONITORIA'] ?></a></td>
-                                  <td><?php echo $row['RAMAL_PA'] ?></a></td>
+                                  <td><a><?php echo $row['NOTA_FINAL'] ?></a></td>
                                   <td><?php echo date_format($row['DT_ATENDIMENTO'],"d-m-Y") ?></a></td>
                                   <td><?php echo date_format($row['DT_SISTEMA'],"d-m-Y") ?></a></td>
 
