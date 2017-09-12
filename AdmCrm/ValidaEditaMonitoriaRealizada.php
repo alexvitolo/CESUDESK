@@ -14,6 +14,13 @@ $OBSERVACAO_PESQUISA = $_POST['OBSERVACAO_PESQUISA'];
 
 $notaFinalSoma = 0;
 $NOTA_RESULTADO = 0;
+
+
+//correção string BD
+
+$OBSERVACAO_PESQUISA = str_replace("'", '"', $OBSERVACAO_PESQUISA);
+
+
 // INSERT TABELA ITENS QUESTOES
 
      
