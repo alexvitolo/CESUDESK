@@ -278,7 +278,7 @@ sqlsrv_execute($result_squilaResultLigacao);
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="formularioCadastroAvaliacaoValida.php">
+                         <form name="Form" method="post" id="formulario" action="formularioCadastroAvaliacaoValida.php" onSubmit="return enviardados();">
 
 
                          <fieldset>
@@ -357,7 +357,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">ID Objeto: </label>
                             </td>
                             <td align="left"><br>
-                             <input type="text" required value="" name="DESC_ID_TALISMA" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                             <input type="text" value="" name="DESC_ID_TALISMA" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                             </td>
                              </tr>
                           </table>
@@ -371,25 +371,25 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">CPF do Candidato: </label>
                             </td>
                             <td align="left">
-                             <input type="text" required value="" name="CPF_MONITORIA"  maxlength="15">
+                             <input type="text" value="" name="CPF_MONITORIA"  maxlength="15">
                             </td>
                              <td style="width:110px";> 
                              <label style="margin-left: 15px" for="nome">Gravador: </label>
                             </td>
                             <td align="left">
-                             <input type="text" required value="" name="ID_GRAVADOR"  maxlength="15"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'  >
+                             <input type="text" value="" name="ID_GRAVADOR"  maxlength="15"  onkeypress='return event.charCode >= 48 && event.charCode <= 57'  >
                             </td>
                             <td style="width:110px";> 
                              <label style="margin-left: 15px" for="nome">Ramal PA: </label>
                             </td>
                             <td align="left">
-                             <input type="text" required value="" name="RAMAL_PA"  maxlength="15"   onkeypress='return event.charCode >= 48 && event.charCode <= 57' >
+                             <input type="text" value="" name="RAMAL_PA"  maxlength="15"   onkeypress='return event.charCode >= 48 && event.charCode <= 57' >
                             </td>
                              <td style="width:110px";> 
                              <label style="margin-left: 15px" for="nome">Data Atendimento: </label>
                             </td>
                             <td align="left">
-                             <input type="date" required value=""  name="DT_ATENDIMENTO"  maxlength="15"  >
+                             <input type="date" value=""  name="DT_ATENDIMENTO"  maxlength="15"  >
                             </td>
                              </tr>
                           </table>
@@ -477,7 +477,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                               <label style="margin-left: 15px" for="nome">Observação: </label>
                              </td>
                              <td align="left"><br>
-                              <textarea name="OBSERVACAO_PESQUISA" required value="" cols="120" rows="10" > TEXTO </textarea>
+                              <textarea name="OBSERVACAO_PESQUISA" value="" cols="120" rows="10" > TEXTO </textarea>
                              </td>
                             </tr>
                            </table>
@@ -542,6 +542,70 @@ sqlsrv_execute($result_squilaResultLigacao);
     
 
 <script type="text/javascript">
+
+
+function enviardados(){
+ 
+
+if (document.Form.ID_AVALIACAO.value == 'null')
+{
+alert( "Preencha o campo AVALIACAO!" );
+document.Form.ID_AVALIACAO.focus();
+return false;
+}
+
+
+if (document.Form.ID_OBJETO_TALISMA.value == 'null')
+{
+alert( "Preencha o campo OBJETO!" );
+document.Form.ID_OBJETO_TALISMA.focus();
+return false;
+}
+
+if (document.Form.DESC_ID_TALISMA.value == '')
+{
+alert( "Preencha o campo ID OBJETO!" );
+document.Form.DESC_ID_TALISMA.focus();
+return false;
+}
+
+if (document.Form.CPF_MONITORIA.value == '')
+{
+alert( "Preencha o campo CPF!" );
+document.Form.CPF_MONITORIA.focus();
+return false;
+}
+
+if (document.Form.ID_GRAVADOR.value == '')
+{
+alert( "Preencha o campo Gravador" );
+document.Form.ID_GRAVADOR.focus();
+return false;
+}
+
+if (document.Form.DT_ATENDIMENTO.value == '')
+{
+alert( "Preencha o campo Data Atendimento" );
+document.Form.DT_ATENDIMENTO.focus();
+return false;
+}
+
+if (document.Form.ID_RESULT_LIG.value == 'null')
+{
+alert( "Preencha o campo Grupo" );
+document.Form.ID_RESULT_LIG.focus();
+return false;
+}
+
+ 
+return true;
+}
+
+
+
+
+
+
 (function(document) {
   'use strict';
 
