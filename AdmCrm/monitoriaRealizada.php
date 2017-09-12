@@ -192,26 +192,30 @@ sqlsrv_execute($result_squila);
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
-                      <div class="content-panel">
+                         <div class="panel  filterable">
+                             <div class="panel-heading">
+                                   <div class="pull-right">
+                                     <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filtro </button>
+                                    </div>
+                              </div>
 
 
                         <form name="Form" method="post" id="formulario" action="editaMonitoriaRealizada.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Avaliações </h4>
                             <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
                               <thead>
-                              <tr>
-                                  <th><i class=""></i> ID Pesquisa </th>
-                                  <th><i class=""></i> Consultor </th>
-                                  <th><i class=""></i> Avaliação </th>
-                                  <th><i class=""></i> Grupo </th>
-                                  <th><i class=""></i> Matrícula Consultor </th>
-                                  <th><i class=""></i> Quem Aplicou </th>
-                                  <th><i class=""></i> Ramal </th>
-                                  <th><i class=""></i> CPF do Aluno  </th>
-                                  <th><i class=""></i> Data Atendimento Cliente </th>
-                                  <th><i class=""></i> Nota Final </th>
+                              <tr class="filters">
+                              <th><input type="text" class="form-control" placeholder="ID Pesquisa " disabled></th>
+                              <th><input type="text" class="form-control" placeholder="Consultor " disabled></th>
+                              <th><input type="text" class="form-control" placeholder="Avaliação" disabled></th>
+                              <th><input type="text" class="form-control" placeholder="Grupo" disabled></th>
+                              <th><input type="text" class="form-control" placeholder="Matrícula Consulto" disabled></th>
+                              <th><input type="text" class="form-control" placeholder="Quem Aplicou" disabled></th>
+                              <th><input type="text" class="form-control" placeholder="Ramal" disabled></th>
+                              <th><input type="text" class="form-control" placeholder="CPF do Aluno" disabled></th>
+                              <th><input type="text" class="form-control" placeholder="Data Atendimento Cliente" disabled></th>
+                              <th style="width: 100px"><input type="text" class="form-control" placeholder="Nota Final" disabled></th>
                               </tr>
                               </thead>
                               <tbody>
@@ -220,7 +224,7 @@ sqlsrv_execute($result_squila);
               
                                     ?>
                                   <td style="width: 100px"><?php echo $row['ID_PESQUISA'] ?></a></td>
-                                  <td style="width: 250px"><?php echo $row['NOME_CONSULTOR'] ?></td>
+                                  <td style="width: 160px"><?php echo $row['NOME_CONSULTOR'] ?></td>
                                   <td style="text-align: center;"><?php echo $row['NUMERO_AVALIACAO'] ?></a></td>
                                   <td><?php echo $row['DESCRICAO'] ?></a></td>
                                   <td><a><?php echo $row['MATRICULA_CONSULTOR'] ?></a></td>
@@ -280,6 +284,53 @@ sqlsrv_execute($result_squila);
 
 
 <script type="text/javascript">
+
+
+$(document).ready(function(){
+    $('.filterable .btn-filter').click(function(){
+        var $panel = $(this).parents('.filterable'),
+        $filters = $panel.find('.filters input'),
+        $tbody = $panel.find('.table tbody');
+        if ($filters.prop('disabled') == true) {
+            $filters.prop('disabled', false);
+            $filters.first().focus();
+        } else {
+            $filters.val('').prop('disabled', true);
+            $tbody.find('.no-result').remove();
+            $tbody.find('tr').show();
+        }
+    });
+
+    $('.filterable .filters input').keyup(function(e){
+        /* Ignore tab key */
+        var code = e.keyCode || e.which;
+        if (code == '9') return;
+        /* Useful DOM data and selectors */
+        var $input = $(this),
+        inputContent = $input.val().toLowerCase(),
+        $panel = $input.parents('.filterable'),
+        column = $panel.find('.filters th').index($input.parents('th')),
+        $table = $panel.find('.table'),
+        $rows = $table.find('tbody tr');
+        /* Dirtiest filter function ever ;) */
+        var $filteredRows = $rows.filter(function(){
+            var value = $(this).find('td').eq(column).text().toLowerCase();
+            return value.indexOf(inputContent) === -1;
+        });
+        /* Clean previous no-result if exist */
+        $table.find('tbody .no-result').remove();
+        /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+        $rows.show();
+        $filteredRows.hide();
+        /* Prepend no-result row if all rows are filtered */
+        if ($filteredRows.length === $rows.length) {
+            $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
+        }
+    });
+});
+
+
+
 (function(document) {
   'use strict';
 
