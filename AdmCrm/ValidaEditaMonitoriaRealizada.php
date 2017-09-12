@@ -45,6 +45,9 @@ foreach( $_POST['vetorRespostas'] as $key => $value ){
         elseif($value2 == 'S'){
           $NOTA_RESULTADO = $key2;
         }
+        elseif($value2 == ''){
+          $NOTA_RESULTADO = 0;
+        }
 
 
         $notaFinalSoma = $NOTA_RESULTADO + $notaFinalSoma;
