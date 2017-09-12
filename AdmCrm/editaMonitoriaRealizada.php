@@ -102,7 +102,9 @@ $squilaResultLigacao = "SELECT tlig.ID_RESULT_LIG
                               ,tlig.ID_GRUPO
                               ,tlig.DESCRICAO
                           FROM tb_qld_resultado_ligacao tlig
-                          WHERE tlig.ID_GRUPO = {$resultadoSQL['ID_GRUPO']}  " ;
+                         WHERE tlig.ID_GRUPO = CASE 
+                                               WHEN {$resultadoSQL['ID_GRUPO']} IN (1,2,3,4,5) THEN 1 
+                                               ELSE {$resultadoSQL['ID_GRUPO']} END " ;
 
 $result_squilaResultLigacao = sqlsrv_prepare($conn, $squilaResultLigacao);
 sqlsrv_execute($result_squilaResultLigacao);
