@@ -206,7 +206,7 @@ $resoltadoSQLprazo = sqlsrv_fetch_array($result_squilaPrazo);
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="ValidaCadastroPrazo.php">
+                         <form name="Form" method="post" id="formulario" action="ValidaEditaPrazo.php">
 <!-- DADOS PESSOAIS-->
                          <fieldset>
                           <legend> Dados do Prazo de Avaliação </legend>
@@ -218,7 +218,7 @@ $resoltadoSQLprazo = sqlsrv_fetch_array($result_squilaPrazo);
                             <td align="left">
                              <select name="ID_AVALIACAO">
                                          <?php while ($row = sqlsrv_fetch_array($result_squilaIDavaliacao)){ ?>
-                                            <option <?php if ($row['ID_AVALIACAO'] == $resoltadoSQLprazo['ID_DT_CRONO']) { echo 'selected'; } ?> value=<?php echo $row['ID_AVALIACAO']?> > <?php echo $row['NUMERO'] ?> </option>
+                                            <option <?php if ($row['ID_AVALIACAO'] == $resoltadoSQLprazo['ID_AVALIACAO']) { echo 'selected'; } ?> value=<?php echo $row['ID_AVALIACAO']?> > <?php echo $row['NUMERO'] ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -229,7 +229,7 @@ $resoltadoSQLprazo = sqlsrv_fetch_array($result_squilaPrazo);
                             <td align="left">
                               <select name="ID_PROCESSO">
                                          <?php while ($row = sqlsrv_fetch_array($result_squilaProcesso)){ ?>
-                                            <option <?php if ($row['ID'] == $resoltadoSQLprazo['ID_PROCESSO']) { echo 'selected'; } ?> value=<?php echo $row['ID_AVALIACAO']?> > <?php echo $row['NUMERO'] ?> </option>
+                                            <option <?php if ($row['ID'] == $resoltadoSQLprazo['ID_PROCESSO']) { echo 'selected'; } ?> value=<?php echo $row['ID']?> > <?php echo $row['NOME'] ?> </option>
                                          <?php }
                                          ?>
                              </select>
@@ -238,7 +238,8 @@ $resoltadoSQLprazo = sqlsrv_fetch_array($result_squilaPrazo);
                              <label style="margin-left: 15px" >Status: </label>
                             </td>
                             <td align="left">
-                             <select name="ATIVO"> 
+                             <select name="ATIVO">         
+                                 <option value=<?php echo $resoltadoSQLprazo['BO_STATUS']?> > <?php if ( $resoltadoSQLprazo['BO_STATUS'] = "S" ) { echo "ATIVO" ;}ELSE{"INATIVO" ;} ?> </option>
                                  <option value="S">ATIVO</option>
                                  <option value="N">INATIVO</option> 
                             </select>
@@ -252,7 +253,7 @@ $resoltadoSQLprazo = sqlsrv_fetch_array($result_squilaPrazo);
                                 </td>
                                 <td align="left">
                                 <br>
-                                 <input type="date" name="DT_INI">
+                                 <input type="date" name="DT_INI"  value=<?php echo date_format($resoltadoSQLprazo['DT_INICIO'], "Y-m-d")?> > 
                                 </td>
                                 <td style="width:110px";>
                                 <br>
@@ -260,7 +261,7 @@ $resoltadoSQLprazo = sqlsrv_fetch_array($result_squilaPrazo);
                                </td>
                                <td align="left">
                                <br>
-                                <input type="date" name="DT_FIM">
+                                <input type="date" name="DT_FIM" value=<?php echo date_format($resoltadoSQLprazo['DT_FIM'], "Y-m-d")?> > 
                             </td>
                            </tr>
                           </table>
@@ -268,7 +269,7 @@ $resoltadoSQLprazo = sqlsrv_fetch_array($result_squilaPrazo);
                          
                          <br/>
 
-                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $resoltadoSQLprazo['ID_DT_CRONO'] ?>"  name="ID_DT_CRONO">Confirmar</button> 
                          <a href="prazoAvaliacao.php"><input type="button" value="Cancelar"></a>
                       </form>
                       </div><!-- /content-panel -->

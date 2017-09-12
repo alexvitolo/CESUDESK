@@ -11,24 +11,16 @@ $ID_PROCESSO = $_POST["ID_PROCESSO"];
 $ATIVO = $_POST["ATIVO"]; 
 $DT_INI = $_POST["DT_INI"]; 
 $DT_FIM = $_POST["DT_FIM"]; 
+$ID_DT_CRONO = $_POST["ID_DT_CRONO"];
 
 
-
-$insertSquila = " INSERT INTO tb_qld_cronograma_avaliacao_prazo
-                              (ID_AVALIACAO
-                              ,ID_PROCESSO
-                              ,DT_INICIO
-                              ,DT_FIM
-                              ,BO_STATUS
-                               )
-                        
-                       VALUES
-                        ({$ID_AVALIACAO}
-                        ,{$ID_PROCESSO}
-                        ,'{$DT_INI}'
-                        ,'{$DT_FIM}'
-                        ,'{$ATIVO}'
-                        )";
+$insertSquila = " UPDATE  tb_qld_cronograma_avaliacao_prazo
+                            SET  ID_AVALIACAO = {$ID_AVALIACAO}
+                                ,ID_PROCESSO  = {$ID_PROCESSO}
+                                ,DT_INICIO    = '{$DT_INI}'
+                                ,DT_FIM       = '{$DT_FIM}'
+                                ,BO_STATUS    = '{$ATIVO}'
+                             WHERE ID_DT_CRONO = '{$ID_DT_CRONO}' ";
 
                    
  $result_insert = sqlsrv_query($conn, $insertSquila);

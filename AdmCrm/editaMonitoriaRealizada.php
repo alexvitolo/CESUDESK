@@ -220,7 +220,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                            <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class="active"><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
-                          <li class="active"><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
+                          <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
                       </ul>
                   </li>
 
@@ -389,7 +389,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                             </td>
                             <td><br><hr>
                               <select name="vetorRespostas[<?php echo $row1['ID_QUESTAO']?>][<?php echo $row1['PESO']?>]""> 
-                                 <option value="<?php echo $row1['RESPOSTA'] ?>"><?php echo $row1['RESPOSTA'] ?></option> 
+                                 <option value="<?php echo $row1['RESPOSTA'] ?>"><?php if( $row1['RESPOSTA'] == "S" ){ echo "SIM" ;}ELSE{ echo "NÃO" ;} ?></option> 
                                  <option value="S">SIM</option>
                                  <option value="N">NÃO</option> 
                           <?php if ( $row1['BO_PARCIAL'] == 'S') { ?>
@@ -413,7 +413,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                             </td>
                             <td><br><hr>
                               <select name="vetorRespostasCrit[<?php echo $row2['ID_QUESTAO']?>][<?php echo $row2['PESO']?>]"> 
-                               <option value="<?php echo $row2['RESPOSTA'] ?>" ><?php echo $row2['RESPOSTA'] ?></option>
+                               <option value="<?php echo $row2['RESPOSTA'] ?>" ><?php if( $row2['RESPOSTA'] == "S" ){ echo "SIM" ;}ELSE{ echo "NÃO" ;}  ?></option>
                                  <option value="N" >NÃO</option> 
                                  <option value="S">SIM</option>
                                   <?php if ( $row2['BO_PARCIAL'] == 'S') { ?>
