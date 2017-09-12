@@ -567,6 +567,14 @@ if (document.Form.DESC_ID_TALISMA.value == '')
 alert( "Preencha o campo ID OBJETO!" );
 document.Form.DESC_ID_TALISMA.focus();
 return false;
+}else{
+
+    if (!(!isNaN(parseFloat(document.Form.DESC_ID_TALISMA.value)) && isFinite(document.Form.DESC_ID_TALISMA.value))){
+      alert( "Preencha o campo ID OBJETO SOMENTE COM NÚMEROS!" );
+      document.Form.DESC_ID_TALISMA.focus();
+      return false;
+    }
+    
 }
 
 if (document.Form.CPF_MONITORIA.value == '')
