@@ -119,7 +119,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
-                          <li class="active"><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
+                          <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
                       </ul>
                   </li>
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
