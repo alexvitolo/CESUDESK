@@ -462,7 +462,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              </td>
                              <td>
                              <select name="ID_RESULT_LIG">
-                                            <option value="null">Escolha uma Avaliacao</option>
+                                            <option value="null">Escolha uma Opção</option>
                                            <?php while ($row = sqlsrv_fetch_array($result_squilaResultLigacao)){ ?>
                                             <option value=<?php echo $row['ID_RESULT_LIG']?> > <?php echo $row['DESC_RESUL_LIGACAO'] ?> </option>
                                          <?php }
@@ -567,6 +567,14 @@ if (document.Form.DESC_ID_TALISMA.value == '')
 alert( "Preencha o campo ID OBJETO!" );
 document.Form.DESC_ID_TALISMA.focus();
 return false;
+}else{
+
+    if (!(!isNaN(parseFloat(document.Form.DESC_ID_TALISMA.value)) && isFinite(document.Form.DESC_ID_TALISMA.value))){
+      alert( "Preencha o campo ID OBJETO SOMENTE COM NÚMEROS!" );
+      document.Form.DESC_ID_TALISMA.focus();
+      return false;
+    }
+    
 }
 
 if (document.Form.CPF_MONITORIA.value == '')

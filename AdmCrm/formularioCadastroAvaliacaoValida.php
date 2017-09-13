@@ -85,8 +85,10 @@ $insertSquilaPesquisa = " INSERT INTO tb_qld_pesquisa
  $result_insertPesquisa = sqlsrv_query($conn, $insertSquilaPesquisa);
 
       if (!($result_insertPesquisa)) {
-             echo ("Falha na inclusão do registro");
+             // echo ("Falha na inclusão do registro");
              print_r(sqlsrv_errors());
+             sqlsrv_close($conn);
+             echo  '<script type="text/javascript"> alert("Falha na inclusão do registro"); window.location.href = "formularioAvaliacao.php" </script>';
       }   
       else {
             sqlsrv_free_stmt($result_insertPesquisa);
@@ -95,6 +97,7 @@ $insertSquilaPesquisa = " INSERT INTO tb_qld_pesquisa
 
 
 $notaFinalSoma = 0;
+$NOTA_RESULTADO = 0;
 // INSERT TABELA ITENS QUESTOES
 
      
