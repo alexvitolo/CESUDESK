@@ -97,6 +97,7 @@ $insertSquilaPesquisa = " INSERT INTO tb_qld_pesquisa
 
 
 $notaFinalSoma = 0;
+$NOTA_RESULTADO = 0;
 // INSERT TABELA ITENS QUESTOES
 
      
