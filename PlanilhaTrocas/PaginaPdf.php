@@ -91,7 +91,7 @@ $horaLimite = '17:00:00';
     <span style="text-align: center; font-size: 17px; font-family: arial; ">Desta forma nos comprometemos a cumprir rigorosamente o horário da troca conforme escala de trabalho determinada neste termo.</span><br><br><br>
   </div>
   <div align="left" style="font-family: arial; margin-left: 30px;">
-    <span>Dados da Troca:</span><br><br><br>
+    <span>Dados da Troca: <?php echo $dateTroca_PaginaIni ?></span><br><br><br>
     <ul style="margin-left: -40px;" >
 
       <li style="list-style-type: none; margin-bottom: 5px;">Solicitante <span style="margin-left: 30px;"> </span></li><br>
