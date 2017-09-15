@@ -76,8 +76,8 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
           </label>
           <label>
             <span>Data</span>
-            <!--  min="<?php echo $dataValida ?>"  é necessário utilizar o echo para utilizar a variavel dentro do valor min html -->
-            <input type="date"  class="input_text" name="dateTroca_PaginaIni" id="date" required value=""/>
+            <!-- é necessário utilizar o echo para utilizar a variavel dentro do valor min html -->
+            <input type="date"  min="<?php echo $dataValida ?>"  class="input_text" name="dateTroca_PaginaIni" id="date" required value=""/>
             <input type="submit" class="button" value="Enviar" >
             <br><br>
           </label>           
