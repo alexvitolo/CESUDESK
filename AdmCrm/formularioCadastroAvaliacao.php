@@ -357,7 +357,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">ID Objeto: </label>
                             </td>
                             <td align="left"><br>
-                             <input type="text" value="" name="DESC_ID_TALISMA" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                             <input style="width:155px" type="text" value="" id="CRTLV" name="DESC_ID_TALISMA" placeholder="Digite apenas NUMEROS" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                             </td>
                              </tr>
                           </table>
@@ -677,6 +677,14 @@ function formatar(mascara, documento){
   }
   
 }
+
+$(document).ready(function() {
+
+    $("#CRTLV").bind('paste', function(e) {
+        e.preventDefault();
+    });
+
+});
 
 
 </script>
