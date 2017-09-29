@@ -51,6 +51,7 @@ sqlsrv_execute($result_squila);
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link rel="shortcut icon" href="icone.ico" >
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         
@@ -116,6 +117,7 @@ sqlsrv_execute($result_squila);
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.php">Resumo</a></li>
+                          <li class=""><a  href="DashboardQualidade.php">Dasboard Qualidade</a></li>
                       </ul>
                   </li>
 
@@ -145,13 +147,28 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
-                          <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
+                           <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
                       </ul>
                   </li>
+
+               <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
+                  <li class="sub-menu">
+                      <a class="" href="javascript:;" >
+                          <i class="fa fa-file-text"></i>
+                          <span>Avaliações</span>
+                      </a> <?php } ?>
+                      <ul class="sub">
+                          <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
+                      </ul>
+                  </li>
+
+
+                  
+                   
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
                       <a class="active" href="javascript:;" >
-                          <i class="fa fa-desktop"></i>
+                          <i class="fa fa-desktop fa-spin"></i>
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">

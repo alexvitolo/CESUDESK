@@ -65,6 +65,7 @@ sqlsrv_execute($result_squilaCargoAvaliacao);
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link rel="shortcut icon" href="icone.ico" >
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         
@@ -130,6 +131,7 @@ sqlsrv_execute($result_squilaCargoAvaliacao);
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.php">Resumo</a></li>
+                          <li class=""><a  href="DashboardQualidade.php">Dasboard Qualidade</a></li>
                       </ul>
                   </li>
 
