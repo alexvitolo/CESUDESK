@@ -145,6 +145,7 @@ sqlsrv_execute($result_MotivoP);
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link rel="shortcut icon" href="icone.ico" >
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         
@@ -210,6 +211,7 @@ sqlsrv_execute($result_MotivoP);
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.php">Resumo</a></li>
+                          <li class=""><a  href="DashboardQualidade.php">Dasboard Qualidade</a></li>
                       </ul>
                   </li>
 
@@ -239,9 +241,24 @@ sqlsrv_execute($result_MotivoP);
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
-                          <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
+                           <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
                       </ul>
                   </li>
+
+               <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
+                  <li class="sub-menu">
+                      <a class="" href="javascript:;" >
+                          <i class="fa fa-file-text"></i>
+                          <span>Avaliações</span>
+                      </a> <?php } ?>
+                      <ul class="sub">
+                          <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
+                      </ul>
+                  </li>
+
+
+                  
+                   
   
                     <li class="sub-menu">
                       <a class="active" href="javascript:;" >
@@ -531,7 +548,7 @@ sqlsrv_execute($result_MotivoP);
 
 
                          <br/>
-
+                           <input type="hidden" name="MATRICULA_OLD" value="<?php echo $vetorSQL['ID_MATRICULA']; ?>"> 
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $row['ID_MATRICULA']?>"  name="ID_MATRICULA">Confirmar</button> 
                          <a href="colaboradores.php"><input type="button" value="Cancelar"></a>
                       </form>

@@ -24,7 +24,7 @@ $dtAdmissao = $_POST["dtAdmissao"];
 $horario = $_POST["horario"];
 $grupo = $_POST["grupo"]; 
 
-
+$MATRICULA_OLD = $_POST["MATRICULA_OLD"];
 
 
 $ID_COLABORADOR = $_POST["ID_COLABORADOR"];
@@ -176,7 +176,7 @@ $updateSquila = " UPDATE tb_crm_colaborador
                         ,CODIGO_PORTAL = '{$codPortal}'
                         ,ID_HORARIO = '{$horario}'
                         ".$sqldicas2."
-                  WHERE  ID_MATRICULA = '{$MATRICULA}'";
+                  WHERE  ID_MATRICULA = '{$MATRICULA_OLD}'";
 
  $result_update = sqlsrv_query($conn, $updateSquila);
 

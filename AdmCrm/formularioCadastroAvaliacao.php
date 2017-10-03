@@ -22,7 +22,7 @@ $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];  // será passado pa
                         FROM tb_crm_colaborador tc
                 INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO 
                        WHERE ID_MATRICULA ='{$ID_MATRICULA_CONSULTOR}'
-                         AND tc.STATUS_COLABORADOR = 'ATIVO'";
+                         AND (tc.STATUS_COLABORADOR = 'ATIVO' OR tc.STATUS_COLABORADOR = 'FERIAS')";
 
           $stmtValida = sqlsrv_prepare($conn, $sqlValida);
           $resultValida = sqlsrv_execute($stmtValida);
@@ -142,6 +142,7 @@ sqlsrv_execute($result_squilaResultLigacao);
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link rel="shortcut icon" href="icone.ico" >
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         
@@ -207,6 +208,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.php">Resumo</a></li>
+                          <li class=""><a  href="DashboardQualidade.php">Dasboard Qualidade</a></li>
                       </ul>
                   </li>
 
@@ -236,9 +238,24 @@ sqlsrv_execute($result_squilaResultLigacao);
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
-                          <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
+                           <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
                       </ul>
                   </li>
+
+               <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
+                  <li class="sub-menu">
+                      <a class="" href="javascript:;" >
+                          <i class="fa fa-file-text"></i>
+                          <span>Avaliações</span>
+                      </a> <?php } ?>
+                      <ul class="sub">
+                          <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
+                      </ul>
+                  </li>
+
+
+                  
+                   
 
    
                     <?php if ($_SESSION['ACESSO'] == 1){ ?>

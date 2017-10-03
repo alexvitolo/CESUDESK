@@ -135,9 +135,24 @@ sqlsrv_execute($result_squilaFDS);
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
-                          <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
+                           <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
                       </ul>
                   </li>
+
+               <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
+                  <li class="sub-menu">
+                      <a class="" href="javascript:;" >
+                          <i class="fa fa-file-text"></i>
+                          <span>Avaliações</span>
+                      </a> <?php } ?>
+                      <ul class="sub">
+                          <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
+                      </ul>
+                  </li>
+
+
+                  
+                   
 
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
@@ -176,7 +191,7 @@ sqlsrv_execute($result_squilaFDS);
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
+                        <form name="Form" method="post" id="formulario" action="">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Tabela Final de Semana  </h4>
                             <hr>

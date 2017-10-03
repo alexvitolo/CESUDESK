@@ -79,6 +79,7 @@ $horaLimite = '17:00:00';
    
 ?>
 <link rel="stylesheet" href="..\PlanilhaTrocas\PaginaPdf.css">
+<link rel="shortcut icon" href="icone.ico" >
 <form method="post" action="http://d42150:8080/main"> 
           <input type="submit" class="botaoInv" value="Cancelar Operação" ></input>
 </form>

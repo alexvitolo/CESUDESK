@@ -4,6 +4,7 @@ $_SESSION["USUARIO"] = $_GET["USUARIO"];
 
 ?>
 <link rel="stylesheet" href="..\PlanilhaTrocas\index.css">
+<link rel="shortcut icon" href="icone.ico" >
 
 <!DOCTYPE html>
 <html>
