@@ -76,7 +76,7 @@ $squilaQuestao = "SELECT ID_QUESTAO
                                                     WHEN tc.ID_GRUPO IN (1,2,3,4,5) THEN 1 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
                      WHERE BO_FALHA_CRITICA = 'N'
                        AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'
-                       AND tc.STATUS_COLABORADOR ='ATIVO' ";
+                       AND (tc.STATUS_COLABORADOR ='ATIVO' OR tc.STATUS_COLABORADOR = 'FERIAS') ";
 
 $result_squilaQuestao = sqlsrv_prepare($conn, $squilaQuestao);
 sqlsrv_execute($result_squilaQuestao);
@@ -107,7 +107,7 @@ $squilaQuestaoCritico = "SELECT ID_QUESTAO
                                                     WHEN tc.ID_GRUPO IN (1,2,3,4,5) THEN 1 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
                      WHERE BO_FALHA_CRITICA = 'S'
                        AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'
-                       AND tc.STATUS_COLABORADOR ='ATIVO' ";
+                       AND (tc.STATUS_COLABORADOR ='ATIVO' OR tc.STATUS_COLABORADOR = 'FERIAS') ";
 
 $result_squilaQuestaoCritico = sqlsrv_prepare($conn, $squilaQuestaoCritico);
 sqlsrv_execute($result_squilaQuestaoCritico);

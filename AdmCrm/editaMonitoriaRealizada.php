@@ -408,7 +408,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                             </td>
                             <td><br><hr>
                               <select name="vetorRespostas[<?php echo $row1['ID_QUESTAO']?>][<?php echo $row1['PESO']?>]""> 
-                                 <option value="<?php echo $row1['RESPOSTA'] ?>"><?php if( $row1['RESPOSTA'] == "S" ){ echo "SIM" ;}ELSE{ echo "NÃO" ;} ?></option> 
+                                 <option value="<?php echo $row1['RESPOSTA'] ?>"><?php if( $row1['RESPOSTA'] == "S" ){ echo "SIM" ;}ELSEIF( $row1['NOTA_RESULTADO'] == ($row1['PESO']/2) ){ echo "PARCIAL" ;} ELSE{ echo "NÃO" ;} ?></option> 
                                  <option value="S">SIM</option>
                                  <option value="N">NÃO</option> 
                           <?php if ( $row1['BO_PARCIAL'] == 'S') { ?>
