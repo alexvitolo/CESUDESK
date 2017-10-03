@@ -22,7 +22,7 @@ $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];  // será passado pa
                         FROM tb_crm_colaborador tc
                 INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO 
                        WHERE ID_MATRICULA ='{$ID_MATRICULA_CONSULTOR}'
-                         AND tc.STATUS_COLABORADOR = 'ATIVO'";
+                         AND (tc.STATUS_COLABORADOR = 'ATIVO' OR tc.STATUS_COLABORADOR = 'FERIAS')";
 
           $stmtValida = sqlsrv_prepare($conn, $sqlValida);
           $resultValida = sqlsrv_execute($stmtValida);
