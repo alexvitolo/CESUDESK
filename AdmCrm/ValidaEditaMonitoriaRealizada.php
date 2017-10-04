@@ -11,6 +11,8 @@ $ID_PESQUISA = $_POST['ID_PESQUISA'];
 $ID_RESULT_LIG = $_POST['ID_RESULT_LIG'];
 $OBSERVACAO_PESQUISA = $_POST['OBSERVACAO_PESQUISA'];
 
+$ID_OBJETO_TALISMA = $_POST['ID_OBJETO_TALISMA']; 
+$DESC_ID_TALISMA = $_POST['DESC_ID_TALISMA']; 
 
 $notaFinalSoma = 0;
 $NOTA_RESULTADO = 0;
@@ -104,7 +106,9 @@ $updateSquilaPesquisa = " UPDATE tb_qld_pesquisa
                               SET 
                                  NOTA_FINAL = {$notaFinalSoma}
                                 ,ID_RESULT_LIG = {$ID_RESULT_LIG}
-                                ,OBSERVACAO_PESQUISA = '{$OBSERVACAO_PESQUISA}'                                 
+                                ,OBSERVACAO_PESQUISA = '{$OBSERVACAO_PESQUISA}'
+                                ,DESC_ID_TALISMA = {$DESC_ID_TALISMA}
+                                ,ID_OBJETO_TALISMA = {$ID_OBJETO_TALISMA}                               
                             WHERE  ID_PESQUISA = {$ID_PESQUISA} ";
 
   $result_updatePesquisa = sqlsrv_query($conn, $updateSquilaPesquisa);
