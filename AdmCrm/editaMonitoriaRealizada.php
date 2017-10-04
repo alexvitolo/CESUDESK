@@ -31,6 +31,7 @@ $squilaPesquisaQuestoes = "SELECT tp.ID_PESQUISA
                                  ,tcro.NUMERO as NUMERO_AVALIACAO
                                  ,tp.ID_OBJETO_TALISMA
                                  ,ttal.DESCRICAO as NOME_OBJETOTALISMA
+                                 ,ttal.ID_OBJETO_TALISMA
                                  ,tp.DESC_ID_TALISMA
                                  ,tp.CPF_MONITORIA
                                  ,tp.RAMAL_PA
@@ -111,6 +112,13 @@ sqlsrv_execute($result_squilaResultLigacao);
 
 
 
+$squilaObjetoTalisma = "SELECT ID_OBJETO_TALISMA
+                              ,DESCRICAO
+                              ,TABELA_TALISMA
+                          FROM tb_qld_objeto_talisma";
+
+$result_squilaObjetoTalisma = sqlsrv_prepare($conn, $squilaObjetoTalisma);
+sqlsrv_execute($result_squilaObjetoTalisma);
 
 
 ?>
@@ -342,7 +350,13 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">OBJETO: </label> 
                             </td>
                             <td align="left"><br>
-                             <?php echo $resultadoSQL['NOME_OBJETOTALISMA'] ?></a> 
+                             <select name="ID_OBJETO_TALISMA">
+                                            <option value="null">Escolha uma Avaliacao</option>
+                                           <?php while ($row = sqlsrv_fetch_array($result_squilaObjetoTalisma)){ ?>
+                                            <option <?php if ($row['ID_OBJETO_TALISMA'] == $resultadoSQL['ID_OBJETO_TALISMA']) { echo 'selected'; } ?>  value=<?php echo $row['ID_OBJETO_TALISMA']?> > <?php echo $row['DESCRICAO'] ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
                             </td>
                             </tr>
                             <tr>
@@ -350,7 +364,7 @@ sqlsrv_execute($result_squilaResultLigacao);
                              <label style="margin-left: 15px" for="nome">ID Objeto: </label>
                             </td>
                             <td align="left"><br>
-                             <?php echo $resultadoSQL['DESC_ID_TALISMA'] ?></a> 
+                              <input style="width:155px" type="text" maxlength="10" value="<?php echo $resultadoSQL['DESC_ID_TALISMA'] ?>" id="CRTLV" name="DESC_ID_TALISMA" placeholder="Digite apenas NUMEROS" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/> 
                             </td>
                              </tr>
                           </table>
@@ -596,5 +610,12 @@ function formatar(mascara, documento){
   
 }
 
+$(document).ready(function() {
+
+    $("#CRTLV").bind('paste', function(e) {
+        e.preventDefault();
+    });
+
+});
 
 </script>
