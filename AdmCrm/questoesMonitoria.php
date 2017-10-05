@@ -167,6 +167,7 @@ sqlsrv_execute($result_SomaPesos);
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
+                          <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
                   </li>
