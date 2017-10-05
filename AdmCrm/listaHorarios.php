@@ -59,6 +59,7 @@ sqlsrv_execute($result_squila);
     <link rel="shortcut icon" href="icone.ico" >
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+     <link rel="stylesheet" href="..\AdmCrm\general.css">
         
     <!-- Custom styles for this template -->
     <link href="assets/css/style.css" rel="stylesheet">
