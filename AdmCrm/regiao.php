@@ -143,6 +143,7 @@ sqlsrv_execute($result_squilaRegiao);
                       </a> <?php } ?>
                       <ul class="sub">
                           <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
+                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
                   </li>
@@ -192,7 +193,7 @@ sqlsrv_execute($result_squilaRegiao);
                             <h4><i class="fa fa-right"></i> Regiões </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroRegiao.php"><input style="margin-left: 800px" type="button" value="Nova Região" ></input></a>
+                            <a href="cadastroRegiao.php"><input style="float:right; margin-right: 50px" type="button" value="Nova Região" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class="fa fa-bullhorn"></i> ID Região </th>

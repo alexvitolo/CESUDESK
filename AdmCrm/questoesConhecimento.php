@@ -1,6 +1,7 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 session_start();
 
+
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
@@ -12,46 +13,30 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 
 
 
-$ID_CONHECIMENTO = $_POST["ID_CONHECIMENTO"]; // id colaborador
+$squilaQuestoes = "SELECT tq.ID_QUESTAO
+                                  ,tcon.ID_CONHECIMENTO
+                                  ,tcon.DESCRICAO as DESC_CONHE
+                                  ,tq.DESCRICAO as DESC_QUESTAO
+                                  ,tq.BO_ATIVO
+                                  ,tq.DIFICULDADE
+                            FROM tb_ava_questoes_conhecimento tq
+                      INNER JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
+                           WHERE tcon.BO_STATUS = 'S'";
 
-$squilaEditaConhecimento = "SELECT tc.ID_CONHECIMENTO
-                         ,tc.ID_PROCESSO
-                         ,tp.NOME as PROCESSO
-                         ,tc.DESCRICAO as DESC_CONHE
-                         ,tc.BO_STATUS
-                         ,tc.ID_GRUPO
-                         ,tg.DESCRICAO DESC_GRUPO
-                    FROM tb_ava_conhecimento tc
-              INNER JOIN tb_crm_processo tp ON tp.ID = ID_PROCESSO
-               LEFT JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
-                WHERE ID_CONHECIMENTO = {$ID_CONHECIMENTO} ";
-
-$result_squilaConhecimento = sqlsrv_prepare($conn, $squilaEditaConhecimento);
-sqlsrv_execute($result_squilaConhecimento);
-
-$vetorSQLConhecimento = sqlsrv_fetch_array($result_squilaConhecimento);
+$result_squilaQuestoes = sqlsrv_prepare($conn, $squilaQuestoes);
+sqlsrv_execute($result_squilaQuestoes);
 
 
+$squilaSomaQuestoes = "SELECT COUNT(tq.ID_QUESTAO) as SOMA
+                                  ,tcon.DESCRICAO 
+                         FROM tb_ava_questoes_conhecimento tq
+                   RIGHT JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
+                        WHERE tcon.BO_STATUS = 'S'
+                     GROUP BY tcon.DESCRICAO";
 
-$squilaProcesso = "SELECT 
-                         tp.ID 
-                         ,tp.NOME 
-                    FROM tb_crm_processo tp 
-                    WHERE ATIVO = '1' ";
+$result_SomaQuestoes = sqlsrv_prepare($conn, $squilaSomaQuestoes);
+sqlsrv_execute($result_SomaQuestoes);
 
-$result_squilaProcesso = sqlsrv_prepare($conn, $squilaProcesso);
-sqlsrv_execute($result_squilaProcesso);
-
-
-
-
-$squilaGrupo = "   SELECT distinct
-                         CASE WHEN tg.ID_GRUPO  in (1,2,3,4,5) THEN 1 ELSE tg.ID_GRUPO END ID_GRUPO
-                         ,tg.DESCRICAO 
-                    FROM tb_crm_grupo tg  ";
-
-$result_squilaGrupo = sqlsrv_prepare($conn, $squilaGrupo);
-sqlsrv_execute($result_squilaGrupo);
 
 
 
@@ -71,6 +56,7 @@ sqlsrv_execute($result_squilaGrupo);
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link rel="shortcut icon" href="icone.ico" >
+     <link rel="stylesheet" href="..\AdmCrm\general.css">
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         
@@ -177,8 +163,8 @@ sqlsrv_execute($result_squilaGrupo);
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class="active"><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
-                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
+                          <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
+                          <li class="active"><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
                   </li>
@@ -217,70 +203,77 @@ sqlsrv_execute($result_squilaGrupo);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Editar Conhecimento</h3>
+            <h3><i class="fa fa-right"></i> Lista de Questões Teste Conhecimento </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="ValidaEditaTipoTesteConheci.php">
-<!-- DADOS PESSOAIS-->
-                         <fieldset>
-                          <legend> Dados Conhecimento </legend>
+
+                        <legend>  Somatória de Questões  </legend> 
                           <table cellspacing="10" style="vertical-align: middle">
+                    <?php while ($row = sqlsrv_fetch_array($result_SomaQuestoes)){ ?>
                            <tr>
-                            <td style="width:110px";>
-                             <label style="margin-left: 15px" >Nome: </label>
-                            </td>
-                            <td align="left">
-                             <input type="text" maxlength="45" size="50" name="DESC_CONHE" value="<?php echo $vetorSQLConhecimento['DESC_CONHE']; ?>">
-                            </td>
-                            <td style="width:110px";>
-                             <label style="margin-left: 15px" >Processo: </label>
-                            </td>
-                            <td align="left">
-                             <select name="ID_PROCESSO">
-                                            <option value="null">Escolha um PROCESSO</option>
-                                           <?php while ($row = sqlsrv_fetch_array($result_squilaProcesso)){ ?>
-                                            <option <?php if ($row['ID'] == $vetorSQLConhecimento['ID_PROCESSO']) { echo 'selected'; } ?> value=<?php echo $row['ID']?> > <?php echo $row['NOME'] ?> </option>
-                                         <?php }
-                                         ?>
-                             </select>
-                            </td>
-                            <td style="width:110px";>
-                             <label style="margin-left: 15px" >Ativo: </label>
-                            </td>
-                            <td align="left">
-                             <select name="BO_STATUS"> 
-                                 <option value="<?php echo $vetorSQLConhecimento['BO_STATUS']; ?>"><?php if($vetorSQLConhecimento['BO_STATUS'] == 'S') {echo "ATIVO" ;} else { echo "INATIVO";} ?>   </option>
-                                 <option value="S">ATIVO</option>
-                                 <option value="N">INATIVO</option> 
-                            </select>
-                            </td>
-                           </tr>
-
-                           <tr>
-                            <td style="width:110px";><br>
-                             <label style="margin-left: 15px" >Grupo: </label>
-                            </td>
-                            <td align="left"><br>
-                             <select name="ID_GRUPO">
-                                            <option value="null">Escolha um GRUPO</option>
-                                           <?php while ($row = sqlsrv_fetch_array($result_squilaGrupo)){ ?>
-                                            <option <?php if ($row['ID_GRUPO'] == $vetorSQLConhecimento['ID_GRUPO']) { echo 'selected'; } ?> value=<?php echo $row['ID_GRUPO']?> > <?php echo $row['DESCRICAO'] ?> </option>
-                                         <?php }
-                                         ?>
-                             </select>
-                            </td>
-                           </tr>
+                           <td style="width:420px";>
+                             <label style="margin-left: 15px" for="nome"> <?php echo $row['DESCRICAO'] ?> </label>
+                           <hr> </td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" > <?php echo $row['SOMA'] ?></label>
+                            <hr></td>
+                             </tr>
+                     <?php } ?>
                           </table>
-                         </fieldset>
-                         
-                         <br/>
+                         </fieldset><br><br>
+                        <br>
 
-                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $ID_CONHECIMENTO ?>"  name="ID_CONHECIMENTO">Confirmar</button> 
-                         <a href="tipoTesteConhecimento.php"><input type="button" value="Cancelar"></a>
-                      </form>
+
+                        <form name="Form" method="post" id="formulario" action="editaTipoTesteConhecimento.php">
+                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
+                            <h4><i class="fa fa-right"></i> Questões </h4>
+                            <hr>
+                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
+                            <a href="cadastroQuestoesConhecimento.php"><input style="float:right; margin-right: 50px" type="button" value="Nova Questão" ></input></a>
+                              <thead>
+                              <tr>
+                                  <th><i class="fa fa"></i> ID Questão </th>
+                                  <th><i class="fa fa"></i> Tipo Conhecimento </th>
+                                  <th><i class="fa fa"></i> Questão </th>
+                                  <th><i class="fa fa"></i> Dificuldade </th>
+                                  <th><i class="fa fa"></i> Status </th>
+
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <?php  while($row = sqlsrv_fetch_array($result_squilaQuestoes)) { 
+                                    
+
+                                    if ($row['BO_ATIVO'] == "S") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif ($row['BO_ATIVO'] == "N"){
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
+
+                                 ?>
+
+                                  <td><?php echo $row['ID_QUESTAO']; ?></a></td>
+                                  <td><?php echo $row['DESC_CONHE']; ?></td>
+                                  <td><?php echo $row['DESC_QUESTAO']; ?></td>
+                                  <td><?php echo $row['DIFICULDADE']; ?></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php if($row['BO_ATIVO'] == 'S') { echo "ATIVO" ;} else { echo "INATIVO" ;} ?></td>
+                                  <td>
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_QUESTAO'] ?>"  name="ID_QUESTAO"><i class="fa fa-pencil"></i></button>
+                                  </td>
+                              </tr>
+
+                              <?php 
+                                    }
+                              ?>
+                              
+                              </tbody>
+                          </table>
+                        </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
@@ -359,19 +352,5 @@ sqlsrv_execute($result_squilaGrupo);
 
    })(document);
         
-
-
-    function getConfirmation(){
-       // var retVal = confirm("Do you want to continue ?");
-       if(  confirm(" Deseja Confirmar? ") == true ){
-          return true;
-       }
-       else{
-          return false;
-       }
-    }
-        
-
-
 
 </script>

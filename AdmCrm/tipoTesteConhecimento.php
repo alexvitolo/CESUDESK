@@ -6,6 +6,12 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
+if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+}
+
+
 
 $squilaTipoConhecimento = "SELECT tc.ID_CONHECIMENTO
                          ,tc.ID_PROCESSO
@@ -140,12 +146,13 @@ sqlsrv_execute($result_squilaTipoConhecimento);
 
                <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                   <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-file-text"></i>
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
+                          <li class="active"><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
+                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
                   </li>
@@ -155,7 +162,7 @@ sqlsrv_execute($result_squilaTipoConhecimento);
                    
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
                       </a> <?php } ?>
@@ -166,7 +173,7 @@ sqlsrv_execute($result_squilaTipoConhecimento);
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
                           <li class=""><a  href="regiao.php">Região</a></li>
-                          <li class="active"><a  href="processo.php">Processo</a></li>
+                          <li class=""><a  href="processo.php">Processo</a></li>
                           <li class=""><a  href="motivo.php">Motivo</a></li>
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
@@ -195,7 +202,7 @@ sqlsrv_execute($result_squilaTipoConhecimento);
                             <h4><i class="fa fa-right"></i> Tipo Conhecimento </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroProcesso.php"><input style="margin-left: 800px" type="button" value="Novo Processo" ></input></a>
+                            <a href="cadastroTipoTesteConheci.php"><input style="float:right; margin-right: 50px" type="button" value="Novo Conhecimento" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class="fa fa-bullhorn"></i> ID Conhecimento </th>
@@ -213,7 +220,7 @@ sqlsrv_execute($result_squilaTipoConhecimento);
 
                                     if ($row['BO_STATUS'] == "S") {
                                       $corStatus = "label label-success label-mini";
-                                    }elseif ($row['ATIVO'] == "N"){
+                                    }elseif ($row['BO_STATUS'] == "N"){
                                       $corStatus = "label label-danger  label-mini";
                                     }
 
