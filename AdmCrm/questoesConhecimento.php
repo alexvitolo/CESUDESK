@@ -232,7 +232,7 @@ sqlsrv_execute($result_SomaQuestoes);
                             <h4><i class="fa fa-right"></i> Questões </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroQuestoesConhecimento.php"><input style="float:right; margin-right: 50px" type="button" value="Nova Questão" ></input></a>
+                           <a href="#" id="myHref"><input style="float:right; margin-right: 50px" type="button" value="Nova Questão" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class="fa fa"></i> ID Questão </th>
@@ -270,7 +270,7 @@ sqlsrv_execute($result_SomaQuestoes);
                               <?php 
                                     }
                               ?>
-                              
+
                               </tbody>
                           </table>
                         </form>
@@ -299,7 +299,7 @@ sqlsrv_execute($result_SomaQuestoes);
     <script src="assets/js/bootstrap.min.js"></script>
     <script class="include" type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
     <script src="assets/js/jquery.scrollTo.min.js"></script>
-
+    
 
     <!--common script for all pages-->
     <script src="assets/js/common-scripts.js"></script>
@@ -312,6 +312,13 @@ sqlsrv_execute($result_SomaQuestoes);
 
 
 <script type="text/javascript">
+
+  $("#myHref").on('click', function() {
+  var person = prompt("Insira o Número de Alternativas da Nova Quesstão", "5");
+  window.location = "cadastroQuestoesConhecimento.php?NUM_ALT=" + person;
+});
+
+
 (function(document) {
   'use strict';
 

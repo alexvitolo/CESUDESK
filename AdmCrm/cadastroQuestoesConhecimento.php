@@ -11,6 +11,16 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 }
 
 
+$NUM_ALT = $_GET["NUM_ALT"];
+
+
+if  ($NUM_ALT <> ( 1 OR 2 OR 3 OR 4 OR 5 OR 6 ) ) {
+ echo  '<script type="text/javascript">alert("Valor Inválido !");</script>';
+ echo  '<script type="text/javascript"> window.location.href = "questoesConhecimento.php"  </script>';
+ exit;
+}
+
+$aux = 0;
 
 
 $squilaConhecimento = "SELECT tcon.ID_CONHECIMENTO
@@ -242,12 +252,13 @@ sqlsrv_execute($result_squilaConhecimento);
                           <legend> Alternativas Questão </legend>
                             <table cellspacing="10" style="vertical-align: middle">
 
+                        <?php for ($aux = 0; $aux < $NUM_ALT; $aux++ ) {  ?>
                                <tr>
                             <td style="width:110px";><br><br>
                              <label style="margin-left: 15px" >Alternativa a): </label>
                             </td>
                              <td align="left"><br><br>
-                              <textarea name="ALTERNATIVA_A" value="" cols="120" rows="8" > TEXTO </textarea>
+                              <textarea name="<?php echo ('ALTERNATIVA'. $aux) ?>" value="" cols="120" rows="8" > TEXTO </textarea>
                              </td>
                               <td style="width:110px";><br><br>
                              <label style="margin-left: 15px" >VERDADEIRO ? </label>
@@ -256,68 +267,7 @@ sqlsrv_execute($result_squilaConhecimento);
                                <input type="checkbox" name="RESP_ALTERNATIVA_A" unchecked data-toggle="switch"  value="on">
                              </td>
                            </tr>
-
-                            <tr>
-                            <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >Alternativa b): </label>
-                            </td>
-                             <td align="left"><br><br>
-                              <textarea name="ALTERNATIVA_B" value="" cols="120" rows="8" > TEXTO </textarea>
-                             </td>
-                              <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >VERDADEIRO ? </label>
-                            </td>
-                             <td align="left"><br><br>
-                               <input type="checkbox" name="RESP_ALTERNATIVA_B" unchecked data-toggle="switch"  value="on">
-                             </td>
-                           </tr>
-
-                            <tr>
-                            <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >Alternativa c): </label>
-                            </td>
-                             <td align="left"><br><br>
-                              <textarea name="ALTERNATIVA_C" value="" cols="120" rows="8" > TEXTO </textarea>
-                             </td>
-                              <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >VERDADEIRO ? </label>
-                            </td>
-                             <td align="left"><br><br>
-                               <input type="checkbox" name="RESP_ALTERNATIVA_C" unchecked data-toggle="switch"  value="on">
-                             </td>
-                           </tr>
-
-                            <tr>
-                            <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >Alternativa d): </label>
-                            </td>
-                             <td align="left"><br><br>
-                              <textarea name="ALTERNATIVA_D" value="" cols="120" rows="8" > TEXTO </textarea>
-                             </td>
-                              <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >VERDADEIRO ? </label>
-                            </td>
-                             <td align="left"><br><br>
-                               <input type="checkbox" name="RESP_ALTERNATIVA_D" unchecked data-toggle="switch"  value="on">
-                             </td>
-                           </tr>
-
-                            <tr>
-                            <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >Alternativa e): </label>
-                            </td>
-                             <td align="left"><br><br>
-                              <textarea name="ALTERNATIVA_E" value="" cols="120" rows="8" > TEXTO </textarea>
-                             </td>
-                             <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >VERDADEIRO ? </label>
-                            </td>
-                             <td align="left"><br><br>
-                               <input type="checkbox" name="RESP_ALTERNATIVA_E" unchecked data-toggle="switch"  value="on">
-                             </td>
-                           </tr>
-
-
+                        <?php  } ?>
 
                             </table>
                          </fieldset>
