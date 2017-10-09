@@ -5,48 +5,54 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
+if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+}
 
 
-$sqlSupervisores = "SELECT tc.ID_COLABORADOR AS ID_SUP
-                      ,tc.NOME AS NOME_SUP
-                  FROM tb_crm_colaborador tc
-            INNER JOIN tb_crm_cargo ta ON ta.ID_CARGO = tc.ID_CARGO AND ta.BO_GESTOR = 'S'
-              ORDER BY tc.NOME";
-
-$result_supervisores = sqlsrv_prepare($conn, $sqlSupervisores);
-sqlsrv_execute($result_supervisores);
+$ID_QUESTAO = $_POST["ID_QUESTAO"];
 
 
-$sqlHorarios = "SELECT th.ID_HORARIO
-                      ,CONVERT(varchar,th.ENTRADA,108) AS ENTRADA
-                      ,CONVERT(varchar,th.SAIDA,108) AS SAIDA
-                      ,CONVERT(varchar,th.CARGA_HORARIO,108) AS CARGA_HORARIO
-                      FROM tb_crm_horario th
-                    WHERE th.BO_ESCALA_FDS = 'N'
-                   ORDER BY th.CARGA_HORARIO
-                       ,th.ENTRADA";
+$QUANTIDADE_ALT = 0;
 
-$result_Horario = sqlsrv_prepare($conn, $sqlHorarios);
-sqlsrv_execute($result_Horario);
 
-$sqlCargos = "SELECT tc.ID_CARGO
-                    ,tc.DESCRICAO AS DESC_CARGO
-                  FROM tb_crm_cargo tc
-              ORDER BY tc.DESCRICAO";
+$squilaEditaQuestao = "SELECT tqc.ID_CONHECIMENTO
+                         ,tqc.ID_CONHECIMENTO
+                         ,tqc.BO_ATIVO
+                         ,tqc.DESCRICAO
+                         ,tqc.DIFICULDADE
+                    FROM tb_ava_questoes_conhecimento tqc
+                   WHERE tqc.ID_QUESTAO = {$ID_QUESTAO} ";
 
-$result_Cargo = sqlsrv_prepare($conn, $sqlCargos);
-sqlsrv_execute($result_Cargo);
+$result_squilaEditaQuestao = sqlsrv_prepare($conn, $squilaEditaQuestao);
+sqlsrv_execute($result_squilaEditaQuestao);
 
-$sqlGrupo = "SELECT tg.ID_GRUPO
-                   ,tg.DESCRICAO AS DESC_GRUPO
-                   ,CASE
-                    WHEN tr.DESCRICAO = 'Sem região' THEN '' ELSE tr.DESCRICAO
-                     END AS DESC_REGIAO
-              FROM tb_crm_grupo tg
-        INNER JOIN tb_crm_regiao tr on tg.ID_REGIAO = tr.ID_REGIAO";
+$resultadoSQLQuestao = sqlsrv_fetch_array($result_squilaEditaQuestao);
 
-$result_Grupo = sqlsrv_prepare($conn, $sqlGrupo);
-sqlsrv_execute($result_Grupo);
+
+
+
+$squilaConhecimento = "SELECT tcon.ID_CONHECIMENTO
+                         ,tcon.BO_STATUS
+                         ,tcon.DESCRICAO
+                    FROM tb_ava_conhecimento tcon
+                   WHERE tcon.BO_STATUS = 'S' ";
+
+$result_squilaConhecimento = sqlsrv_prepare($conn, $squilaConhecimento);
+sqlsrv_execute($result_squilaConhecimento);
+
+
+
+$squilaAlternativas = "SELECT talt.ID_RESPOSTA
+                             ,talt.ID_QUESTAO
+                             ,talt.DESC_RESPOSTA
+                             ,talt.BO_VERDADEIRO
+                        FROM tb_ava_questoes_conhecimento_alt talt 
+                       WHERE talt.ID_QUESTAO = {$ID_QUESTAO} ";
+
+$result_squilaAlternativas = sqlsrv_prepare($conn, $squilaAlternativas);
+sqlsrv_execute($result_squilaAlternativas);
 
 
 ?>
@@ -166,13 +172,13 @@ sqlsrv_execute($result_Grupo);
 
                <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                   <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-file-text"></i>
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
                           <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
-                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
+                          <li class="active"><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
                   </li>
@@ -180,18 +186,16 @@ sqlsrv_execute($result_Grupo);
 
                   
                    
-                          
-            
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
-                          <li class="active"><a  href="colaboradores.php">Colaboradores</a></li>
+                          <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
                           <li class=""><a  href="regiao.php">Região</a></li>
@@ -213,193 +217,103 @@ sqlsrv_execute($result_Grupo);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Cadastro de colaboradores</h3>
+            <h3><i class="fa fa-right"></i> Cadastro Nova Questão</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="ValidaCadastroColaborador.php">
+                         <form name="Form" method="post" id="formulario" action="ValidaEditaQuestoesConheci.php" onSubmit="return enviardados();" >
 <!-- DADOS PESSOAIS-->
                          <fieldset>
-                          <legend> Dados do colaborador </legend>
+                          <legend> Dados Questão </legend>
                           <table cellspacing="10" style="vertical-align: middle">
                            <tr>
                             <td style="width:110px";>
-                             <label style="margin-left: 15px" for="nome">Matricula: </label>
+                             <label style="margin-left: 15px" >Tipo Conhecimento: </label>
                             </td>
-                            <td align="left">
-                             <input type="text" name="MATRICULA">
+                             <td align="left">
+                             <select name="ID_CONHECIMENTO">
+                                            <option value="null">Escolha um Tipo Conhecimento</option>
+                                           <?php while ($row = sqlsrv_fetch_array($result_squilaConhecimento)){ ?>
+                                            <option <?php if ($row['ID_CONHECIMENTO'] == $resultadoSQLQuestao['ID_CONHECIMENTO']) { echo 'selected'; } ?> value=<?php echo $row['ID_CONHECIMENTO']?> > <?php echo $row['DESCRICAO'] ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
                             </td>
-                            <td>
-                             <label style="margin-left: 15px">Nome: </label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="NOME" size="40">
-                            </td>
-                             <td>
-                             <label style="margin-left: 15px">Data Nascimento: </label>
-                            </td>
-                            <td align="left">
-                             <input type="date" name="dtNascimento">
-                            </td> 
-                           </tr>
+                          </tr>
 
-                           <tr>
-                            <td>
-                             <label style="margin-left: 15px">E-mail: </label>
+                          <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" >Status: </label>
                             </td>
-                            <td align="left">
-                             <input type="text" name="email" size="40">
-                            </td>
-                            <td>
-                             <label style="margin-left: 15px">Código Portal: </label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="codPortal" size="10">
-                            </td>
-                           </tr>
-
-                           <tr>
-                            <td>
-                            <br>
-                             <label style="margin-left: 15px">Telefone: </label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="telefone" size="25">
-                            </td>
-                           </tr>
-
-                           <tr>
-                            <td>
-                            <br/>
-                             <label style="margin-left: 15px">Login Rede: </label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="loginRede" size="40"> 
-                            </td>
-                             <td>
-                             <label style="margin-left: 15px" >Login Telefonia:</label>
-                            </td>
-                            <td align="left">
-                             <input type="text" name="loginTelefonia" size="30"> 
-                            </td>
-                            <td>
-                             <label style="margin-left: 15px">Status :</label>
-                            </td>
-                        <?php if ($_SESSION['SUGESTAO_COLABORADOR'] <> 0){ ?>
-                            <td align="left">
-                             <select name="STATUS" value="ATIVO"> 
-                             <option value="ATIVO">ATIVO</option>
-                             <option value="FERIAS">FERIAS</option> 
-                             <option value="DESLIGADO">DESLIGADO</option>
-                             <option value="INSS">INSS</option>  
+                            <td align="left"><br>
+                             <select name="BO_STATUS"> 
+                                 <option value="S">ATIVO</option>
+                                 <option value="N">INATIVO</option> 
                             </select>
                             </td>
-                        <?php } ?>
-
-
-                        <?php if ($_SESSION['SUGESTAO_COLABORADOR'] == 0){ ?>
-                            <td align="left">
-                             <select name="STATUS" value="SUGESTÃO"> 
-                             <option value="SUGESTÃO">SUGESTÃO</option> 
-                            </select>
-                            </td>
-                         <?php } ?>
-
-
                            </tr>
 
                            <tr>
-                            <td style="width:120px";>
-                             <label style="margin-left: 15px">Nome Supervisor:</label>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" >Dificuldade: </label>
                             </td>
-                            <td align="left">
-                             <select name="supervisor">
-                                         <option value="null">Escolha um supervisor</option>
-                                         <?php while ($row = sqlsrv_fetch_array($result_supervisores)){ ?>
-                                            <option value=<?php echo $row['ID_SUP']?> > <?php echo $row['NOME_SUP'] ?> </option>
-                                         <?php }
-                                         ?>
-                             </select>
-                            </td>
-                            </td>
-                           </tr>
-
-                            <tr>
-                            <td>
-                            <br/>
-                             <label style="margin-left: 15px" for="rg">Cargo: </label>
-                            </td>
-                            <td align="left">
-                             <select name="cargo">
-                                         <option value="">Escolha um Cargo</option>
-                                         <?php while ($row = sqlsrv_fetch_array($result_Cargo)){ ?>
-                                            <option value=<?php echo $row['ID_CARGO']?> > <?php echo $row['DESC_CARGO'] ?> </option>
-                                         <?php }
-                                         ?>
-                             </select>
-                            </td>
-                            <td>
-                             <label style="margin-left: 15px" for="status">Nível Cargo :</label>
-                            </td>
-                            <td align="left">
-                             <select name="nivelCargo" value="I"> 
-                             <option value="I">I</option>
-                             <option value="II">II</option> 
-                             <option value="III">III</option>
-                             <option value="IV">IV</option>
-                             <option value="null">Sem Nível</option>  
+                            <td align="left"><br>
+                             <select name="DIFICULDADE"> 
+                                 <option value="<?php echo $resultadoSQLQuestao['DIFICULDADE']?> "><?php if ( $resultadoSQLQuestao['DIFICULDADE'] == 1 ) { echo " Fácil" ;} elseif ( $resultadoSQLQuestao['DIFICULDADE'] == 2 ) { echo " Médio" ;} else { echo "Difícil" ;} ?> </option>
+                                 <option value="1">Fácil</option>
+                                 <option value="2">Médio</option>
+                                 <option value="3">Difícil</option>  
                             </select>
                             </td>
-                             <td>
-                             <label style="margin-left: 15px" >Data Admissão :</label>
-                            </td>
-                            <td align="left">
-                             <input type="date" name="dtAdmissao"> 
-                            </td>
                            </tr>
 
-                            <tr>
-                            <td>
-                            <br/>
-                             <label style="margin-left: 15px" >Horário: </label>
+                           <tr>
+                            <td style="width:110px";><br><br>
+                             <label style="margin-left: 15px" >Descriçao da Questão: </label>
                             </td>
-                            <td align="left">
-                             <select  name="horario">
-                                         <option value="">Escolha um horário</option>
-                                         <?php while ($row = sqlsrv_fetch_array($result_Horario)){ ?>
-                                            <option value=<?php echo $row['ID_HORARIO']?> > <?php echo 'ENTRADA: '.$row['ENTRADA'].'  |  Saída: '.$row['SAIDA'].'  |  Carga Horária: '.$row['CARGA_HORARIO']?> </option>
-                                         <?php }
-                                         ?>
-                             </select>
-                            </td>
-                            <td>
-                            <br/>
-                             <label style="margin-left: 15px" >Grupo: </label>
-                            </td>
-                            <td align="left">
-                             <select  name="grupo">
-                                         <option value="">Escolha um Grupo</option>
-                                         <?php while ($row = sqlsrv_fetch_array($result_Grupo)){ ?>
-                                           <option value=<?php echo $row['ID_GRUPO']?> > <?php echo 'Grupo: '. $row['DESC_GRUPO'].'  |   '. $row['DESC_REGIAO'] ?> </option>
-                                         <?php }
-                                         ?>
-                             </select>
-                            </td>
+                             <td align="left"><br><br>
+                              <textarea name="DESC_QUESTAO" value="" cols="120" rows="8" > <?php echo $resultadoSQLQuestao['DESCRICAO'] ?> </textarea>
+                             </td>
                            </tr>
-
 
                           </table>
                          </fieldset>
+
+                          <br><br>
+                          <fieldset>
+                          <legend> Alternativas Questão </legend>
+                            <table cellspacing="10" style="vertical-align: middle">
+
+                        <?php while ($row = sqlsrv_fetch_array($result_squilaAlternativas)) { $QUANTIDADE_ALT++; ?>  
+                               <tr>
+                            <td style="width:110px";><br><br>
+                             <label style="margin-left: 15px" >Alternativa <?php echo $QUANTIDADE_ALT ;?> </label>
+                            </td>
+                             <td align="left"><br><br>
+                              <textarea name="<?php echo ('ALTERNATIVA'. $QUANTIDADE_ALT) ?>" value="" cols="120" rows="8" > <?php echo $row['DESC_RESPOSTA'] ?></textarea>
+                             </td>
+                              <td style="width:110px";><br><br>
+                             <label style="margin-left: 15px" >VERDADEIRO ? </label>
+                            </td>
+                             <td align="left"><br><br>
+                               <input type="checkbox" name="<?php echo ('RESP_ALTERNATIVA'. $QUANTIDADE_ALT) ?>" <?php if ($row['BO_VERDADEIRO'] == 'S') { echo "checked" ;}else { echo "unchecked" ;}?> data-toggle="switch"  value="on">
+                               <input type="hidden" name="<?php echo ('ID_RESPOSTA'. $QUANTIDADE_ALT) ?>" value="<?php echo $row['ID_RESPOSTA'] ?>">
+                             </td>
+                           </tr>
+
+                        <?php  } ?>
+
+                            </table>
+                         </fieldset>
                          
-                         <br/>
+                         <br>
 
-                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $row['ID_MATRICULA']?>"  name="ID_MATRICULA">Confirmar</button> 
-                 <?php if ($_SESSION['ACESSO'] == 1) { ?>   <a href="colaboradores.php"><input type="button" value="Cancelar"></a>   <?php } ?>
-                 <?php if ($_SESSION['ACESSO'] <> 1) { ?>   <a href="index.php"><input type="button" value="Cancelar"></a>   <?php } ?>
-
-
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="" >Confirmar</button> 
+                           <input type="hidden" name="QUANTIDADE_ALT" value="<?php echo $QUANTIDADE_ALT ?>"> 
+                           <input type="hidden" name="ID_QUESTAO" value="<?php echo $ID_QUESTAO ?>">
+                         <a href="questoesConhecimento.php"><input type="button" value="Cancelar"></a>
                       </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
@@ -433,12 +347,52 @@ sqlsrv_execute($result_Grupo);
 
     <!--script for this page-->
 
+      <!--custom switch checkbox-->
+  <script src="assets/js/bootstrap-switch-new-on-off.js"></script>
+  
+  <!--custom tagsinput-->
+  <script src="assets/js/jquery.tagsinput.js"></script>
+  
+
+  <script src="assets/js/form-component.js"></script>   
+
+
+
   </body>
 </html>
 
 
 
 <script type="text/javascript">
+
+function enviardados(){
+ 
+
+if (document.Form.ID_GRUPO.value == 'null')
+{
+alert( "Preencha o campo GRUPO!" );
+document.Form.ID_GRUPO.focus();
+return false;
+}
+
+if (document.Form.ID_PROCESSO.value == 'null')
+{
+alert( "Preencha o PROCESSO!" );
+document.Form.ID_PROCESSO.focus();
+return false;
+}
+
+if (document.Form.DESC_CONHE.value == '')
+{
+alert( "Preencha o DESCRIÇÃO!" );
+document.Form.DESC_CONHE.focus();
+return false;
+}
+
+return true;
+}
+
+
 (function(document) {
   'use strict';
 

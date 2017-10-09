@@ -128,6 +128,8 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
                           <span>Avaliações</span> 
                       </a> <?php } ?>
                       <ul class="sub">
+                          <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
+                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
                   </li>

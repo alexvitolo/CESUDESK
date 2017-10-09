@@ -64,7 +64,6 @@ sqlsrv_execute($result_Questoes);
 
 $numeroQuestao = 1;
 
-
 ?>
 
 <html>
@@ -145,8 +144,7 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
 <br /><br />
 
 
-	
-<form action='process.php?id=1' method='post' id='quizForm' id='1'>
+<form name="Form" method="post" id="formulario" action="ValidaAvaliacaoConhecimento.php" >	
 
  
 	<ol style="font-size: 15pt">
@@ -177,8 +175,8 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
             <?php while ($row2 = sqlsrv_fetch_array($result_QuestoesResp)){ ?>
         
         <div>
-        <input type='radio' name='answerOne' id='RESPOSTA<?php echo $numeroQuestao?>' value='<?php echo $row2['ID_RESPOSTA']?>'>
-        <label for='answerOneA'> <?php echo $row2['DESC_RESPOSTA'] ?></label>
+        <input type='radio' name="vetorquestaorepostas[<?php echo $row['ID_QUESTAO']?>]"  value='<?php echo $row2['ID_RESPOSTA']?>'>
+        <label for='answer'> <?php echo $row2['DESC_RESPOSTA'] ?></label>
         </div>
         <br>
         
@@ -191,7 +189,9 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
       <?php }  ?>
 
     </ol>
-     <input type='submit' value='Concluir Teste' />
+     <button  type='submit' value=""  name=""> Confirmar </button>
+     <input type="hidden" name="ID_CONHECIMENTO" value="<?php echo $ID_CONHECIMENTO?>">
+     <input type="hidden" name="ID_COLABORADOR_CONSULTOR" value="<?php echo $ID_COLABORADOR_CONSULTOR?>">
     
 </form>
 

@@ -1,44 +1,31 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 session_start();
 
+
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
-if ($_SESSION['ACESSO'] <> 1 )  {
+if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
  // Ação a ser executada: mata o script e manda uma mensagem
  echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
 }
 
-$squilaDicas = "SELECT 
-                         tc.ID_MATRICULA
-                        ,tc.ID_COLABORADOR
-                        ,tc.NOME
-                        ,th.ENTRADA
-                        ,th.SAIDA
-                        ,tc.STATUS_COLABORADOR
-                        ,tg.DESCRICAO as GRUPO
-                        ,tr.DESCRICAO as REGIAO
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA1
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='2'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='2'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA2
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='5'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='5'AND DT_VIGENCIA_FINAL is NULL),24)) END LANCHE
 
-                    FROM tb_crm_colaborador tc
-              INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
-              INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
-              INNER JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
-                   WHERE tc.STATUS_COLABORADOR <> 'DESLIGADO'
 
-                ORDER BY tc.NOME";
+$squilaTipoConhecimento = "SELECT tc.ID_CONHECIMENTO
+                         ,tc.ID_PROCESSO
+                         ,tp.NOME as PROCESSO
+                         ,tc.DESCRICAO as DESC_CONHE
+                         ,tc.BO_STATUS
+                         ,tc.ID_GRUPO
+                         ,tg.DESCRICAO DESC_GRUPO
+                    FROM tb_ava_conhecimento tc
+              INNER JOIN tb_crm_processo tp ON tp.ID = ID_PROCESSO
+               LEFT JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO";
 
-$result_squila = sqlsrv_prepare($conn, $squilaDicas);
-sqlsrv_execute($result_squila);
+$result_squilaTipoConhecimento = sqlsrv_prepare($conn, $squilaTipoConhecimento);
+sqlsrv_execute($result_squilaTipoConhecimento);
 
 
 ?>
@@ -57,9 +44,9 @@ sqlsrv_execute($result_squila);
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link rel="shortcut icon" href="icone.ico" >
+     <link rel="stylesheet" href="..\AdmCrm\general.css">
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-     <link rel="stylesheet" href="..\AdmCrm\general.css">
         
     <!-- Custom styles for this template -->
     <link href="assets/css/style.css" rel="stylesheet">
@@ -159,12 +146,12 @@ sqlsrv_execute($result_squila);
 
                <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                   <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-file-text"></i>
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
+                          <li class="active"><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
                           <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
@@ -175,13 +162,13 @@ sqlsrv_execute($result_squila);
                    
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class="active"><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
+                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -204,49 +191,49 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Horários</h3>
+            <h3><i class="fa fa-right"></i> Lista de Testes Conhecimento </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
+                        <form name="Form" method="post" id="formulario" action="editaTipoTesteConhecimento.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela de Horários </h4>
+                            <h4><i class="fa fa-right"></i> Tipo Conhecimento </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
+                            <a href="cadastroTipoTesteConheci.php"><input style="float:right; margin-right: 50px" type="button" value="Novo Conhecimento" ></input></a>
                               <thead>
                               <tr>
-                                  <th><i class="fa fa-bookmark"></i> Matrícula </th>
-                                  <th><i class="fa fa-bullhorn"></i> Nome </th>
-                                  <th><i class="fa fa-bookmark"></i> Entrada </th>
-                                  <th><i class=" fa fa-edit"></i> Saída </th>
-                                  <th><i class=" fa fa-edit"></i> Status </th>
-                                  <th><i class=" fa fa-edit"></i> Grupo </th>
-                                  <th><i class=" fa fa-edit"></i> Região </th>
-                                  <th><i class=" fa fa-edit"></i> Pausa 1 </th>
-                                  <th><i class=" fa fa-edit"></i> Lanche </th>
-                                  <th><i class=" fa fa-edit"></i> Pausa 2 </th>
- 
+                                  <th><i class="fa fa-bullhorn"></i> ID Conhecimento </th>
+                                  <th><i class="fa fa-bullhorn"></i> Processo </th>
+                                  <th><i class="fa fa-bullhorn"></i> Descrição </th>
+                                  <th><i class="fa fa-bullhorn"></i> Status </th>
+                                  <th><i class="fa fa-bullhorn"></i> Grupo </th>
+
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-                                    ?>
+                                  <?php  while($row = sqlsrv_fetch_array($result_squilaTipoConhecimento)) { 
+                                    
 
-                                  <td><?php echo $row['ID_MATRICULA']; ?></a></td>
-                                  <td><?php echo $row['NOME']; ?></a></td>
-                                  <td><?php echo date_format($row['ENTRADA'],"H:i"); ?></a></td>
-                                  <td><?php echo date_format($row['SAIDA'],"H:i"); ?></a></td>
-                                  <td><?php echo $row['STATUS_COLABORADOR']; ?></a></td>
-                                  <td><?php echo $row['GRUPO']; ?></a></td>
-                                  <td><?php echo $row['REGIAO']; ?></a></td>
-                                  <td><?php echo $row['PAUSA1']; ?></td>
-                                  <td><?php echo $row['LANCHE']; ?></td>
-                                  <td><?php echo $row['PAUSA2']; ?></td>
+                                    if ($row['BO_STATUS'] == "S") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif ($row['BO_STATUS'] == "N"){
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
+
+                                 ?>
+
+                                  <td><?php echo $row['ID_CONHECIMENTO']; ?></a></td>
+                                  <td><?php echo $row['PROCESSO']; ?></td>
+                                  <td><?php echo $row['DESC_CONHE']; ?></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php if($row['BO_STATUS'] == 'S') { echo "ATIVO" ;} else { echo "INATIVO" ;} ?></td>
+                                  <td><?php echo $row['DESC_GRUPO']; ?></td>
                                   <td>
-                                      
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_CONHECIMENTO'] ?>"  name="ID_CONHECIMENTO"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 

@@ -152,6 +152,8 @@ sqlsrv_execute($result_squila);
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
+                          <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
+                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
                   </li>
@@ -200,7 +202,7 @@ sqlsrv_execute($result_squila);
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Colaboradores Call-Center </h4>
                             <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input><a href="UserReport_Export.php"><input style="margin-left: 800px" type="button" value="Exportar Excel" ></input></a>
+                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input><a href="UserReport_Export.php"><input style="float:right; margin-right: 50px" type="button" value="Exportar Excel" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class=""></i> Matrícula </th>

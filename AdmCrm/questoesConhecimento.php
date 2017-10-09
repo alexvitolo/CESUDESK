@@ -1,44 +1,43 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 session_start();
 
+
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
-if ($_SESSION['ACESSO'] <> 1 )  {
+if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
  // Ação a ser executada: mata o script e manda uma mensagem
  echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
 }
 
-$squilaDicas = "SELECT 
-                         tc.ID_MATRICULA
-                        ,tc.ID_COLABORADOR
-                        ,tc.NOME
-                        ,th.ENTRADA
-                        ,th.SAIDA
-                        ,tc.STATUS_COLABORADOR
-                        ,tg.DESCRICAO as GRUPO
-                        ,tr.DESCRICAO as REGIAO
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='1'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA1
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='2'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='2'AND DT_VIGENCIA_FINAL is NULL),24)) END PAUSA2
-            ,CASE WHEN CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='5'AND DT_VIGENCIA_FINAL is NULL), 24) is NULL 
-                  THEN 'SEM HORÁRIO' 
-                  ELSE (CONVERT(VARCHAR(8),(SELECT HORARIO_PAUSA FROM tb_crm_escala_pausa WHERE ID_COLABORADOR = tc.ID_COLABORADOR AND ID_TIPO_PAUSA ='5'AND DT_VIGENCIA_FINAL is NULL),24)) END LANCHE
 
-                    FROM tb_crm_colaborador tc
-              INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
-              INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
-              INNER JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
-                   WHERE tc.STATUS_COLABORADOR <> 'DESLIGADO'
 
-                ORDER BY tc.NOME";
+$squilaQuestoes = "SELECT tq.ID_QUESTAO
+                                  ,tcon.ID_CONHECIMENTO
+                                  ,tcon.DESCRICAO as DESC_CONHE
+                                  ,tq.DESCRICAO as DESC_QUESTAO
+                                  ,tq.BO_ATIVO
+                                  ,tq.DIFICULDADE
+                            FROM tb_ava_questoes_conhecimento tq
+                      INNER JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
+                           WHERE tcon.BO_STATUS = 'S'";
 
-$result_squila = sqlsrv_prepare($conn, $squilaDicas);
-sqlsrv_execute($result_squila);
+$result_squilaQuestoes = sqlsrv_prepare($conn, $squilaQuestoes);
+sqlsrv_execute($result_squilaQuestoes);
+
+
+$squilaSomaQuestoes = "SELECT COUNT(tq.ID_QUESTAO) as SOMA
+                                  ,tcon.DESCRICAO 
+                         FROM tb_ava_questoes_conhecimento tq
+                   RIGHT JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
+                        WHERE tcon.BO_STATUS = 'S'
+                     GROUP BY tcon.DESCRICAO";
+
+$result_SomaQuestoes = sqlsrv_prepare($conn, $squilaSomaQuestoes);
+sqlsrv_execute($result_SomaQuestoes);
+
+
 
 
 ?>
@@ -57,9 +56,9 @@ sqlsrv_execute($result_squila);
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link rel="shortcut icon" href="icone.ico" >
+     <link rel="stylesheet" href="..\AdmCrm\general.css">
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-     <link rel="stylesheet" href="..\AdmCrm\general.css">
         
     <!-- Custom styles for this template -->
     <link href="assets/css/style.css" rel="stylesheet">
@@ -159,13 +158,13 @@ sqlsrv_execute($result_squila);
 
                <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                   <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-file-text"></i>
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
                           <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
-                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
+                          <li class="active"><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
                   </li>
@@ -175,13 +174,13 @@ sqlsrv_execute($result_squila);
                    
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class="active"><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
+                          <li><a  href="listaHorarios.php">Lista Pausas</a></li>
+                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -204,56 +203,83 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Horários</h3>
+            <h3><i class="fa fa-right"></i> Lista de Questões Teste Conhecimento </h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaColaborador.php">
+
+                        <legend>  Somatória de Questões  </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                    <?php while ($row = sqlsrv_fetch_array($result_SomaQuestoes)){ ?>
+                           <tr>
+                           <td style="width:420px";>
+                             <label style="margin-left: 15px" for="nome"> <?php echo $row['DESCRICAO'] ?> </label>
+                           <hr> </td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" > <?php echo $row['SOMA'] ?></label>
+                            <hr></td>
+                             </tr>
+                     <?php } ?>
+                          </table>
+                         </fieldset><br><br>
+                        <br>
+
+
+                        <form name="Form" method="post" id="formulario" action="editaQuestoesConhecimento.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela de Horários </h4>
+                            <h4><i class="fa fa-right"></i> Questões </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
+                           <a href="#" id="myHref"><input style="float:right; margin-right: 50px" type="button" value="Nova Questão" ></input></a>
                               <thead>
                               <tr>
-                                  <th><i class="fa fa-bookmark"></i> Matrícula </th>
-                                  <th><i class="fa fa-bullhorn"></i> Nome </th>
-                                  <th><i class="fa fa-bookmark"></i> Entrada </th>
-                                  <th><i class=" fa fa-edit"></i> Saída </th>
-                                  <th><i class=" fa fa-edit"></i> Status </th>
-                                  <th><i class=" fa fa-edit"></i> Grupo </th>
-                                  <th><i class=" fa fa-edit"></i> Região </th>
-                                  <th><i class=" fa fa-edit"></i> Pausa 1 </th>
-                                  <th><i class=" fa fa-edit"></i> Lanche </th>
-                                  <th><i class=" fa fa-edit"></i> Pausa 2 </th>
- 
+                                  <th><i class="fa fa"></i> ID Questão </th>
+                                  <th><i class="fa fa"></i> Tipo Conhecimento </th>
+                                  <th><i class="fa fa"></i> Questão </th>
+                                  <th><i class="fa fa"></i> Dificuldade </th>
+                                  <th><i class="fa fa"></i> Status </th>
+
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-                                    ?>
+                                  <?php  while($row = sqlsrv_fetch_array($result_squilaQuestoes)) { 
+                                    
 
-                                  <td><?php echo $row['ID_MATRICULA']; ?></a></td>
-                                  <td><?php echo $row['NOME']; ?></a></td>
-                                  <td><?php echo date_format($row['ENTRADA'],"H:i"); ?></a></td>
-                                  <td><?php echo date_format($row['SAIDA'],"H:i"); ?></a></td>
-                                  <td><?php echo $row['STATUS_COLABORADOR']; ?></a></td>
-                                  <td><?php echo $row['GRUPO']; ?></a></td>
-                                  <td><?php echo $row['REGIAO']; ?></a></td>
-                                  <td><?php echo $row['PAUSA1']; ?></td>
-                                  <td><?php echo $row['LANCHE']; ?></td>
-                                  <td><?php echo $row['PAUSA2']; ?></td>
+                                    if ($row['BO_ATIVO'] == "S") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif ($row['BO_ATIVO'] == "N"){
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
+
+                                     if ($row['DIFICULDADE'] == "1") {
+                                      $corStatus2 = "label label-success label-mini";
+                                    }elseif ($row['DIFICULDADE'] == "2"){
+                                      $corStatus2 = "label label-warning  label-mini";
+                                    }elseif ($row['DIFICULDADE'] == "3"){
+                                      $corStatus2 = "label label-danger  label-mini";
+                                    }
+
+
+                                 ?>
+
+                                  <td><?php echo $row['ID_QUESTAO']; ?></a></td>
+                                  <td><?php echo $row['DESC_CONHE']; ?></td>
+                                  <td><?php echo $row['DESC_QUESTAO']; ?></td>
+                                  <td><span class="<?php echo $corStatus2 ?>"><?php if($row['DIFICULDADE'] == '1') { echo "Fácil" ;} elseif($row['DIFICULDADE'] == '2') { echo "Médio" ;} else { echo "Difícil" ;} ?></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php if($row['BO_ATIVO'] == 'S') { echo "ATIVO" ;} else { echo "INATIVO" ;} ?></td>
                                   <td>
-                                      
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_QUESTAO'] ?>"  name="ID_QUESTAO"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 
                               <?php 
                                     }
                               ?>
-                              
+
                               </tbody>
                           </table>
                         </form>
@@ -282,7 +308,7 @@ sqlsrv_execute($result_squila);
     <script src="assets/js/bootstrap.min.js"></script>
     <script class="include" type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
     <script src="assets/js/jquery.scrollTo.min.js"></script>
-
+    
 
     <!--common script for all pages-->
     <script src="assets/js/common-scripts.js"></script>
@@ -295,6 +321,17 @@ sqlsrv_execute($result_squila);
 
 
 <script type="text/javascript">
+
+  $("#myHref").on('click', function() {
+  var person = prompt("Insira o Número de Alternativas da Nova Quesstão", "5");
+   if (person === null) {
+        return; //break out of the function early
+    }else{
+         window.location = "cadastroQuestoesConhecimento.php?NUM_ALT=" + person;
+     } 
+});
+
+
 (function(document) {
   'use strict';
 

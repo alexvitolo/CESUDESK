@@ -147,6 +147,8 @@ sqlsrv_execute($result_squilaProcesso);
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
+                          <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
+                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
                   </li>
@@ -196,7 +198,7 @@ sqlsrv_execute($result_squilaProcesso);
                             <h4><i class="fa fa-right"></i> Processos </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroProcesso.php"><input style="margin-left: 800px" type="button" value="Novo Processo" ></input></a>
+                            <a href="cadastroProcesso.php"><input style="float:right; margin-right: 50px" type="button" value="Novo Processo" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class="fa fa-bullhorn"></i> ID Processo </th>
