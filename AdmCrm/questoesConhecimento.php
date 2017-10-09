@@ -227,7 +227,7 @@ sqlsrv_execute($result_SomaQuestoes);
                         <br>
 
 
-                        <form name="Form" method="post" id="formulario" action="editaTipoTesteConhecimento.php">
+                        <form name="Form" method="post" id="formulario" action="editaQuestoesConhecimento.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Questões </h4>
                             <hr>
@@ -254,12 +254,21 @@ sqlsrv_execute($result_SomaQuestoes);
                                       $corStatus = "label label-danger  label-mini";
                                     }
 
+                                     if ($row['DIFICULDADE'] == "1") {
+                                      $corStatus2 = "label label-success label-mini";
+                                    }elseif ($row['DIFICULDADE'] == "2"){
+                                      $corStatus2 = "label label-warning  label-mini";
+                                    }elseif ($row['DIFICULDADE'] == "3"){
+                                      $corStatus2 = "label label-danger  label-mini";
+                                    }
+
+
                                  ?>
 
                                   <td><?php echo $row['ID_QUESTAO']; ?></a></td>
                                   <td><?php echo $row['DESC_CONHE']; ?></td>
                                   <td><?php echo $row['DESC_QUESTAO']; ?></td>
-                                  <td><?php echo $row['DIFICULDADE']; ?></td>
+                                  <td><span class="<?php echo $corStatus2 ?>"><?php if($row['DIFICULDADE'] == '1') { echo "Fácil" ;} elseif($row['DIFICULDADE'] == '2') { echo "Médio" ;} else { echo "Difícil" ;} ?></td>
                                   <td><span class="<?php echo $corStatus ?>"><?php if($row['BO_ATIVO'] == 'S') { echo "ATIVO" ;} else { echo "INATIVO" ;} ?></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
@@ -315,7 +324,11 @@ sqlsrv_execute($result_SomaQuestoes);
 
   $("#myHref").on('click', function() {
   var person = prompt("Insira o Número de Alternativas da Nova Quesstão", "5");
-  window.location = "cadastroQuestoesConhecimento.php?NUM_ALT=" + person;
+   if (person === null) {
+        return; //break out of the function early
+    }else{
+         window.location = "cadastroQuestoesConhecimento.php?NUM_ALT=" + person;
+     } 
 });
 
 

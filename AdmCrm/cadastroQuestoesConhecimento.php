@@ -14,7 +14,7 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 $NUM_ALT = $_GET["NUM_ALT"];
 
 
-if  ($NUM_ALT <> ( 1 OR 2 OR 3 OR 4 OR 5 OR 6 ) ) {
+if   ( ereg('[^0-6]',$NUM_ALT )) {
  echo  '<script type="text/javascript">alert("Valor Inválido !");</script>';
  echo  '<script type="text/javascript"> window.location.href = "questoesConhecimento.php"  </script>';
  exit;
@@ -236,6 +236,19 @@ sqlsrv_execute($result_squilaConhecimento);
                            </tr>
 
                            <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" >Dificuldade: </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="DIFICULDADE"> 
+                                 <option value="1">Fácil</option>
+                                 <option value="2">Médio</option>
+                                 <option value="3">Difícil</option>  
+                            </select>
+                            </td>
+                           </tr>
+
+                           <tr>
                             <td style="width:110px";><br><br>
                              <label style="margin-left: 15px" >Descriçao da Questão: </label>
                             </td>
@@ -252,10 +265,10 @@ sqlsrv_execute($result_squilaConhecimento);
                           <legend> Alternativas Questão </legend>
                             <table cellspacing="10" style="vertical-align: middle">
 
-                        <?php for ($aux = 0; $aux < $NUM_ALT; $aux++ ) {  ?>
+                        <?php for ($aux = 1; $aux <= $NUM_ALT; $aux++ ) {  ?>
                                <tr>
                             <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >Alternativa a): </label>
+                             <label style="margin-left: 15px" >Alternativa <?php echo $aux ;?> </label>
                             </td>
                              <td align="left"><br><br>
                               <textarea name="<?php echo ('ALTERNATIVA'. $aux) ?>" value="" cols="120" rows="8" > TEXTO </textarea>
@@ -264,7 +277,7 @@ sqlsrv_execute($result_squilaConhecimento);
                              <label style="margin-left: 15px" >VERDADEIRO ? </label>
                             </td>
                              <td align="left"><br><br>
-                               <input type="checkbox" name="RESP_ALTERNATIVA_A" unchecked data-toggle="switch"  value="on">
+                               <input type="checkbox" name="<?php echo ('RESP_ALTERNATIVA'. $aux) ?>" unchecked data-toggle="switch"  value="on">
                              </td>
                            </tr>
                         <?php  } ?>
@@ -274,7 +287,8 @@ sqlsrv_execute($result_squilaConhecimento);
                          
                          <br>
 
-                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $ID_CONHECIMENTO ?>"  name="ID_CONHECIMENTO">Confirmar</button> 
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="" >Confirmar</button> 
+                           <input type="hidden" name="NUM_ALT" value="<?php echo $NUM_ALT ?>"> 
                          <a href="tipoTesteConhecimento.php"><input type="button" value="Cancelar"></a>
                       </form>
                       </div><!-- /content-panel -->

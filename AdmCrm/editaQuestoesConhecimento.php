@@ -1,11 +1,9 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
-
 session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
-
 
 if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
  // Ação a ser executada: mata o script e manda uma mensagem
@@ -13,34 +11,48 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 }
 
 
-
-$squilaDicas = "SELECT tp.ID_PESQUISA
-                      ,tp.ID_COLABORADOR
-                      ,tc.NOME as NOME_CONSULTOR
-                      ,tc.ID_MATRICULA as MATRICULA_CONSULTOR
-                      ,tp.ID_COLABORADOR_APLICA
-                      ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tp.ID_COLABORADOR_APLICA) as NOME_QUEM_APLICOU
-                      ,tp.ID_PROCESSO
-                      ,tpro.NOME as NOME_PROCESSO
-                      ,tp.ID_GRUPO
-                      ,tcron.NUMERO as NUMERO_AVALIACAO
-                      ,tg.DESCRICAO
-                      ,tp.CPF_MONITORIA
-                      ,tp.RAMAL_PA
-                      ,tp.DT_ATENDIMENTO
-                      ,tp.DT_SISTEMA
-                      ,tp.NOTA_FINAL
-                FROM tb_qld_pesquisa tp
-          INNER JOIN tb_crm_processo tpro ON tpro.ID = tp.ID_PROCESSO 
-          INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tp.ID_COLABORADOR
-          INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tp.ID_GRUPO
-          INNER JOIN tb_qld_cronograma_avaliacao tcron ON tcron.ID_AVALIACAO = tp.ID_AVALIACAO
-            ORDER BY tp.DT_SISTEMA desc";
-
-$result_squila = sqlsrv_prepare($conn, $squilaDicas);
-sqlsrv_execute($result_squila);
+$ID_QUESTAO = $_POST["ID_QUESTAO"];
 
 
+$QUANTIDADE_ALT = 0;
+
+
+$squilaEditaQuestao = "SELECT tqc.ID_CONHECIMENTO
+                         ,tqc.ID_CONHECIMENTO
+                         ,tqc.BO_ATIVO
+                         ,tqc.DESCRICAO
+                         ,tqc.DIFICULDADE
+                    FROM tb_ava_questoes_conhecimento tqc
+                   WHERE tqc.ID_QUESTAO = {$ID_QUESTAO} ";
+
+$result_squilaEditaQuestao = sqlsrv_prepare($conn, $squilaEditaQuestao);
+sqlsrv_execute($result_squilaEditaQuestao);
+
+$resultadoSQLQuestao = sqlsrv_fetch_array($result_squilaEditaQuestao);
+
+
+
+
+$squilaConhecimento = "SELECT tcon.ID_CONHECIMENTO
+                         ,tcon.BO_STATUS
+                         ,tcon.DESCRICAO
+                    FROM tb_ava_conhecimento tcon
+                   WHERE tcon.BO_STATUS = 'S' ";
+
+$result_squilaConhecimento = sqlsrv_prepare($conn, $squilaConhecimento);
+sqlsrv_execute($result_squilaConhecimento);
+
+
+
+$squilaAlternativas = "SELECT talt.ID_RESPOSTA
+                             ,talt.ID_QUESTAO
+                             ,talt.DESC_RESPOSTA
+                             ,talt.BO_VERDADEIRO
+                        FROM tb_ava_questoes_conhecimento_alt talt 
+                       WHERE talt.ID_QUESTAO = {$ID_QUESTAO} ";
+
+$result_squilaAlternativas = sqlsrv_prepare($conn, $squilaAlternativas);
+sqlsrv_execute($result_squilaAlternativas);
 
 
 ?>
@@ -146,27 +158,27 @@ sqlsrv_execute($result_squila);
 
                   <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                       <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-signal"></i>
                           <span>Qualidade</span> 
                       </a> <?php } ?>
                       <ul class="sub">
                           <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
-                          <li class="active"><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
-                            <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
+                          <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
+                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
                            <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
                       </ul>
                   </li>
 
                <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                   <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-file-text"></i>
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
                           <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
-                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
+                          <li class="active"><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                       </ul>
                   </li>
@@ -179,7 +191,7 @@ sqlsrv_execute($result_squila);
                       <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
-                      </a> 
+                      </a> <?php } ?>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
@@ -192,7 +204,6 @@ sqlsrv_execute($result_squila);
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
                   </li>
-               <?php } ?>
 
               </ul>
               <!-- sidebar menu end-->
@@ -206,65 +217,104 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Formulários </h3>
+            <h3><i class="fa fa-right"></i> Cadastro Nova Questão</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
-                         <div class="panel  filterable">
-                             <div class="panel-heading">
-                                   <div class="pull-right">
-                                     <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filtro </button>
-                                    </div>
-                              </div>
+                      <div class="content-panel">
+                         <form name="Form" method="post" id="formulario" action="ValidaEditaQuestoesConheci.php" onSubmit="return enviardados();" >
+<!-- DADOS PESSOAIS-->
+                         <fieldset>
+                          <legend> Dados Questão </legend>
+                          <table cellspacing="10" style="vertical-align: middle">
+                           <tr>
+                            <td style="width:110px";>
+                             <label style="margin-left: 15px" >Tipo Conhecimento: </label>
+                            </td>
+                             <td align="left">
+                             <select name="ID_CONHECIMENTO">
+                                            <option value="null">Escolha um Tipo Conhecimento</option>
+                                           <?php while ($row = sqlsrv_fetch_array($result_squilaConhecimento)){ ?>
+                                            <option <?php if ($row['ID_CONHECIMENTO'] == $resultadoSQLQuestao['ID_CONHECIMENTO']) { echo 'selected'; } ?> value=<?php echo $row['ID_CONHECIMENTO']?> > <?php echo $row['DESCRICAO'] ?> </option>
+                                         <?php }
+                                         ?>
+                             </select>
+                            </td>
+                          </tr>
 
+                          <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" >Status: </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="BO_STATUS"> 
+                                 <option value="S">ATIVO</option>
+                                 <option value="N">INATIVO</option> 
+                            </select>
+                            </td>
+                           </tr>
 
-                        <form name="Form" method="post" id="formulario" action="editaMonitoriaRealizada.php">
-                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Avaliações </h4>
-                            <hr>
-                              <thead>
-                              <tr class="filters">
-                              <th><input type="text" class="form-control" placeholder="ID Pesquisa " disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Consultor " disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Avaliação" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Grupo" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Matrícula Consulto" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Quem Aplicou" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Ramal" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="CPF do Aluno" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Data Atendimento Cliente" disabled></th>
-                              <th style="width: 100px"><input type="text" class="form-control" placeholder="Nota Final" disabled></th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
-              
-                                    ?>
-                                  <td style="width: 100px"><?php echo $row['ID_PESQUISA'] ?></a></td>
-                                  <td style="width: 160px"><?php echo $row['NOME_CONSULTOR'] ?></td>
-                                  <td style="text-align: center;"><?php echo $row['NUMERO_AVALIACAO'] ?></a></td>
-                                  <td><?php echo $row['DESCRICAO'] ?></a></td>
-                                  <td><a><?php echo $row['MATRICULA_CONSULTOR'] ?></a></td>
-                                  <td><?php echo $row['NOME_QUEM_APLICOU'] ?></a></td>
-                                  <td><?php echo $row['RAMAL_PA'] ?></td>
-                                  <td><?php echo $row['CPF_MONITORIA'] ?></td>
-                                  <td><?php echo date_format($row['DT_ATENDIMENTO'],"d/m/Y");?></td>
-                                  <td><?php echo $row['NOTA_FINAL'] ?></td>
-                                  <td>
-                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_PESQUISA'] ?>"  name="ID_PESQUISA"><i class="fa fa-pencil"></i></button>
-                                  </td>
-                              </tr>
+                           <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" >Dificuldade: </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="DIFICULDADE"> 
+                                 <option value="<?php echo $resultadoSQLQuestao['DIFICULDADE']?> "><?php if ( $resultadoSQLQuestao['DIFICULDADE'] == 1 ) { echo " Fácil" ;} elseif ( $resultadoSQLQuestao['DIFICULDADE'] == 2 ) { echo " Médio" ;} else { echo "Difícil" ;} ?> </option>
+                                 <option value="1">Fácil</option>
+                                 <option value="2">Médio</option>
+                                 <option value="3">Difícil</option>  
+                            </select>
+                            </td>
+                           </tr>
 
-                              <?php 
-                                    }
-                              ?>
-                              
-                              </tbody>
+                           <tr>
+                            <td style="width:110px";><br><br>
+                             <label style="margin-left: 15px" >Descriçao da Questão: </label>
+                            </td>
+                             <td align="left"><br><br>
+                              <textarea name="DESC_QUESTAO" value="" cols="120" rows="8" > <?php echo $resultadoSQLQuestao['DESCRICAO'] ?> </textarea>
+                             </td>
+                           </tr>
+
                           </table>
-                        </form>
+                         </fieldset>
+
+                          <br><br>
+                          <fieldset>
+                          <legend> Alternativas Questão </legend>
+                            <table cellspacing="10" style="vertical-align: middle">
+
+                        <?php while ($row = sqlsrv_fetch_array($result_squilaAlternativas)) { $QUANTIDADE_ALT++; ?>  
+                               <tr>
+                            <td style="width:110px";><br><br>
+                             <label style="margin-left: 15px" >Alternativa <?php echo $QUANTIDADE_ALT ;?> </label>
+                            </td>
+                             <td align="left"><br><br>
+                              <textarea name="<?php echo ('ALTERNATIVA'. $QUANTIDADE_ALT) ?>" value="" cols="120" rows="8" > <?php echo $row['DESC_RESPOSTA'] ?></textarea>
+                             </td>
+                              <td style="width:110px";><br><br>
+                             <label style="margin-left: 15px" >VERDADEIRO ? </label>
+                            </td>
+                             <td align="left"><br><br>
+                               <input type="checkbox" name="<?php echo ('RESP_ALTERNATIVA'. $QUANTIDADE_ALT) ?>" <?php if ($row['BO_VERDADEIRO'] == 'S') { echo "checked" ;}else { echo "unchecked" ;}?> data-toggle="switch"  value="on">
+                               <input type="hidden" name="<?php echo ('ID_RESPOSTA'. $QUANTIDADE_ALT) ?>" value="<?php echo $row['ID_RESPOSTA'] ?>">
+                             </td>
+                           </tr>
+
+                        <?php  } ?>
+
+                            </table>
+                         </fieldset>
+                         
+                         <br>
+
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="" >Confirmar</button> 
+                           <input type="hidden" name="QUANTIDADE_ALT" value="<?php echo $QUANTIDADE_ALT ?>"> 
+                           <input type="hidden" name="ID_QUESTAO" value="<?php echo $ID_QUESTAO ?>">
+                         <a href="questoesConhecimento.php"><input type="button" value="Cancelar"></a>
+                      </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
@@ -297,6 +347,17 @@ sqlsrv_execute($result_squila);
 
     <!--script for this page-->
 
+      <!--custom switch checkbox-->
+  <script src="assets/js/bootstrap-switch-new-on-off.js"></script>
+  
+  <!--custom tagsinput-->
+  <script src="assets/js/jquery.tagsinput.js"></script>
+  
+
+  <script src="assets/js/form-component.js"></script>   
+
+
+
   </body>
 </html>
 
@@ -304,50 +365,32 @@ sqlsrv_execute($result_squila);
 
 <script type="text/javascript">
 
+function enviardados(){
+ 
 
-$(document).ready(function(){
-    $('.filterable .btn-filter').click(function(){
-        var $panel = $(this).parents('.filterable'),
-        $filters = $panel.find('.filters input'),
-        $tbody = $panel.find('.table tbody');
-        if ($filters.prop('disabled') == true) {
-            $filters.prop('disabled', false);
-            $filters.first().focus();
-        } else {
-            $filters.val('').prop('disabled', true);
-            $tbody.find('.no-result').remove();
-            $tbody.find('tr').show();
-        }
-    });
+if (document.Form.ID_GRUPO.value == 'null')
+{
+alert( "Preencha o campo GRUPO!" );
+document.Form.ID_GRUPO.focus();
+return false;
+}
 
-    $('.filterable .filters input').keyup(function(e){
-        /* Ignore tab key */
-        var code = e.keyCode || e.which;
-        if (code == '9') return;
-        /* Useful DOM data and selectors */
-        var $input = $(this),
-        inputContent = $input.val().toLowerCase(),
-        $panel = $input.parents('.filterable'),
-        column = $panel.find('.filters th').index($input.parents('th')),
-        $table = $panel.find('.table'),
-        $rows = $table.find('tbody tr');
-        /* Dirtiest filter function ever ;) */
-        var $filteredRows = $rows.filter(function(){
-            var value = $(this).find('td').eq(column).text().toLowerCase();
-            return value.indexOf(inputContent) === -1;
-        });
-        /* Clean previous no-result if exist */
-        $table.find('tbody .no-result').remove();
-        /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
-        $rows.show();
-        $filteredRows.hide();
-        /* Prepend no-result row if all rows are filtered */
-        if ($filteredRows.length === $rows.length) {
-            $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
-        }
-    });
-});
+if (document.Form.ID_PROCESSO.value == 'null')
+{
+alert( "Preencha o PROCESSO!" );
+document.Form.ID_PROCESSO.focus();
+return false;
+}
 
+if (document.Form.DESC_CONHE.value == '')
+{
+alert( "Preencha o DESCRIÇÃO!" );
+document.Form.DESC_CONHE.focus();
+return false;
+}
+
+return true;
+}
 
 
 (function(document) {
@@ -390,5 +433,19 @@ $(document).ready(function(){
 
    })(document);
         
+
+
+    function getConfirmation(){
+       // var retVal = confirm("Do you want to continue ?");
+       if(  confirm(" Deseja Confirmar? ") == true ){
+          return true;
+       }
+       else{
+          return false;
+       }
+    }
+        
+
+
 
 </script>
