@@ -54,6 +54,8 @@ sqlsrv_execute($result_squilaPesquisaQuestoes);
 $resultadoSQL = sqlsrv_fetch_array($result_squilaPesquisaQuestoes);
 
 
+$DT_ATENDIMENTO = date_format($resultadoSQL['DT_ATENDIMENTO'], "Y-m-d");
+
 
 
 $squilaItensQuestoes = "SELECT tq.ID_ITEM_PESQUISA
@@ -380,7 +382,7 @@ sqlsrv_execute($result_squilaObjetoTalisma);
                              <label style="margin-left: 15px" for="nome">CPF do Candidato: </label>
                             </td>
                             <td align="left"><br>
-                             <?php echo $resultadoSQL['CPF_MONITORIA'] ?></a> 
+                            <input type="text" name="CPF_MONITORIA" id="CRTLV" maxlength="15" value="<?php echo $resultadoSQL['CPF_MONITORIA'] ?>">
                             </td>
                             </tr>
                             <tr>
@@ -388,7 +390,7 @@ sqlsrv_execute($result_squilaObjetoTalisma);
                              <label style="margin-left: 15px" for="nome">Gravador: </label>
                             </td>
                             <td align="left"><br>
-                            <?php echo $resultadoSQL['ID_GRAVADOR'] ?></a> 
+                            <input type="text" name="ID_GRAVADOR" id="CRTLV" maxlength="20" value="<?php echo $resultadoSQL['ID_GRAVADOR'] ?>"> 
                             </td>
                             </tr>
                             <tr>
@@ -396,7 +398,7 @@ sqlsrv_execute($result_squilaObjetoTalisma);
                              <label style="margin-left: 15px" for="nome">Ramal PA: </label>
                             </td>
                             <td align="left"><br>
-                           <?php echo $resultadoSQL['RAMAL_PA'] ?></a> 
+                           <input type="text" name="RAMAL_PA" id="CRTLV" maxlength="10" value="<?php echo $resultadoSQL['RAMAL_PA'] ?>"> 
                             </td>
                             </tr>
                             <tr>
@@ -404,7 +406,7 @@ sqlsrv_execute($result_squilaObjetoTalisma);
                              <label style="margin-left: 15px" for="nome">Data Atendimento: </label>
                             </td>
                             <td align="left"><br>
-                             <?php echo date_format($resultadoSQL['DT_ATENDIMENTO'],"d/m/Y"); ?></a> 
+                             <input type="date" id="CRTLV" name="DATA_ATENDIMENTO" value="<?php echo $DT_ATENDIMENTO; ?>"> 
                             </td>
                              </tr>
                           </table>
