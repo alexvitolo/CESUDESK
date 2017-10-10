@@ -214,7 +214,8 @@ sqlsrv_execute($result_squila);
                          <div class="panel  filterable">
                              <div class="panel-heading">
                                    <div class="pull-right">
-                                     <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filtro </button>
+                                     <!-- <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filtro </button> -->
+                                     <a href="UserReport_Export_monitoria.php"><input style="float:right; margin-right: 50px" type="button" value="Relatório Monitoria" ></input></a>
                                     </div>
                               </div>
 
@@ -225,16 +226,16 @@ sqlsrv_execute($result_squila);
                             <hr>
                               <thead>
                               <tr class="filters">
-                              <th><input type="text" class="form-control" placeholder="ID Pesquisa " disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Consultor " disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Avaliação" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Grupo" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Matrícula Consulto" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Quem Aplicou" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Ramal" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="CPF do Aluno" disabled></th>
-                              <th><input type="text" class="form-control" placeholder="Data Atendimento Cliente" disabled></th>
-                              <th style="width: 100px"><input type="text" class="form-control" placeholder="Nota Final" disabled></th>
+                              <th><input type="text" class="form-control" placeholder="ID Pesquisa " ></th>
+                              <th><input type="text" class="form-control" placeholder="Consultor " ></th>
+                              <th><input type="text" class="form-control" placeholder="Avaliação" ></th>
+                              <th><input type="text" class="form-control" placeholder="Grupo" ></th>
+                              <th><input type="text" class="form-control" placeholder="Matrícula Consulto" ></th>
+                              <th><input type="text" class="form-control" placeholder="Quem Aplicou" ></th>
+                              <th><input type="text" class="form-control" placeholder="Ramal" ></th>
+                              <th><input type="text" class="form-control" placeholder="CPF do Aluno" ></th>
+                              <th><input type="text" class="form-control" placeholder="Data Atendimento Cliente" ></th>
+                              <th style="width: 100px"><input type="text" class="form-control" placeholder="Nota Final" ></th>
                               </tr>
                               </thead>
                               <tbody>
