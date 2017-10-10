@@ -18,6 +18,14 @@ $notaFinalSoma = 0;
 $NOTA_RESULTADO = 0;
 
 
+
+$CPF_MONITORIA = $_POST['CPF_MONITORIA'];
+$ID_GRAVADOR = $_POST['ID_GRAVADOR'];
+$RAMAL_PA = $_POST['RAMAL_PA'];
+$DATA_ATENDIMENTO = $_POST['DATA_ATENDIMENTO'];
+
+
+
 //correção string BD
 
 $OBSERVACAO_PESQUISA = str_replace("'", '"', $OBSERVACAO_PESQUISA);
@@ -108,15 +116,24 @@ $updateSquilaPesquisa = " UPDATE tb_qld_pesquisa
                                 ,ID_RESULT_LIG = {$ID_RESULT_LIG}
                                 ,OBSERVACAO_PESQUISA = '{$OBSERVACAO_PESQUISA}'
                                 ,DESC_ID_TALISMA = {$DESC_ID_TALISMA}
-                                ,ID_OBJETO_TALISMA = {$ID_OBJETO_TALISMA}                               
+                                ,ID_OBJETO_TALISMA = {$ID_OBJETO_TALISMA} 
+                                ,CPF_MONITORIA = '{$CPF_MONITORIA}'
+                                ,RAMAL_PA = '{$RAMAL_PA}'
+                                ,ID_GRAVADOR = '{$ID_GRAVADOR}'
+                                ,DT_ATENDIMENTO = '{$DATA_ATENDIMENTO}'                          
                             WHERE  ID_PESQUISA = {$ID_PESQUISA} ";
 
   $result_updatePesquisa = sqlsrv_query($conn, $updateSquilaPesquisa);
-   sqlsrv_free_stmt($result_updatePesquisa);
 
+     if (!($result_updatePesquisa)) {
+             echo ("Falha na inclusão do registro");
+             print_r(sqlsrv_errors());
+      }   
+      else {
+            sqlsrv_free_stmt($result_updatePesquisa);
+             echo  '<script type="text/javascript">alert("Pesquisa Atualizada");</script>';
+             echo  '<script type="text/javascript"> window.location.href = "monitoriaRealizada.php" </script>';
+        }
 
-
- echo  '<script type="text/javascript">alert("Pesquisa Atualizada");</script>';
- echo  '<script type="text/javascript"> window.location.href = "monitoriaRealizada.php" </script>';
 ?>
 
