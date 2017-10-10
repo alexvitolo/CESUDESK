@@ -13,6 +13,23 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 }
 
 
+$squilaUltimoProcesso = "SELECT ID
+                          FROM tb_crm_processo 
+                          WHERE MODALIDADE = 'Graduação' AND ATIVO = 1";
+
+$result_squilaUltimoProcesso = sqlsrv_prepare($conn, $squilaUltimoProcesso);
+sqlsrv_execute($result_squilaUltimoProcesso);
+$ID_ULTIMO_PROCESSO = sqlsrv_fetch_array($result_squilaUltimoProcesso);
+
+
+ if ( ! isset ($_GET['PROCESSO'])){
+    $sqlCondicao = "WHERE tp.ID_PROCESSO =".$ID_ULTIMO_PROCESSO['ID'];
+    $_GET['PROCESSO'] = $ID_ULTIMO_PROCESSO['ID'];
+ }else{
+  $sqlCondicao = "WHERE tp.ID_PROCESSO =".$_GET['PROCESSO'];
+ }
+
+
 
 $squilaDicas = "SELECT tp.ID_PESQUISA
                       ,tp.ID_COLABORADOR
@@ -35,10 +52,23 @@ $squilaDicas = "SELECT tp.ID_PESQUISA
           INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tp.ID_COLABORADOR
           INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tp.ID_GRUPO
           INNER JOIN tb_qld_cronograma_avaliacao tcron ON tcron.ID_AVALIACAO = tp.ID_AVALIACAO
+                  ".$sqlCondicao."
             ORDER BY tp.DT_SISTEMA desc";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
+
+
+
+$squilaProcessoSelect = "SELECT ID
+                       ,NOME
+                       ,MODALIDADE
+                       ,ATIVO
+                FROM tb_crm_processo WHERE MODALIDADE <> 'Presencial' ORDER BY DATA_INICIO DESC";
+
+$result_squilaProcessoSelect = sqlsrv_prepare($conn, $squilaProcessoSelect);
+sqlsrv_execute($result_squilaProcessoSelect);
+
 
 
 
@@ -214,8 +244,17 @@ sqlsrv_execute($result_squila);
                          <div class="panel  filterable">
                              <div class="panel-heading">
                                    <div class="pull-right">
+                                    <form name="Form" method="get" id="id" action="monitoriaRealizada.php">
+                                      <a style="float:left; margin-right: 10px; margin-top: 20px"> PROCESSO </a>
+                                        <select onchange="this.form.submit()" name="PROCESSO" style="float:left; margin-right: 20px; margin-top: 20px" >
+                                           <?php while ($row = sqlsrv_fetch_array($result_squilaProcessoSelect)){ ?>
+                                             <option <?php if($row['ID'] == $_GET['PROCESSO'] ) { echo 'selected' ;} ?> value=<?php echo $row['ID']?> > <?php echo $row['NOME'] ?> </option>
+                                         <?php }
+                                         ?>
+                                        </select>
+                                        <a href="UserReport_Export_monitoria.php"><input style="float:right; margin-right: 50px ;margin-top: 17px" type="button" value="Relatório Monitoria" ></input></a>
+                                    </form>
                                      <!-- <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filtro </button> -->
-                                     <a href="UserReport_Export_monitoria.php"><input style="float:right; margin-right: 50px" type="button" value="Relatório Monitoria" ></input></a>
                                     </div>
                               </div>
 
@@ -252,7 +291,8 @@ sqlsrv_execute($result_squila);
                                   <td><?php echo $row['RAMAL_PA'] ?></td>
                                   <td><?php echo $row['CPF_MONITORIA'] ?></td>
                                   <td><?php echo date_format($row['DT_ATENDIMENTO'],"d/m/Y");?></td>
-                                  <td><?php echo $row['NOTA_FINAL'] ?></td>
+                                  <td style="text-align: center;"><?php echo $row['NOTA_FINAL'] ?></td>
+                                  <td style="display: none;"><?php echo $row['NOME_PROCESSO'] ?></td>     <!-- Coluna hidden criada para filtrar o processo  -->
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                       <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_PESQUISA'] ?>"  name="ID_PESQUISA"><i class="fa fa-pencil"></i></button>
