@@ -1,14 +1,34 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 session_start();
 
+
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
-if ($_SESSION['ACESSO'] <> 1 )  {
+if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
  // Ação a ser executada: mata o script e manda uma mensagem
  echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
 }
+
+
+
+$squilaTesteConhecimento = "SELECT tcon.ID_TESTE
+                                  ,tcon.ID_CONHECIMENTO
+                                  ,tc.DESCRICAO as TIPO_TESTE
+                                  ,tp.NOME as NOME_PROCESSO
+                                  ,tco.ID_MATRICULA
+                                  ,tco.nome as NOME_CONSULTOR
+                                  ,tcon.NOTA_FINAL
+                                  ,tcon.QUEM_REALIZOU
+                              FROM tb_ava_teste_conhecimento tcon
+                        INNER JOIN tb_ava_conhecimento tc ON tc.ID_CONHECIMENTO = tcon.ID_CONHECIMENTO
+                        INNER JOIN tb_crm_processo tp ON tp.ID = tc.ID_PROCESSO
+                        INNER JOIN tb_crm_colaborador tco ON tco.ID_COLABORADOR = tcon.ID_COLABORADOR";
+
+$result_squilaTesteConhecimento = sqlsrv_prepare($conn, $squilaTesteConhecimento);
+sqlsrv_execute($result_squilaTesteConhecimento);
+
 
 ?>
 
@@ -77,7 +97,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
       MAIN SIDEBAR MENU
       *********************************************************************************************************************************************************** -->
       <!--sidebar start-->
-       <aside>
+      <aside>
           <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
@@ -128,7 +148,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 
                <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                   <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-file-text"></i>
                           <span>Avaliações</span>
                       </a> <?php } ?>
@@ -136,7 +156,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
                           <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
                           <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
-                          <li class=""><a  href="testeConhecimentoCadastrado.php">Testes Cadastrados</a></li>
+                          <li class="active"><a  href="testeConhecimentoCadastrado.php">Testes Cadastrados</a></li>
                       </ul>
                   </li>
 
@@ -145,13 +165,13 @@ if ($_SESSION['ACESSO'] <> 1 )  {
                    
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                         <li class="active"><a  href="dimensionamento.php">Dimensionamento</a></li>
+                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -174,15 +194,67 @@ if ($_SESSION['ACESSO'] <> 1 )  {
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <!-- <h3><i class="fa fa-right"></i> Dimensionamento Colaboradores</h3>
-            <hr> -->
+            <h3><i class="fa fa-right"></i> Lista de Testes Realizados</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
-                      <iframe style="margin-left: 20px" width="1024" height="720" src="https://app.powerbi.com/view?r=eyJrIjoiMWJlMzkxNTMtMDJkNy00OGE2LWEzNmYtYzU4YWEzNjM0Y2E3IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"  frameborder="0" allowFullScreen="true"></iframe>
+                  <div class="col-md-12">
+                      <div class="content-panel">
+                        <form name="Form" method="post" id="formulario" action="editaTesteTesteConhecimento.php">
+                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
+                            <h4><i class="fa fa-right"></i> Teste Conhecimento </h4>
+                            <hr>
+                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
+                              <thead>
+                              <tr>
+                                  <th><i class="fa fa-bullhorn"></i> ID TESTE </th>
+                                  <th><i class="fa fa-bullhorn"></i> Nome Consultor </th>
+                                  <th><i class="fa fa-bullhorn"></i> Tipo Teste </th>
+                                  <th><i class="fa fa-bullhorn"></i> Processo </th>
+                                  <th style="text-align: center;"><i class="fa fa-bullhorn"></i> Nota Final </th>
+                                  <th><i class="fa fa-bullhorn"></i> Quem Aplicou </th>
+
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <?php  while($row = sqlsrv_fetch_array($result_squilaTesteConhecimento)) { 
+                                    
+
+                                    if ($row['NOTA_FINAL'] > "6") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif (($row['NOTA_FINAL'] <= "5") and ($row['NOTA_FINAL'] >= "4")) {
+                                      $corStatus = "label label-warning  label-mini";
+                                    }elseif ($row['NOTA_FINAL'] < "4") {
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
+
+                                 ?>
+
+                                  <td><?php echo $row['ID_TESTE']; ?></a></td>
+                                  <td><?php echo $row['NOME_CONSULTOR']; ?></td>
+                                  <td><?php echo $row['TIPO_TESTE']; ?></td>
+                                  <td><?php echo $row['NOME_PROCESSO']; ?></td>
+                                  <td style="text-align: center;"><span class="<?php echo $corStatus ?>"><?php echo $row['NOTA_FINAL']; ?></td>
+                                  <td><?php echo $row['QUEM_REALIZOU']; ?></td>
+                                  <td>
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_MATRICULA'] ?>"  name="ID_MATRICULA"><i class="fa fa-pencil"></i></button>
+                                  </td>
+                              </tr>
+
+                              <?php 
+                                    }
+                              ?>
+                              
+                              </tbody>
+                          </table>
+                        </form>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
               </div><!-- /row -->
 
-          </section>
+    </section>
       </section><!-- /MAIN CONTENT -->
 
       <!--main content end-->
