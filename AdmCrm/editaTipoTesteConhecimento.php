@@ -37,7 +37,7 @@ $squilaProcesso = "SELECT
                          tp.ID 
                          ,tp.NOME 
                     FROM tb_crm_processo tp 
-                    WHERE ATIVO = '1' ";
+                     ";
 
 $result_squilaProcesso = sqlsrv_prepare($conn, $squilaProcesso);
 sqlsrv_execute($result_squilaProcesso);
