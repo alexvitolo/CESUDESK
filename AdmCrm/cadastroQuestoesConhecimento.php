@@ -345,24 +345,10 @@ sqlsrv_execute($result_squilaConhecimento);
 function enviardados(){
  
 
-if (document.Form.ID_GRUPO.value == 'null')
+if (document.Form.ID_CONHECIMENTO.value == 'null')
 {
-alert( "Preencha o campo GRUPO!" );
-document.Form.ID_GRUPO.focus();
-return false;
-}
-
-if (document.Form.ID_PROCESSO.value == 'null')
-{
-alert( "Preencha o PROCESSO!" );
-document.Form.ID_PROCESSO.focus();
-return false;
-}
-
-if (document.Form.DESC_CONHE.value == '')
-{
-alert( "Preencha o DESCRIÇÃO!" );
-document.Form.DESC_CONHE.focus();
+alert( "Preencha o campo CONHECIMENTO!" );
+document.Form.ID_CONHECIMENTO.focus();
 return false;
 }
 

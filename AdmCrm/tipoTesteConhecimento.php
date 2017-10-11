@@ -22,7 +22,8 @@ $squilaTipoConhecimento = "SELECT tc.ID_CONHECIMENTO
                          ,tg.DESCRICAO DESC_GRUPO
                     FROM tb_ava_conhecimento tc
               INNER JOIN tb_crm_processo tp ON tp.ID = ID_PROCESSO
-               LEFT JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO";
+               LEFT JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
+                ORDER BY tc.BO_STATUS DESC";
 
 $result_squilaTipoConhecimento = sqlsrv_prepare($conn, $squilaTipoConhecimento);
 sqlsrv_execute($result_squilaTipoConhecimento);
