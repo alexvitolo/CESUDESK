@@ -127,7 +127,8 @@ $updateNotaFinal = " UPDATE tb_ava_teste_conhecimento
 <br />
 
 <?php
-    echo "<center><font face='Berlin Sans FB' size='8'>Pontuação: <br> $NotaFinal/10</font></center>";
+    $NotaFinal = $NotaFinal*10;
+    echo "<center><font face='Berlin Sans FB' size='8'>Pontuação: <br> $NotaFinal/100</font></center>";
 ?>
 <br>
 

@@ -180,6 +180,7 @@ sqlsrv_execute($result_squilaGrupo);
                           <li class="active"><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
                           <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
+                          <li class=""><a  href="testeConhecimentoCadastrado.php">Testes Cadastrados</a></li>
                       </ul>
                   </li>
 
