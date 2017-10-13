@@ -62,7 +62,7 @@ $result_Questoes = sqlsrv_prepare($conn, $sqlQuestoes);
 sqlsrv_execute($result_Questoes);
 
 
-$numeroQuestao = 1;
+$ArrayNumeroCheckbox = array();
 
 ?>
 
@@ -175,14 +175,14 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
             <?php while ($row2 = sqlsrv_fetch_array($result_QuestoesResp)){ ?>
         
         <div>
-        <input type='radio' name="vetorquestaorepostas[<?php echo $row['ID_QUESTAO']?>]"  value='<?php echo $row2['ID_RESPOSTA']?>'>
+        <input type='radio' name="vetorquestaorepostas[<?php echo $row['ID_QUESTAO']?>]"  value='<?php echo $row2['ID_RESPOSTA']?>' required="required">
         <label for='answer'> <?php echo $row2['DESC_RESPOSTA'] ?></label>
         </div>
         <br>
         
 
             <?php 
-                $numeroQuestao ++;
+                $ArrayNumeroCheckbox[$row['ID_QUESTAO']] = $row['ID_QUESTAO'];    // usar foreach !!! verificar esse ponto para vailidar se todos os checkbox estão selecionados!!!!!@!!!!
                  }  
              ?>
         
@@ -199,5 +199,30 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
 
 </div><!--end of wrapper div -->
 
-</body>
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script class="include" type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="assets/js/jquery.scrollTo.min.js"></script>
+
+
+    <!--common script for all pages-->
+    <script src="assets/js/common-scripts.js"></script>
+
+    <!--script for this page-->
+
+  </body>
 </html>
+
+
+ 
+
+  <script src="assets/js/form-component.js"></script>   
+   
+
+
+<script type="text/javascript">
+
+
+
+</script>

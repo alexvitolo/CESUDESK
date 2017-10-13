@@ -99,7 +99,7 @@ $updateNotaFinal = " UPDATE tb_ava_teste_conhecimento
 
 
 
- echo  '<script type="text/javascript">alert("Formulário Cadastrado");</script>';
+ echo  '<script type="text/javascript">alert("Formulário Cadastrado Com Sucesso");</script>';
  // echo  '<script type="text/javascript"> window.location.href = "testeconhecimento.php" </script>';
 
 
