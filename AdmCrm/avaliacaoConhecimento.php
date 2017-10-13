@@ -9,6 +9,26 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
 $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];
 
 
+  $sqlDadosVerifica ="SELECT tc.ID_MATRICULA
+                        FROM tb_crm_colaborador tc
+                INNER JOIN tb_crm_grupo tg ON tc.ID_GRUPO  = tg.ID_GRUPO
+                INNER JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
+                INNER JOIN tb_ava_conhecimento tconhe  ON CASE 
+                                                    WHEN tc.ID_GRUPO IN (1,2,3,4,5) THEN 1 ELSE tc.ID_GRUPO END  = tconhe.ID_GRUPO
+                       WHERE tc.ID_MATRICULA ='{$ID_MATRICULA_CONSULTOR}'
+                         AND tc.STATUS_COLABORADOR = 'ATIVO' ";
+
+          $stmtVerificaCon = sqlsrv_prepare($conn, $sqlDadosVerifica);
+          sqlsrv_execute($stmtVerificaCon);
+          $Verificaarry = sqlsrv_fetch_array($stmtVerificaCon);
+
+          if ( $Verificaarry == 0) {
+              echo  '<script type="text/javascript">alert("Matrícula Inválida");</script>';
+              echo  '<script type="text/javascript"> window.location.href = "testeconhecimento.php" </script>';  //veerificar URL
+             
+          }
+
+
 
   $sqlDadosConsultor ="SELECT tc.ID_MATRICULA
                                 ,tc.ID_COLABORADOR
@@ -27,17 +47,20 @@ $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];
                 INNER JOIN tb_ava_conhecimento tconhe  ON CASE 
                                                     WHEN tc.ID_GRUPO IN (1,2,3,4,5) THEN 1 ELSE tc.ID_GRUPO END  = tconhe.ID_GRUPO
                        WHERE tc.ID_MATRICULA ='{$ID_MATRICULA_CONSULTOR}'
-                         AND tc.STATUS_COLABORADOR = 'ATIVO' ";
+                         AND tc.STATUS_COLABORADOR = 'ATIVO' 
+                         AND tconhe.BO_STATUS ='S' ";
 
           $stmtValida = sqlsrv_prepare($conn, $sqlDadosConsultor);
           sqlsrv_execute($stmtValida);
           $resultadoSQL = sqlsrv_fetch_array($stmtValida);
 
           if ( $resultadoSQL == 0) {
-              echo  '<script type="text/javascript">alert("Numero de Matricula não Existe");</script>';
+              echo  '<script type="text/javascript">alert("Tipo Teste Conhecimento Inválido");</script>';
               echo  '<script type="text/javascript"> window.location.href = "testeconhecimento.php" </script>';  //veerificar URL
-              //header('location: PaginaIni.php');   não funciona
+            
           }
+
+
 $ID_COLABORADOR_CONSULTOR = $resultadoSQL['ID_COLABORADOR'];
 $NOME_GESTOR =  $resultadoSQL['NOME_GESTOR'];
 $NOME_CONSULTOR =  $resultadoSQL['NOME'];
