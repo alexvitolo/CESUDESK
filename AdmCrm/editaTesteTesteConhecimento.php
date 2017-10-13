@@ -61,7 +61,7 @@ $result_Questoes = sqlsrv_prepare($conn, $sqlQuestoes);
 sqlsrv_execute($result_Questoes);
 
 
-$numeroQuestao = 1;
+
 
 ?>
 
@@ -181,7 +181,6 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
         
 
             <?php 
-                $numeroQuestao ++;
                  }  
              ?>
         

@@ -9,6 +9,26 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
 $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];
 
 
+  $sqlDadosVerifica ="SELECT tc.ID_MATRICULA
+                        FROM tb_crm_colaborador tc
+                INNER JOIN tb_crm_grupo tg ON tc.ID_GRUPO  = tg.ID_GRUPO
+                INNER JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
+                INNER JOIN tb_ava_conhecimento tconhe  ON CASE 
+                                                    WHEN tc.ID_GRUPO IN (1,2,3,4,5) THEN 1 ELSE tc.ID_GRUPO END  = tconhe.ID_GRUPO
+                       WHERE tc.ID_MATRICULA ='{$ID_MATRICULA_CONSULTOR}'
+                         AND tc.STATUS_COLABORADOR = 'ATIVO' ";
+
+          $stmtVerificaCon = sqlsrv_prepare($conn, $sqlDadosVerifica);
+          sqlsrv_execute($stmtVerificaCon);
+          $Verificaarry = sqlsrv_fetch_array($stmtVerificaCon);
+
+          if ( $Verificaarry == 0) {
+              echo  '<script type="text/javascript">alert("Matrícula Inválida");</script>';
+              echo  '<script type="text/javascript"> window.location.href = "testeconhecimento.php" </script>';  //veerificar URL
+             
+          }
+
+
 
   $sqlDadosConsultor ="SELECT tc.ID_MATRICULA
                                 ,tc.ID_COLABORADOR
@@ -27,17 +47,20 @@ $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];
                 INNER JOIN tb_ava_conhecimento tconhe  ON CASE 
                                                     WHEN tc.ID_GRUPO IN (1,2,3,4,5) THEN 1 ELSE tc.ID_GRUPO END  = tconhe.ID_GRUPO
                        WHERE tc.ID_MATRICULA ='{$ID_MATRICULA_CONSULTOR}'
-                         AND tc.STATUS_COLABORADOR = 'ATIVO' ";
+                         AND tc.STATUS_COLABORADOR = 'ATIVO' 
+                         AND tconhe.BO_STATUS ='S' ";
 
           $stmtValida = sqlsrv_prepare($conn, $sqlDadosConsultor);
           sqlsrv_execute($stmtValida);
           $resultadoSQL = sqlsrv_fetch_array($stmtValida);
 
           if ( $resultadoSQL == 0) {
-              echo  '<script type="text/javascript">alert("Numero de Matricula não Existe");</script>';
+              echo  '<script type="text/javascript">alert("Tipo Teste Conhecimento Inválido");</script>';
               echo  '<script type="text/javascript"> window.location.href = "testeconhecimento.php" </script>';  //veerificar URL
-              //header('location: PaginaIni.php');   não funciona
+            
           }
+
+
 $ID_COLABORADOR_CONSULTOR = $resultadoSQL['ID_COLABORADOR'];
 $NOME_GESTOR =  $resultadoSQL['NOME_GESTOR'];
 $NOME_CONSULTOR =  $resultadoSQL['NOME'];
@@ -62,7 +85,7 @@ $result_Questoes = sqlsrv_prepare($conn, $sqlQuestoes);
 sqlsrv_execute($result_Questoes);
 
 
-$numeroQuestao = 1;
+$ArrayNumeroCheckbox = array();
 
 ?>
 
@@ -175,14 +198,14 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
             <?php while ($row2 = sqlsrv_fetch_array($result_QuestoesResp)){ ?>
         
         <div>
-        <input type='radio' name="vetorquestaorepostas[<?php echo $row['ID_QUESTAO']?>]"  value='<?php echo $row2['ID_RESPOSTA']?>'>
+        <input type='radio' name="vetorquestaorepostas[<?php echo $row['ID_QUESTAO']?>]"  value='<?php echo $row2['ID_RESPOSTA']?>' required="required">
         <label for='answer'> <?php echo $row2['DESC_RESPOSTA'] ?></label>
         </div>
         <br>
         
 
             <?php 
-                $numeroQuestao ++;
+                $ArrayNumeroCheckbox[$row['ID_QUESTAO']] = $row['ID_QUESTAO'];    // usar foreach !!! verificar esse ponto para vailidar se todos os checkbox estão selecionados!!!!!@!!!!
                  }  
              ?>
         
@@ -199,5 +222,30 @@ html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
 
 </div><!--end of wrapper div -->
 
-</body>
+    <!-- js placed at the end of the document so the pages load faster -->
+    <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script class="include" type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="assets/js/jquery.scrollTo.min.js"></script>
+
+
+    <!--common script for all pages-->
+    <script src="assets/js/common-scripts.js"></script>
+
+    <!--script for this page-->
+
+  </body>
 </html>
+
+
+ 
+
+  <script src="assets/js/form-component.js"></script>   
+   
+
+
+<script type="text/javascript">
+
+
+
+</script>
