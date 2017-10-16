@@ -27,12 +27,15 @@ $result_squilaQuestoes = sqlsrv_prepare($conn, $squilaQuestoes);
 sqlsrv_execute($result_squilaQuestoes);
 
 
-$squilaSomaQuestoes = "SELECT COUNT(tq.ID_QUESTAO) as SOMA
-                                  ,tcon.DESCRICAO 
-                         FROM tb_ava_questoes_conhecimento tq
-                   RIGHT JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
-                        WHERE tcon.BO_STATUS = 'S'
-                     GROUP BY tcon.DESCRICAO";
+$squilaSomaQuestoes = "SELECT DISTINCT
+                     tcon.DESCRICAO 
+                    ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 1 AND BO_ATIVO ='S') as DIFICULDADE_EAZY
+                    ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 2 AND BO_ATIVO ='S') as DIFICULDADE_MEDIUN
+                    ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 3 AND BO_ATIVO ='S') as DIFICULDADE_HARD
+                    ,(SELECT COUNT(ID_QUESTAO) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO) as SOMA
+            FROM tb_ava_questoes_conhecimento tq
+      RIGHT JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
+           WHERE tcon.BO_STATUS = 'S'";
 
 $result_SomaQuestoes = sqlsrv_prepare($conn, $squilaSomaQuestoes);
 sqlsrv_execute($result_SomaQuestoes);
@@ -192,6 +195,13 @@ sqlsrv_execute($result_SomaQuestoes);
                       </ul>
                   </li>
 
+                   <?php if ($_SESSION['ACESSO'] == 1){ ?>
+                      <li class="sub-menu">
+                      <a class="" href="../MOBIRISE/INDEX.html" >
+                          <i class="fa fa-cog fa-spin"></i>
+                          <span>BETA DEV</span> 
+                      </a> <?php } ?>
+
               </ul>
               <!-- sidebar menu end-->
           </div>
@@ -211,15 +221,37 @@ sqlsrv_execute($result_SomaQuestoes);
                   <div class="col-md-12">
                       <div class="content-panel">
 
-                        <legend>  Somatória de Questões  </legend> 
+                        <legend>  Resumo de Questões  </legend> 
                           <table cellspacing="10" style="vertical-align: middle">
-                    <?php while ($row = sqlsrv_fetch_array($result_SomaQuestoes)){ ?>
+                    <?php while ($row = sqlsrv_fetch_array($result_SomaQuestoes)){ 
+
+                         if ($row['DIFICULDADE_EAZY'] >= 3 & $row['DIFICULDADE_MEDIUN'] >= 3 & $row['DIFICULDADE_HARD'] >= 4 ) {
+                                      $corStatusQues = "label label-success label-mini";
+                                      $resStatusQues = "OK";
+                                    }else{
+                                      $corStatusQues = "label label-danger  label-mini";
+                                      $resStatusQues = "INCOMPLETO";
+                                    }
+
+                      ?>
                            <tr>
-                           <td style="width:420px";>
+                           <td style="width:300px";>
                              <label style="margin-left: 15px" for="nome"> <?php echo $row['DESCRICAO'] ?> </label>
                            <hr> </td>
                             <td style="width:140px";>
-                            <label style="margin-left: 15px" > <?php echo $row['SOMA'] ?></label>
+                            <label style="margin-left: 15px" > Soma = <?php echo $row['SOMA'] ?></label>
+                            <hr></td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" > Fácil = <?php echo $row['DIFICULDADE_EAZY'] ?></label>
+                            <hr></td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" > Médio = <?php echo $row['DIFICULDADE_MEDIUN'] ?></label>
+                            <hr></td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" > Difícil = <?php echo $row['DIFICULDADE_HARD'] ?></label>
+                            <hr></td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" ><span class="<?php echo $corStatusQues ?>"> Situação <?php echo $resStatusQues ?></label>
                             <hr></td>
                              </tr>
                      <?php } ?>

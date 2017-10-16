@@ -206,6 +206,13 @@ sqlsrv_execute($result_squilaAlternativas);
                       </ul>
                   </li>
 
+                   <?php if ($_SESSION['ACESSO'] == 1){ ?>
+                      <li class="sub-menu">
+                      <a class="" href="../MOBIRISE/INDEX.html" >
+                          <i class="fa fa-cog fa-spin"></i>
+                          <span>BETA DEV</span> 
+                      </a> <?php } ?>
+
               </ul>
               <!-- sidebar menu end-->
           </div>
@@ -250,6 +257,7 @@ sqlsrv_execute($result_squilaAlternativas);
                             </td>
                             <td align="left"><br>
                              <select name="BO_STATUS"> 
+                                  <option value=<?php echo $resultadoSQLQuestao['BO_ATIVO']?> > <?php if ($resultadoSQLQuestao['BO_ATIVO'] == 'N'){ echo "INATIVO" ; } else{ echo "ATIVO";} ?> </option>
                                  <option value="S">ATIVO</option>
                                  <option value="N">INATIVO</option> 
                             </select>

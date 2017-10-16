@@ -12,6 +12,24 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 }
 
 
+$squilaUltimoProcesso = "SELECT ID
+                          FROM tb_crm_processo 
+                          WHERE MODALIDADE = 'Graduação' AND ATIVO = 1";
+
+$result_squilaUltimoProcesso = sqlsrv_prepare($conn, $squilaUltimoProcesso);
+sqlsrv_execute($result_squilaUltimoProcesso);
+$ID_ULTIMO_PROCESSO = sqlsrv_fetch_array($result_squilaUltimoProcesso);
+
+
+ if ( ! isset ($_GET['PROCESSO'])){
+    $sqlCondicaoTeste = "WHERE tc.ID_PROCESSO =".$ID_ULTIMO_PROCESSO['ID'];
+    $_GET['PROCESSO'] = $ID_ULTIMO_PROCESSO['ID'];
+ }else{
+  $sqlCondicaoTeste = "WHERE tc.ID_PROCESSO =".$_GET['PROCESSO'];
+ }
+
+
+
 
 $squilaTesteConhecimento = "SELECT tcon.ID_TESTE
                                   ,tcon.ID_CONHECIMENTO
@@ -24,10 +42,24 @@ $squilaTesteConhecimento = "SELECT tcon.ID_TESTE
                               FROM tb_ava_teste_conhecimento tcon
                         INNER JOIN tb_ava_conhecimento tc ON tc.ID_CONHECIMENTO = tcon.ID_CONHECIMENTO
                         INNER JOIN tb_crm_processo tp ON tp.ID = tc.ID_PROCESSO
-                        INNER JOIN tb_crm_colaborador tco ON tco.ID_COLABORADOR = tcon.ID_COLABORADOR";
+                        INNER JOIN tb_crm_colaborador tco ON tco.ID_COLABORADOR = tcon.ID_COLABORADOR
+                        ".$sqlCondicaoTeste." ";
 
 $result_squilaTesteConhecimento = sqlsrv_prepare($conn, $squilaTesteConhecimento);
 sqlsrv_execute($result_squilaTesteConhecimento);
+
+
+
+
+$squilaTodosProcessos = "SELECT ID
+                       ,NOME
+                       ,MODALIDADE
+                       ,ATIVO
+                FROM tb_crm_processo WHERE MODALIDADE <> 'Presencial' ORDER BY DATA_INICIO DESC";
+
+$result_squilaTodosProcessos = sqlsrv_prepare($conn, $squilaTodosProcessos);
+sqlsrv_execute($result_squilaTodosProcessos);
+
 
 
 ?>
@@ -182,6 +214,13 @@ sqlsrv_execute($result_squilaTesteConhecimento);
                       </ul>
                   </li>
 
+                   <?php if ($_SESSION['ACESSO'] == 1){ ?>
+                      <li class="sub-menu">
+                      <a class="" href="../MOBIRISE/INDEX.html" >
+                          <i class="fa fa-cog fa-spin"></i>
+                          <span>BETA DEV</span> 
+                      </a> <?php } ?>
+
               </ul>
               <!-- sidebar menu end-->
           </div>
@@ -200,6 +239,15 @@ sqlsrv_execute($result_squilaTesteConhecimento);
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
+                         <form name="Form" method="get" id="id" action="testeConhecimentoCadastrado.php">
+                                        <select onchange="this.form.submit()" name="PROCESSO" style="float:right; margin-right: 20px; margin-top: 20px" >
+                                           <?php while ($row = sqlsrv_fetch_array($result_squilaTodosProcessos)){ ?>
+                                             <option <?php if($row['ID'] == $_GET['PROCESSO'] ) { echo 'selected' ;} ?> value=<?php echo $row['ID']?> > <?php echo $row['NOME'] ?> </option>
+                                         <?php }
+                                         ?>
+                                        </select>
+                                         <a style="float:right; margin-right: 10px; margin-top: 22px"> PROCESSO </a>
+                                    </form>
                         <form name="Form" method="post" id="formulario" action="editaTesteTesteConhecimento.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Teste Conhecimento </h4>
