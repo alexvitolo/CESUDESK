@@ -197,6 +197,13 @@ sqlsrv_execute($result_squilaGrupo);
                           <li class=""><a  href="submotivo.php">Sub-Motivo</a></li>
                       </ul>
                   </li>
+
+                   <?php if ($_SESSION['ACESSO'] == 1){ ?>
+                      <li class="sub-menu">
+                      <a class="" href="../MOBIRISE/INDEX.html" >
+                          <i class="fa fa-cog fa-spin"></i>
+                          <span>BETA DEV</span> 
+                      </a> <?php } ?>
                <?php } ?>
 
               </ul>
