@@ -46,7 +46,7 @@ sqlsrv_execute($result_squilaProcesso);
 
 
 $squilaGrupo = "   SELECT distinct
-                         CASE WHEN tg.ID_GRUPO  in (1,2,3,4,5) THEN 1 ELSE tg.ID_GRUPO END ID_GRUPO
+                         CASE WHEN tg.ID_GRUPO  in (1,2,3,4,5,17) THEN 1 ELSE tg.ID_GRUPO END ID_GRUPO
                          ,tg.DESCRICAO 
                     FROM tb_crm_grupo tg  ";
 
