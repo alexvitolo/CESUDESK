@@ -32,7 +32,7 @@ $squilaSomaQuestoes = "SELECT DISTINCT
                     ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 1 AND BO_ATIVO ='S') as DIFICULDADE_EAZY
                     ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 2 AND BO_ATIVO ='S') as DIFICULDADE_MEDIUN
                     ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 3 AND BO_ATIVO ='S') as DIFICULDADE_HARD
-                    ,(SELECT COUNT(ID_QUESTAO) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO) as SOMA
+                    ,(SELECT COUNT(ID_QUESTAO) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND BO_ATIVO ='S') as SOMA
             FROM tb_ava_questoes_conhecimento tq
       RIGHT JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
            WHERE tcon.BO_STATUS = 'S'";
@@ -239,7 +239,7 @@ sqlsrv_execute($result_SomaQuestoes);
                              <label style="margin-left: 15px" for="nome"> <?php echo $row['DESCRICAO'] ?> </label>
                            <hr> </td>
                             <td style="width:140px";>
-                            <label style="margin-left: 15px" > Soma = <?php echo $row['SOMA'] ?></label>
+                            <label style="margin-left: 15px" > Questões Ativas = <?php echo $row['SOMA'] ?></label>
                             <hr></td>
                             <td style="width:140px";>
                             <label style="margin-left: 15px" > Fácil = <?php echo $row['DIFICULDADE_EAZY'] ?></label>

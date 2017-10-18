@@ -172,7 +172,7 @@ sqlsrv_execute($result_squila);
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
                       <a class="active" href="javascript:;" >
-                          <i class="fa fa-desktop fa-spin"></i>
+                          <i class="fa fa-desktop"></i>
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">

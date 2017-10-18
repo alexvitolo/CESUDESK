@@ -30,6 +30,30 @@ $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];
 
 
 
+  $sqlDadosVerificaJaRealizou ="SELECT tteste.ID_TESTE
+                                      ,tteste.ID_CONHECIMENTO
+                                      ,tteste.ID_COLABORADOR
+                                      ,tteste.NOTA_FINAL
+                                      ,tteste.QUEM_REALIZOU
+                                FROM tb_ava_teste_conhecimento tteste
+                          INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tteste.ID_COLABORADOR
+                          INNER JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tteste.ID_CONHECIMENTO AND tcon.BO_STATUS = 'S'
+                               WHERE tc.ID_MATRICULA = {$ID_MATRICULA_CONSULTOR} ";
+
+          $stmtVerificaJaRealizou = sqlsrv_prepare($conn, $sqlDadosVerificaJaRealizou);
+          sqlsrv_execute($stmtVerificaJaRealizou);
+          $VerificaarryRealizou = sqlsrv_fetch_array($stmtVerificaJaRealizou);
+
+          if ( $VerificaarryRealizou > 0) {
+              echo  '<script type="text/javascript">alert("Consultor Já Realizou Teste Conhecimento");</script>';
+              echo  '<script type="text/javascript"> window.location.href = "testeconhecimento.php" </script>';  //veerificar URL
+             
+          }
+
+
+
+
+
   $sqlDadosConsultor ="SELECT tc.ID_MATRICULA
                                 ,tc.ID_COLABORADOR
                                 ,tc.NOME
