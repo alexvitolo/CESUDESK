@@ -266,6 +266,7 @@ sqlsrv_execute($result_SomaQuestoes);
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
                            <a href="#" id="myHref"><input style="float:right; margin-right: 50px" type="button" value="Nova Questão" ></input></a>
+                           <a href="UserReport_Export_banco_questoes.php" ><input style="float:right; margin-right: 50px" type="button" value="Banco de Questões" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class="fa fa"></i> ID Questão </th>
