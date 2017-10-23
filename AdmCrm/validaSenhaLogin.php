@@ -28,7 +28,8 @@ $squilaUsuario = "SELECT
                 FROM tb_crm_login tl
           INNER JOIN tb_crm_colaborador tc on tc.LOGIN_REDE = tl.USUARIO
                 WHERE USUARIO = '{$USERVALIDA}' 
-                  AND tc.STATUS_COLABORADOR = 'ATIVO' ";
+                  AND tc.STATUS_COLABORADOR = 'ATIVO' 
+                  AND tl.BO_ATIVO = 'S' " ;
 
 $result_Usuario = sqlsrv_prepare($conn, $squilaUsuario);
 sqlsrv_execute($result_Usuario);

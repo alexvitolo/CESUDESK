@@ -5,55 +5,27 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
  // Ação a ser executada: mata o script e manda uma mensagem
 echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
 
-if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
+if ($_SESSION['ACESSO'] <> 1 )  {
  // Ação a ser executada: mata o script e manda uma mensagem
  echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
 }
 
+$ID = $_POST['ID'];
 
 
-$ID_CONHECIMENTO = $_POST["ID_CONHECIMENTO"]; // id colaborador
+$sqlLoginEdita = "SELECT  tl.ID
+                         ,tl.NOME
+                         ,tl.USUARIO
+                         ,tl.SENHA_USUARIO
+                         ,tl.ACESSO_ADM
+                         ,tl.BO_ATIVO
+                    FROM tb_crm_login tl
+                   WHERE tl.ID = {$ID} ";
 
-$squilaEditaConhecimento = "SELECT tc.ID_CONHECIMENTO
-                         ,tc.ID_PROCESSO
-                         ,tp.NOME as PROCESSO
-                         ,tc.DESCRICAO as DESC_CONHE
-                         ,tc.BO_STATUS
-                         ,tc.ID_GRUPO
-                         ,tg.DESCRICAO DESC_GRUPO
-                    FROM tb_ava_conhecimento tc
-              INNER JOIN tb_crm_processo tp ON tp.ID = ID_PROCESSO
-               LEFT JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
-                WHERE ID_CONHECIMENTO = {$ID_CONHECIMENTO} ";
+$result_LoginEdita = sqlsrv_prepare($conn, $sqlLoginEdita);
+sqlsrv_execute($result_LoginEdita);
 
-$result_squilaConhecimento = sqlsrv_prepare($conn, $squilaEditaConhecimento);
-sqlsrv_execute($result_squilaConhecimento);
-
-$vetorSQLConhecimento = sqlsrv_fetch_array($result_squilaConhecimento);
-
-
-
-$squilaProcesso = "SELECT 
-                         tp.ID 
-                         ,tp.NOME 
-                    FROM tb_crm_processo tp 
-                     ";
-
-$result_squilaProcesso = sqlsrv_prepare($conn, $squilaProcesso);
-sqlsrv_execute($result_squilaProcesso);
-
-
-
-
-$squilaGrupo = "   SELECT distinct
-                         CASE WHEN tg.ID_GRUPO  in (1,2,3,4,5,17) THEN 1 ELSE tg.ID_GRUPO END ID_GRUPO
-                         ,tg.DESCRICAO 
-                    FROM tb_crm_grupo tg  ";
-
-$result_squilaGrupo = sqlsrv_prepare($conn, $squilaGrupo);
-sqlsrv_execute($result_squilaGrupo);
-
-
+$vetorSQLLogin = sqlsrv_fetch_array($result_LoginEdita);
 
 ?>
 
@@ -121,7 +93,7 @@ sqlsrv_execute($result_squilaGrupo);
       MAIN SIDEBAR MENU
       *********************************************************************************************************************************************************** -->
       <!--sidebar start-->
-      <aside>
+        <aside>
           <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
@@ -172,12 +144,12 @@ sqlsrv_execute($result_squilaGrupo);
 
                <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                   <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-file-text"></i>
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class="active"><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
+                          <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
                           <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                           <li class=""><a  href="testeConhecimentoCadastrado.php">Testes Cadastrados</a></li>
@@ -189,14 +161,14 @@ sqlsrv_execute($result_squilaGrupo);
                    
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li><a  href="usuarioLogin.php">Usuários GCO</a></li>
+                          <li class="active"><a  href="usuarioLogin.php">Usuários GCO</a></li>
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
+                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -226,69 +198,82 @@ sqlsrv_execute($result_squilaGrupo);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Editar Conhecimento</h3>
+            <h3><i class="fa fa-right"></i> Edição de Usuário</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="ValidaEditaTipoTesteConheci.php">
+                         <form name="Form" method="post" id="formulario" action="validaEditaUsuarioLogin.php">
 <!-- DADOS PESSOAIS-->
                          <fieldset>
-                          <legend> Dados Conhecimento </legend>
+                          <legend> Dados de Login </legend>
                           <table cellspacing="10" style="vertical-align: middle">
                            <tr>
-                            <td style="width:110px";>
-                             <label style="margin-left: 15px" >Nome: </label>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome">Nome: </label>
                             </td>
-                            <td align="left">
-                             <input type="text" maxlength="45" size="50" name="DESC_CONHE" value="<?php echo $vetorSQLConhecimento['DESC_CONHE']; ?>">
+                            <td align="left"><br>
+                             <input type="text" name="NOME" value="<?php echo $vetorSQLLogin['NOME'] ; ?>">
                             </td>
-                            <td style="width:110px";>
-                             <label style="margin-left: 15px" >Processo: </label>
+                           </tr>
+
+                            <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome">Login: </label>
                             </td>
-                            <td align="left">
-                             <select name="ID_PROCESSO">
-                                            <option value="null">Escolha um PROCESSO</option>
-                                           <?php while ($row = sqlsrv_fetch_array($result_squilaProcesso)){ ?>
-                                            <option <?php if ($row['ID'] == $vetorSQLConhecimento['ID_PROCESSO']) { echo 'selected'; } ?> value=<?php echo $row['ID']?> > <?php echo $row['NOME'] ?> </option>
-                                         <?php }
-                                         ?>
-                             </select>
+                            <td align="left"><br>
+                             <input type="text" name="USUARIO" value="<?php echo $vetorSQLLogin['USUARIO'] ; ?>">
                             </td>
-                            <td style="width:110px";>
-                             <label style="margin-left: 15px" >Ativo: </label>
+                           </tr>
+
+                            <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome">Senha: </label>
                             </td>
-                            <td align="left">
-                             <select name="BO_STATUS"> 
-                                 <option value="<?php echo $vetorSQLConhecimento['BO_STATUS']; ?>"><?php if($vetorSQLConhecimento['BO_STATUS'] == 'S') {echo "ATIVO" ;} else { echo "INATIVO";} ?>   </option>
-                                 <option value="S">ATIVO</option>
-                                 <option value="N">INATIVO</option> 
-                            </select>
+                            <td align="left"><br>
+                             <input type="password" name="SENHA" value="<?php echo $vetorSQLLogin['SENHA_USUARIO'] ; ?>">
                             </td>
                            </tr>
 
                            <tr>
                             <td style="width:110px";><br>
-                             <label style="margin-left: 15px" >Grupo: </label>
+                             <label style="margin-left: 15px" for="nome">Acesso: </label>
                             </td>
                             <td align="left"><br>
-                             <select name="ID_GRUPO">
-                                            <option value="null">Escolha um GRUPO</option>
-                                           <?php while ($row = sqlsrv_fetch_array($result_squilaGrupo)){ ?>
-                                            <option <?php if ($row['ID_GRUPO'] == $vetorSQLConhecimento['ID_GRUPO']) { echo 'selected'; } ?> value=<?php echo $row['ID_GRUPO']?> > <?php echo $row['DESCRICAO'] ?> </option>
-                                         <?php }
-                                         ?>
+                             <select name="ACESSO_ADM">
+                                    <option value="<?php echo $vetorSQLLogin['ACESSO_ADM'] ; ?>"><?php if($vetorSQLLogin['ACESSO_ADM']==null){ echo 'SUPERVISOR' ;} elseif($vetorSQLLogin['ACESSO_ADM']==1){ echo 'ADM';}elseif($vetorSQLLogin['ACESSO_ADM'] == 2){echo 'QUALIDADE';} ?></option> 
+                                    <option value=1>ADM</option>
+                                    <option value=2>QUALIDADE</option> 
+                                    <option value=null>SUPERVISOR</option>
+
                              </select>
                             </td>
                            </tr>
+
+                           <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome">Ativo: </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="ATIVO">
+                                    <option value="<?php echo $vetorSQLLogin['BO_ATIVO'] ; ?>"><?php if($vetorSQLLogin['BO_ATIVO'] == "S"){ echo 'SIM';}elseif ($vetorSQLLogin['BO_ATIVO'] == "N"){echo 'NÃO' ;} {
+                                      # code...
+                                    } ; ?></option> 
+                                    <option value="S">SIM</option>
+                                    <option value="N">NÃO</option> 
+                             </select>
+                            </td>
+                           </tr>
+
                           </table>
                          </fieldset>
                          
                          <br/>
 
-                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $ID_CONHECIMENTO ?>"  name="ID_CONHECIMENTO">Confirmar</button> 
-                         <a href="tipoTesteConhecimento.php"><input type="button" value="Cancelar"></a>
+                          <input type="hidden" name="ID" value="<?php echo $ID ?>"> 
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
+                         <a href="usuarioLogin.php"><input type="button" value="Cancelar"></a>
                       </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->

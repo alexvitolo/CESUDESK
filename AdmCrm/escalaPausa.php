@@ -176,6 +176,7 @@ sqlsrv_execute($result_squila);
                           <span>General</span> 
                       </a> 
                       <ul class="sub">
+                        <li class=""><a  href="usuarioLogin.php">Usuários GCO</a></li>
                           <li class=""><a  href="listaHorarios.php">Lista Pausas</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>

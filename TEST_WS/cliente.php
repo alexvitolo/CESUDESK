@@ -13,7 +13,7 @@
 	$parametros = array('nome'=>'Teste',
 						'idade'=>51);
 
-	$parametros2 = array('nome'=>'');  // passar parametros obrigatorios ?
+	$parametros2 = array('nome'=>'TESTE');  // passar parametros obrigatorios ?
 						
 		
 	$resultado = $cliente->call('exemplo', $parametros);

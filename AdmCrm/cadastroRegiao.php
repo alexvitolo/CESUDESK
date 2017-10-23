@@ -115,6 +115,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
                           <span>General</span>
                       </a>
                       <ul class="sub">
+                          <li><a  href="usuarioLogin.php">Usuários GCO</a></li>
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li><a  href="colaboradores.php">Colaboradores</a></li>
