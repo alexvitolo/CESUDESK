@@ -1,6 +1,9 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
 session_start();
 
+if (! isset( $_GET["USUARIO"] ) ) {
+    $_GET["USUARIO"] = '';
+}
 
 $USUARIO = $_GET["USUARIO"];
 

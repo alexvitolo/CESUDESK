@@ -150,6 +150,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">
+                          <li><a  href="usuarioLogin.php">Usuários GCO</a></li>
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class="active"><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>

@@ -32,7 +32,7 @@ $squilaSomaQuestoes = "SELECT DISTINCT
                     ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 1 AND BO_ATIVO ='S') as DIFICULDADE_EAZY
                     ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 2 AND BO_ATIVO ='S') as DIFICULDADE_MEDIUN
                     ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 3 AND BO_ATIVO ='S') as DIFICULDADE_HARD
-                    ,(SELECT COUNT(ID_QUESTAO) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO) as SOMA
+                    ,(SELECT COUNT(ID_QUESTAO) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND BO_ATIVO ='S') as SOMA
             FROM tb_ava_questoes_conhecimento tq
       RIGHT JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
            WHERE tcon.BO_STATUS = 'S'";
@@ -183,6 +183,7 @@ sqlsrv_execute($result_SomaQuestoes);
                           <span>General</span> 
                       </a> <?php } ?>
                       <ul class="sub">
+                          <li><a  href="usuarioLogin.php">Usuários GCO</a></li>
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
@@ -239,7 +240,7 @@ sqlsrv_execute($result_SomaQuestoes);
                              <label style="margin-left: 15px" for="nome"> <?php echo $row['DESCRICAO'] ?> </label>
                            <hr> </td>
                             <td style="width:140px";>
-                            <label style="margin-left: 15px" > Soma = <?php echo $row['SOMA'] ?></label>
+                            <label style="margin-left: 15px" > Questões Ativas = <?php echo $row['SOMA'] ?></label>
                             <hr></td>
                             <td style="width:140px";>
                             <label style="margin-left: 15px" > Fácil = <?php echo $row['DIFICULDADE_EAZY'] ?></label>
@@ -266,6 +267,7 @@ sqlsrv_execute($result_SomaQuestoes);
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
                            <a href="#" id="myHref"><input style="float:right; margin-right: 50px" type="button" value="Nova Questão" ></input></a>
+                           <a href="UserReport_Export_banco_questoes.php" ><input style="float:right; margin-right: 50px" type="button" value="Banco de Questões" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class="fa fa"></i> ID Questão </th>
