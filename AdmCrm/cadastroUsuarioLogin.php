@@ -11,6 +11,9 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+15 minute', strtotime($_SESS
    echo  '<script type="text/javascript"> alert("Tempo de Sessão Expirada"); window.location.href = "http://d42150:8087/cesudesk/AdmCrm/login.php"  </script>'; 
    session_destroy();
  }
+ 
+ $_SESSION['TEMPOSESSION'] = date('h:i:s');
+
 
 
 
