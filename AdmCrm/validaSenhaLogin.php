@@ -70,6 +70,12 @@ sqlsrv_execute($result_Usuario);
 
        if ($SENHA == $senhaCorreta) {
 
+                     $deleteLoggedUser = "DELETE tb_loggeduser
+                                               WHERE USUARIO = '{$_SESSION['USUARIO']}' ";
+   
+                     $result_deleteLoggedUser = sqlsrv_query($conn, $deleteLoggedUser);
+                     sqlsrv_free_stmt($result_deleteLoggedUser); 
+
                $insertLoggedUser = "INSERT INTO tb_loggeduser
                                     (USUARIO
                                     ,ACESSO
