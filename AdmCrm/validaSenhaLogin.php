@@ -7,6 +7,8 @@ session_start();
 $USERVALIDA = $_POST["USERVALIDA"];
 $_SESSION['USUARIO'] = $USERVALIDA;
 
+$_SESSION['TEMPOSESSION'] = date('h:i:s'); // session criada para validar o tempo de session de cada usuário
+
 
 if ($_POST["SENHAVALIDA"] == "") {
                   echo  '<script type="text/javascript">alert("Senha com Campo Vazio");</script>';
@@ -66,11 +68,37 @@ sqlsrv_execute($result_Usuario);
 
  }
 
-        if ($SENHA == $senhaCorreta) {
-                  echo  '<script type="text/javascript">alert("Bem-Vindo!");</script>';
-                  echo  '<script type="text/javascript"> window.location.href = "index.php" </script>';
+       if ($SENHA == $senhaCorreta) {
 
-        } else {
+               $insertLoggedUser = "INSERT INTO tb_loggeduser
+                                    (USUARIO
+                                    ,ACESSO
+                                    ,ORIGEM
+                                    )
+                              VALUES
+                                    ('{$_SESSION['USUARIO']}'
+                                    ,{$_SESSION['ACESSO']}
+                                    ,'GCO - Gestão de Controle Operacional'
+                                    )  ";
+
+                  $result_InsertLoggedUser = sqlsrv_query($conn, $insertLoggedUser); 
+ 
+
+
+                  if (!($result_InsertLoggedUser)) {
+                         // echo ("Falha na inclusão do registro");
+                         print_r(sqlsrv_errors());
+                         sqlsrv_close($conn);
+                         echo  '<script type="text/javascript"> alert("Falha no Login"); window.location.href = "login.php" </script>';
+                  }   
+                  else {
+                             sqlsrv_free_stmt($result_InsertLoggedUser);
+                             echo  '<script type="text/javascript">alert("Bem-Vindo!");</script>';
+                             echo  '<script type="text/javascript"> window.location.href = "index.php" </script>';
+                    }
+                  
+
+        }else {
                   echo  '<script type="text/javascript">alert("Senha Incorreta");</script>';
                   echo  '<script type="text/javascript"> window.location.href = "login.php?USUARIO='.$USERVALIDA.' " </script>';
         }

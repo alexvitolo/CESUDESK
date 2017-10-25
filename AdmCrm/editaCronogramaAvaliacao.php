@@ -3,8 +3,17 @@
 session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
- // Ação a ser executada: mata o script e manda uma mensagem
-echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
+    // Ação a ser executada: mata o script e manda uma mensagem
+   echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
+}
+
+if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+40 minute', strtotime($_SESSION['TEMPOSESSION'])))) & ($_SESSION['ACESSO'] <> 1 ) ){
+     // Ação a ser executada: encerra a session depois de 40 min
+   echo  '<script type="text/javascript"> alert("Tempo de Sessão Expirada"); window.location.href = "http://d42150:8087/cesudesk/AdmCrm/login.php"  </script>'; 
+   session_destroy();
+ }
+
+
 
 
 if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
@@ -158,9 +167,9 @@ sqlsrv_execute($result_squilaCargoAvaliacao);
                           <span>Qualidade</span> 
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
+                          <li class=""><a  href="questoesMonitoria.php">Questões Monitoria</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
-                          <li class="active"><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
+                          <li class="active"><a  href="cronogramaAvaliacao.php">Cronograma Avaliação Monitoria</a></li>
                       </ul>
                   </li>
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
