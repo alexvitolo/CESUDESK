@@ -3,8 +3,17 @@
 session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
- // Ação a ser executada: mata o script e manda uma mensagem
-echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; }
+    // Ação a ser executada: mata o script e manda uma mensagem
+   echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
+}
+
+if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+40 minute', strtotime($_SESSION['TEMPOSESSION'])))) & ($_SESSION['ACESSO'] <> 1 ) ){
+     // Ação a ser executada: encerra a session depois de 40 min
+   echo  '<script type="text/javascript"> alert("Tempo de Sessão Expirada"); window.location.href = "http://d42150:8087/cesudesk/AdmCrm/login.php"  </script>'; 
+   session_destroy();
+ }
+
+
 
 
 
@@ -117,10 +126,10 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
                           <span>Qualidade</span> 
                       </a> <?php } ?>
                       <ul class="sub">
-                          <li class=""><a  href="questoesMonitoria.php">Questões</a></li>
+                          <li class=""><a  href="questoesMonitoria.php">Questões Monitoria</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
-                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação</a></li>
-                           <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação</a></li>
+                          <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação Monitoria</a></li>
+                           <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação Monitoria</a></li>
                       </ul>
                   </li>
 
@@ -134,7 +143,7 @@ echo  '<script type="text/javascript"> window.location.href = "http://d42150:808
                           <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
                           <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class="active"><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
-                          <li class=""><a  href="testeConhecimentoCadastrado.php">Testes Cadastrados</a></li>
+                          <li class=""><a  href="testeConhecimentoCadastrado.php">Conhecimento Realizados</a></li>
                       </ul>
                   </li>
 
