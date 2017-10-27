@@ -89,7 +89,7 @@ if ( (date('h:i:s')) >=  (date('h:i:s', strtotime('+15 minute', strtotime($_SESS
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
-                  <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.gif" class="img-circle" width="120"></a></p>
+                  <p class="centered"><a href=""><img src="assets/img/ui-sam.gif" class="img-circle" width="120"></a></p>
                   <h5 class="centered">Analytics EAD</h5>
                     
                   <li class="sub-menu"">
