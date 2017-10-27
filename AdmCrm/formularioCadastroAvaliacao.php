@@ -52,6 +52,7 @@ $squilaAvaliacao = "SELECT ta.NUMERO
                       AND ta.BO_STATUS = 'S'
                       AND NOT EXISTS (SELECT 1 
                      FROM tb_qld_pesquisa tp
+                     INNER JOIN tb_crm_processo tproc ON tproc.ID = tp.ID_PROCESSO AND tproc.ATIVO ='1'
                     WHERE tp.ID_AVALIACAO = ta.ID_AVALIACAO
                       AND tp.ID_COLABORADOR = '{$ID_CONSULTOR}') ";
                   
@@ -199,7 +200,7 @@ sqlsrv_execute($result_squilaResultLigacao);
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
-                  <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.gif" class="img-circle" width="60"></a></p>
+                  <p class="centered"><a href=""><img src="assets/img/ui-sam.gif" class="img-circle" width="60"></a></p>
                   <h5 class="centered">Analytics EAD</h5>
                     
                   <li class="sub-menu"">
