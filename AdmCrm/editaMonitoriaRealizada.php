@@ -74,7 +74,6 @@ $squilaItensQuestoes = "SELECT tq.ID_ITEM_PESQUISA
                             FROM tb_qld_itens_questoes tq
                       INNER JOIN tb_qld_questoes tque ON tque.ID_QUESTAO = tq.ID_QUESTAO
                            WHERE tq.ID_PESQUISA = {$ID_PESQUISA}
-                            AND tque.BO_QUESTAO_ATIVA = 'S'
                             AND tque.BO_FALHA_CRITICA = 'N'  " ;
 
 $result_squilaItensQuestoes = sqlsrv_prepare($conn, $squilaItensQuestoes);
@@ -95,7 +94,6 @@ $squilaItensQuestoesCrit = "SELECT tq.ID_ITEM_PESQUISA
                             FROM tb_qld_itens_questoes tq
                       INNER JOIN tb_qld_questoes tque ON tque.ID_QUESTAO = tq.ID_QUESTAO
                            WHERE tq.ID_PESQUISA = {$ID_PESQUISA}
-                            AND tque.BO_QUESTAO_ATIVA = 'S'
                             AND tque.BO_FALHA_CRITICA = 'S'  " ;
 
 $result_squilaItensQuestoesCrit = sqlsrv_prepare($conn, $squilaItensQuestoesCrit);
