@@ -76,7 +76,8 @@ $squilaQuestao = "SELECT ID_QUESTAO
                       FROM tb_qld_questoes tq 
                 INNER JOIN tb_crm_colaborador tc ON CASE 
                                                     WHEN tc.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
-                     WHERE BO_FALHA_CRITICA = 'N'
+                     WHERE tq.BO_FALHA_CRITICA = 'N'
+                       AND tq.BO_QUESTAO_ATIVA = 'S'
                        AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'
                        AND (tc.STATUS_COLABORADOR ='ATIVO' OR tc.STATUS_COLABORADOR = 'FERIAS') ";
 
