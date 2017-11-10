@@ -34,9 +34,12 @@ $squilaDicas = "SELECT tq.ID_QUESTAO
                         ,tq.BO_FALHA_CRITICA
                         ,tq.BO_PARCIAL
                         ,tq.DT_SISTEMA
+                        ,tp.NOME
                         ,CASE WHEN tq.BO_QUESTAO_ATIVA = 'S' THEN 'ATIVO' ELSE 'DESATIVO' END AS BO_QUESTAO_ATIVA
-                    FROM tb_qld_questoes tq
-                  INNER JOIN tb_crm_grupo tc ON tc.ID_GRUPO = TQ.ID_GRUPO
+                        FROM tb_qld_questoes tq
+                  INNER JOIN tb_crm_grupo tc ON tc.ID_GRUPO = tq.ID_GRUPO
+                  INNER JOIN tb_crm_processo tp ON tp.ID = tq.ID_PROCESSO
+                  WHERE tq.BO_QUESTAO_ATIVA = 'S'
                   ORDER BY DESC_GRUPO";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
@@ -269,6 +272,7 @@ sqlsrv_execute($result_SomaPesos);
                                   <th><i class=""></i> Falha Crítica</th>
                                   <th><i class=""></i> Possui Parcial  </th>
                                   <th><i class=""></i> Ativa </th>
+                                  <th><i class=""></i> Processo </th>
                               </tr>
                               </thead>
                               <tbody>
@@ -300,6 +304,7 @@ sqlsrv_execute($result_SomaPesos);
                                   <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_FALHA_CRITICA'] ?></span></td>
                                   <td><span class="<?php echo $corStatus2 ?>"><?php echo $row['BO_PARCIAL'] ?></span></td>
                                   <td><span class="<?php echo $corStatus3 ?>"><?php echo $row['BO_QUESTAO_ATIVA']?></span></td>
+                                  <td><?php echo $row['NOME'] ?></a></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                       <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_QUESTAO'] ?>"  name="ID_QUESTAO"><i class="fa fa-pencil"></i></button>
