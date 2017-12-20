@@ -265,7 +265,7 @@ sqlsrv_execute($result_squilaTodosProcessos);
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Teste Conhecimento </h4>
                             <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
+                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input><a href="UserReport_Export_TesteConhecimento.php"><input style="float:right; margin-right: 50px" type="button" value="Relatório Testes Realizados" ></input></a>
                               <thead>
                               <tr>
                                   <th><i class="fa fa-bullhorn"></i> ID TESTE </th>
