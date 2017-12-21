@@ -7,7 +7,7 @@ session_start();
 $USERVALIDA = $_POST["USERVALIDA"];
 $_SESSION['USUARIO'] = $USERVALIDA;
 
-$_SESSION['TEMPOSESSION'] = date('h:i:s'); // session criada para validar o tempo de session de cada usuário
+$_SESSION['TEMPOSESSION'] = date('H:i:s'); // session criada para validar o tempo de session de cada usuário
 
 
 if ($_POST["SENHAVALIDA"] == "") {
