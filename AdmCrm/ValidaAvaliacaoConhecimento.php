@@ -9,7 +9,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 
 
  
- $_SESSION['TEMPOSESSION'] = date('h:i:s');
+ $_SESSION['TEMPOSESSION'] = date('H:i:s');
 
 
 
