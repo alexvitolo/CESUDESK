@@ -30,6 +30,7 @@ $query_test = "SELECT TCON.ID_TESTE
                 ,(SELECT NOME FROM tb_crm_processo WHERE ID = tava.ID_PROCESSO) as PROCESSO
                 --,TCON.ID_COLABORADOR
                 ,tc.NOME
+                ,tc.ID_MATRICULA
                 ,TCON.NOTA_FINAL
                 ,TCON.QUEM_REALIZOU
                 ,tque.DESCRICAO
@@ -57,6 +58,7 @@ sqlsrv_execute($result_test);
                          <th>GRUPO</th>
                          <th>PROCESSO</th>
                          <th>NOME</th>
+                         <th>ID_MATRICULA</th>
                          <th>NOTA_FINAL</th>
                          <th>QUEM_REALIZOU</th>
                          <th>DESCRICAO</th>
@@ -76,7 +78,8 @@ sqlsrv_execute($result_test);
                          <td>'.$row["DESCRICAO"].'</td>  
                          <td>'.$row["GRUPO"].'</td>  
                          <td>'.$row["PROCESSO"].'</td>  
-                         <td>'.$row["NOME"].'</td>  
+                         <td>'.$row["NOME"].'</td>
+                         <td>'.$row["ID_MATRICULA"].'</td>   
                          <td>'.$row["NOTA_FINAL"].'</td>  
                          <td>'.$row["QUEM_REALIZOU"].'</td>  
                          <td>'.$row["DESCRICAO"].'</td>  

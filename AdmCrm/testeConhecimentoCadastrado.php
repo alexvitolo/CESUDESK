@@ -269,6 +269,7 @@ sqlsrv_execute($result_squilaTodosProcessos);
                               <thead>
                               <tr>
                                   <th><i class="fa fa-bullhorn"></i> ID TESTE </th>
+                                  <th><i class="fa fa-bullhorn"></i> MATRICULA </th>
                                   <th><i class="fa fa-bullhorn"></i> Nome Consultor </th>
                                   <th><i class="fa fa-bullhorn"></i> Tipo Teste </th>
                                   <th><i class="fa fa-bullhorn"></i> Processo </th>
@@ -293,6 +294,7 @@ sqlsrv_execute($result_squilaTodosProcessos);
                                  ?>
 
                                   <td><?php echo $row['ID_TESTE']; ?></a></td>
+                                  <td><?php echo $row['ID_MATRICULA']; ?></td>
                                   <td><?php echo $row['NOME_CONSULTOR']; ?></td>
                                   <td><?php echo $row['TIPO_TESTE']; ?></td>
                                   <td><?php echo $row['NOME_PROCESSO']; ?></td>
