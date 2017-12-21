@@ -2,6 +2,8 @@
 
 session_start();
 
+$_SESSION['TEMPOSESSION'] = date('h:i:s');
+
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
     // Ação a ser executada: mata o script e manda uma mensagem
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
@@ -12,9 +14,6 @@ if ( (date('h:i:s')) >=  (date('h:i:s', strtotime('+55 minute', strtotime($_SESS
    echo  '<script type="text/javascript"> alert("Tempo de Sessão Expirada"); window.location.href = "http://d42150:8087/cesudesk/AdmCrm/login.php"  </script>'; 
    session_destroy();
  }
- 
- $_SESSION['TEMPOSESSION'] = date('h:i:s');
-
 
 ?>
 
