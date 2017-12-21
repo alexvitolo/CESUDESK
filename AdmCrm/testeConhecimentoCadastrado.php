@@ -282,9 +282,9 @@ sqlsrv_execute($result_squilaTodosProcessos);
                                   <?php  while($row = sqlsrv_fetch_array($result_squilaTesteConhecimento)) { 
                                     
 
-                                    if ($row['NOTA_FINAL'] > "6") {
+                                    if ($row['NOTA_FINAL'] >= "6") {
                                       $corStatus = "label label-success label-mini";
-                                    }elseif (($row['NOTA_FINAL'] <"6") and ($row['NOTA_FINAL'] >= "4")) {
+                                    }elseif (($row['NOTA_FINAL'] = "5") or ($row['NOTA_FINAL'] = "4")) {
                                       $corStatus = "label label-warning  label-mini";
                                     }elseif ($row['NOTA_FINAL'] < "4") {
                                       $corStatus = "label label-danger  label-mini";
