@@ -33,7 +33,7 @@ $query_test = "SELECT TCON.ID_TESTE
                 ,tc.ID_MATRICULA
                 ,TCON.NOTA_FINAL
                 ,TCON.QUEM_REALIZOU
-                ,tque.DESCRICAO
+                ,tque.DESCRICAO as DESCRICAO_ALTERNATIVA_ESCOLHIDA
                 ,tque.DIFICULDADE
                 ,tqalt.BO_VERDADEIRO as RESPOSTA_CORRETA
                 ,CONVERT(VARCHAR(10),TCON.DT_SISTEMA, 103) as DATA_REALIZOU_PROVA
@@ -61,7 +61,7 @@ sqlsrv_execute($result_test);
                          <th>ID_MATRICULA</th>
                          <th>NOTA_FINAL</th>
                          <th>QUEM_REALIZOU</th>
-                         <th>DESCRICAO</th>
+                         <th>DESCRICAO_ALTERNATIVA_ESCOLHIDA</th>
                          <th>DIFICULDADE</th>
                          <th>RESPOSTA_CORRETA</th>
                          <th>DATA_REALIZOU_PROVA</th>
@@ -82,7 +82,7 @@ sqlsrv_execute($result_test);
                          <td>'.$row["ID_MATRICULA"].'</td>   
                          <td>'.$row["NOTA_FINAL"].'</td>  
                          <td>'.$row["QUEM_REALIZOU"].'</td>  
-                         <td>'.$row["DESCRICAO"].'</td>  
+                         <td>'.$row["DESCRICAO_ALTERNATIVA_ESCOLHIDA"].'</td>  
                          <td>'.$row["DIFICULDADE"].'</td>  
                          <td>'.$row["RESPOSTA_CORRETA"].'</td>  
                          <td>'.$row["DATA_REALIZOU_PROVA"].'</td>  
