@@ -27,6 +27,7 @@ $query_test = "SELECT TCON.ID_TESTE
                 ,TCON.ID_CONHECIMENTO
                 ,tava.DESCRICAO
                 ,(SELECT DESCRICAO FROM tb_crm_grupo tg INNER JOIN tb_crm_colaborador tc ON tc.ID_GRUPO = tg.ID_GRUPO and tc.ID_COLABORADOR=TCON.ID_COLABORADOR) as GRUPO 
+                ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = (SELECT ID_COLABORADOR_GESTOR FROM tb_crm_colaborador where ID_COLABORADOR = TCON.ID_COLABORADOR)) as NOME_SUPERVISOR
                 ,(SELECT NOME FROM tb_crm_processo WHERE ID = tava.ID_PROCESSO) as PROCESSO
                 --,TCON.ID_COLABORADOR
                 ,tc.NOME
@@ -57,6 +58,7 @@ sqlsrv_execute($result_test);
                          <th>ID_CONHECIMENTO</th>
                          <th>DESCRICAO</th>
                          <th>GRUPO</th>
+                         <th>NOME_SUPERVISOR</th>
                          <th>PROCESSO</th>
                          <th>NOME</th>
                          <th>ID_MATRICULA</th>
@@ -78,7 +80,8 @@ sqlsrv_execute($result_test);
                          <td>'.$row["ID_TESTE"].'</td>
                          <td>'.$row["ID_CONHECIMENTO"].'</td>  
                          <td>'.$row["DESCRICAO"].'</td>  
-                         <td>'.$row["GRUPO"].'</td>  
+                         <td>'.$row["GRUPO"].'</td> 
+                         <td>'.$row["NOME_SUPERVISOR"].'</td>   
                          <td>'.$row["PROCESSO"].'</td>  
                          <td>'.$row["NOME"].'</td>
                          <td>'.$row["ID_MATRICULA"].'</td>   
