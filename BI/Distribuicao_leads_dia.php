@@ -79,7 +79,8 @@ $Data_hora = json_encode($data_points_2, JSON_NUMERIC_CHECK);   // gabiara heheh
 $Data_hora = str_replace('"new', 'new', $Data_hora);
 $Data_hora = str_replace('))"', '))', $Data_hora);
 $media = $media/$aux1;
-// print_r($media);
+$media = round($media,0);
+//print_r($media);
 // exit;
 
 
