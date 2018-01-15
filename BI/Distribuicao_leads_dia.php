@@ -1,5 +1,11 @@
 <?php include '..\BI\connectionTALSIMA.php';  
 
+if (array_key_exists('TAMANHO', $_GET)){
+	$tamanho = $_GET['TAMANHO'];
+}else{
+	$tamanho = 400;
+}
+
 
 $data_points = array();
 
@@ -146,10 +152,10 @@ var soma2 = <?php echo $soma ; ?>;
 var chart2 = new CanvasJS.Chart("chartContainer2", {
 	animationEnabled: true,  
 	title:{
-		text: "Distribuição por Hora ("+soma2+" Leads)"
+		text: "Criados Hoje ("+soma2+" Leads)"
 	},
 	axisY: {
-		title: "Quantidade Leads",
+		title: " ",
 		suffix: "un ",
 		stripLines: [{
 			value: media2,
@@ -180,9 +186,9 @@ chart2.render();
 
 </head>
 <body>
-<div id="chartContainer" style="height: 400px; width: 50%; float:left"></div>
+<div id="chartContainer" style="height: <?php echo $tamanho ?>px; width: 50%; float:left"></div>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-<div id="chartContainer2" style="height: 400px; width: 50%; float:right"></div>
+<div id="chartContainer2" style="height: <?php echo $tamanho ?>px; width: 50%; float:right"></div>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>
 </html>
