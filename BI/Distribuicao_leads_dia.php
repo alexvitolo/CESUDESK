@@ -43,24 +43,24 @@ array_push($data_points, $point);
 
 $data_points_2 = array();
 
-   $sql2 = "SELECT CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, l.dtCreated)),',', 
-	               CONVERT(VARCHAR(10),DATEPART(MONTH, l.dtCreated)-1),',',
-			       CONVERT(VARCHAR(10),DATEPART(DAY, l.dtCreated)),',',
-			       CONVERT(VARCHAR(10),DATEPART(HOUR, l.dtCreated)+2),
+   $sql2 = "SELECT CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, l.[FldDate21845])),',', 
+	               CONVERT(VARCHAR(10),DATEPART(MONTH, l.[FldDate21845])-1),',',
+			       CONVERT(VARCHAR(10),DATEPART(DAY, l.[FldDate21845])),',',
+			       CONVERT(VARCHAR(10),DATEPART(HOUR, l.[FldDate21845])+2),
 			       '))'
 			       ) AS HORA_LEAD
-				  ,DATEPART(HOUR, l.dtCreated) AS HORA
+				  ,DATEPART(HOUR, l.[FldDate21845]) AS HORA
                   ,COUNT(1) AS QT_LEAD
-             FROM [tblObjectType20005] l WITH (NOLOCK)
-            WHERE CONVERT(DATE, L.[dtCreated]) = CONVERT(DATE, GETDATE())
-         GROUP BY CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, l.dtCreated)),',', 
-	              CONVERT(VARCHAR(10),DATEPART(MONTH, l.dtCreated)-1),',',
-		      	  CONVERT(VARCHAR(10),DATEPART(DAY, l.dtCreated)),',',
-		      	  CONVERT(VARCHAR(10),DATEPART(HOUR, l.dtCreated)+2),
+             FROM [tblObjectType20005_2] l WITH (NOLOCK)
+            WHERE CONVERT(DATE, L.[FldDate21845]) = CONVERT(DATE, GETDATE())
+         GROUP BY CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, l.[FldDate21845])),',', 
+	              CONVERT(VARCHAR(10),DATEPART(MONTH, l.[FldDate21845])-1),',',
+		      	  CONVERT(VARCHAR(10),DATEPART(DAY, l.[FldDate21845])),',',
+		      	  CONVERT(VARCHAR(10),DATEPART(HOUR, l.[FldDate21845])+2),
 			      '))'
 			  )
-			  ,DATEPART(HOUR, l.dtCreated)
-		ORDER BY DATEPART(HOUR, l.dtCreated)";
+			  ,DATEPART(HOUR, l.[FldDate21845])
+		ORDER BY DATEPART(HOUR, l.[FldDate21845])";
    
    $result_2= sqlsrv_prepare($conn, $sql2);
    sqlsrv_execute($result_2);
@@ -107,7 +107,7 @@ echo "<meta HTTP-EQUIV='refresh' CONTENT='900; URL=..\BI\Distribuicao_leads_dia.
 window.onload = function () {
 var json = <?php echo json_encode($data_points, JSON_NUMERIC_CHECK); ?>;
 var chart = new CanvasJS.Chart("chartContainer", {
-	theme: "dark1",
+	theme: "dark5",
 	exportFileName: "Doughnut Chart",
 	exportEnabled: true,
 	animationEnabled: true,
