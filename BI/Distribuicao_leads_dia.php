@@ -38,7 +38,7 @@ array_push($data_points, $point);
 $data_points_2 = array();
 
    $sql2 = "SELECT CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, l.dtCreated)),',', 
-	               CONVERT(VARCHAR(10),DATEPART(MONTH, l.dtCreated)),',',
+	               CONVERT(VARCHAR(10),DATEPART(MONTH, l.dtCreated)-1),',',
 			       CONVERT(VARCHAR(10),DATEPART(DAY, l.dtCreated)),',',
 			       CONVERT(VARCHAR(10),DATEPART(HOUR, l.dtCreated)+2),
 			       '))'
@@ -48,7 +48,7 @@ $data_points_2 = array();
              FROM [tblObjectType20005] l WITH (NOLOCK)
             WHERE CONVERT(DATE, L.[dtCreated]) = CONVERT(DATE, GETDATE())
          GROUP BY CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, l.dtCreated)),',', 
-	              CONVERT(VARCHAR(10),DATEPART(MONTH, l.dtCreated)),',',
+	              CONVERT(VARCHAR(10),DATEPART(MONTH, l.dtCreated)-1),',',
 		      	  CONVERT(VARCHAR(10),DATEPART(DAY, l.dtCreated)),',',
 		      	  CONVERT(VARCHAR(10),DATEPART(HOUR, l.dtCreated)+2),
 			      '))'
@@ -66,12 +66,14 @@ $data_points_2 = array();
    ;
 $aux1 = 1;
 $media = 0;
+$soma = 0;
 while($row2 = sqlsrv_fetch_array($result_2))
 {
 $aux1 ++;
 $point_2 = array("x" => $row2['HORA_LEAD'], "y" => $row2['QT_LEAD']);
 array_push($data_points_2, $point_2);
 $media = $media + $row2['QT_LEAD'];
+$soma = $soma + $row2['QT_LEAD'];
 }
 
 $Data_hora = json_encode($data_points_2, JSON_NUMERIC_CHECK);   // gabiara hehehe
@@ -138,10 +140,11 @@ function explodePie (e) {
 
 var json2 = <?php echo $Data_hora ; ?>;
 var media2 = <?php echo $media ; ?>;
+var soma2 = <?php echo $soma ; ?>;
 var chart2 = new CanvasJS.Chart("chartContainer2", {
 	animationEnabled: true,  
 	title:{
-		text: "Distribuição por Hora"
+		text: "Distribuição por Hora ("+soma2+" Leads)"
 	},
 	axisY: {
 		title: "Quantidade Leads",
