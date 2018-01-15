@@ -87,7 +87,9 @@ $media = round($media,0);
 
 
 
+// refresh automático pág
 
+echo "<meta HTTP-EQUIV='refresh' CONTENT='900; URL=..\BI\Distribuicao_leads_dia.php'>";
 
 
 ?>
