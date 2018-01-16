@@ -17,7 +17,7 @@ $data_points = array();
           WHERE CONVERT(DATE, LD.dh_distrib) = CONVERT(DATE, GETDATE()) 
             and ld.teamid <> 2
        GROUP BY CONVERT(DATE, LD.dh_distrib) ,ld.teamid
-       ORDER BY CONVERT(DATE, LD.dh_distrib) DESC";
+       ORDER BY COUNT(1) DESC";
    
    $result = sqlsrv_prepare($conn, $sql);
    sqlsrv_execute($result);
@@ -27,11 +27,11 @@ $data_points = array();
                 print_r(sqlsrv_errors());
          }   
    ;
-while($row = sqlsrv_fetch_array($result))
-{
-$point = array("y" => $row['QT_LEAD'] , "name" => $row['TEAM']);
-array_push($data_points, $point);
-}
+// while($row = sqlsrv_fetch_array($result))
+// {
+// $point = array("y" => $row['QT_LEAD'] , "name" => $row['TEAM']);
+// array_push($data_points, $point);
+// }
 // echo json_encode($data_points, JSON_NUMERIC_CHECK);
 //  exit;
 
@@ -102,49 +102,14 @@ echo "<meta HTTP-EQUIV='refresh' CONTENT='900; URL=..\BI\Distribuicao_leads_dia.
 
 <!DOCTYPE HTML>
 <html>
+ <link href="..\BI\Distribuicao_leads_dia.css" rel="stylesheet" />
 <head>
+<meta charset="utf-8" />
+	<title>Table Style</title>
+	<meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
+
 <script>
 window.onload = function () {
-var json = <?php echo json_encode($data_points, JSON_NUMERIC_CHECK); ?>;
-var chart = new CanvasJS.Chart("chartContainer", {
-	theme: "dark5",
-	exportFileName: "Doughnut Chart",
-	exportEnabled: true,
-	animationEnabled: true,
-	title:{
-		text: "Distribuição LEAD Diária"
-	},
-	legend:{
-		cursor: "pointer",
-		itemclick: explodePie
-	},
-	data: [{
-		type: "doughnut",
-		innerRadius: 90,
-		showInLegend: true,
-		toolTipContent: "<b>{name}</b> - Soma: {y}",
-		indexLabel: "{name} - {y} LEADS",
-		dataPoints: json
-	}]
-});
-chart.render();
-
-function explodePie (e) {
-	if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
-		e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
-	} else {
-		e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
-	}
-	e.chart.render();
-}
-
-
-
-
-
-
-
-
 
 var json2 = <?php echo $Data_hora ; ?>;
 var media2 = <?php echo $media ; ?>;
@@ -180,14 +145,31 @@ chart2.render();
 }
 </script>
 
-
-
-
-
 </head>
-<body>
-<div id="chartContainer" style="height: <?php echo $tamanho ?>px; width: 50%; float:left"></div>
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+     <body>
+      <table class="table-fill" >
+      <thead>
+      <tr>
+      <th class="text-left">Região</th>
+      <th class="text-left">Leads</th>
+      </tr>
+      </thead>
+      <tbody class="table-hover">
+      	<?php 
+      	while($row = sqlsrv_fetch_array($result)){
+        ?>
+      <tr>
+      <td class="text-left"><?php echo $row['TEAM'] ?></td>
+      <td class="text-left"><?php echo $row['QT_LEAD'] ?></td>
+      </tr>
+       <?php }
+       ?>
+      </tbody>
+      </table>
+  
+
+
+
 <div id="chartContainer2" style="height: <?php echo $tamanho ?>px; width: 50%; float:right"></div>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>
