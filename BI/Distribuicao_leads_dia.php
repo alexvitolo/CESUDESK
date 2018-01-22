@@ -44,19 +44,19 @@ $data_points = array();
 $data_points_2 = array();
 
    $sql2 = "SELECT CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, l.[FldDate21845])),',', 
-	               CONVERT(VARCHAR(10),DATEPART(MONTH, l.[FldDate21845])-1),',',
-			       CONVERT(VARCHAR(10),DATEPART(DAY, l.[FldDate21845])),',',
-			       CONVERT(VARCHAR(10),DATEPART(HOUR, l.[FldDate21845])+2),
-			       '))'
-			       ) AS HORA_LEAD
-				  ,DATEPART(HOUR, l.[FldDate21845]) AS HORA
+	                 CONVERT(VARCHAR(10),DATEPART(MONTH, l.[FldDate21845])-1),',',
+			             CONVERT(VARCHAR(10),DATEPART(DAY, l.[FldDate21845])),',',
+			             CONVERT(VARCHAR(10),DATEPART(HOUR, l.[FldDate21845])+2),
+			             '))'
+			                  ) AS HORA_LEAD
+				          ,DATEPART(HOUR, l.[FldDate21845]) AS HORA
                   ,COUNT(1) AS QT_LEAD
              FROM [tblObjectType20005_2] l WITH (NOLOCK)
             WHERE CONVERT(DATE, L.[FldDate21845]) = CONVERT(DATE, GETDATE())
          GROUP BY CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, l.[FldDate21845])),',', 
-	              CONVERT(VARCHAR(10),DATEPART(MONTH, l.[FldDate21845])-1),',',
-		      	  CONVERT(VARCHAR(10),DATEPART(DAY, l.[FldDate21845])),',',
-		      	  CONVERT(VARCHAR(10),DATEPART(HOUR, l.[FldDate21845])+2),
+	                CONVERT(VARCHAR(10),DATEPART(MONTH, l.[FldDate21845])-1),',',
+		      	      CONVERT(VARCHAR(10),DATEPART(DAY, l.[FldDate21845])),',',
+		      	      CONVERT(VARCHAR(10),DATEPART(HOUR, l.[FldDate21845])+2),
 			      '))'
 			  )
 			  ,DATEPART(HOUR, l.[FldDate21845])
@@ -70,7 +70,7 @@ $data_points_2 = array();
                 print_r(sqlsrv_errors());
          }   
    ;
-$aux1 = 1;
+$aux1 = 0;
 $media = 0;
 $soma = 0;
 while($row2 = sqlsrv_fetch_array($result_2))
@@ -90,6 +90,89 @@ $media = $media/$aux1;
 $media = round($media,0);
 //print_r($media);
 // exit;
+
+
+
+
+
+
+
+//sql SMS POR HORA
+
+
+
+$data_points_3 = array();
+
+   $sql3 = " SELECT CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, dtCreatedDate)),',', 
+                    CONVERT(VARCHAR(10),DATEPART(MONTH, dtCreatedDate)-1),',',
+                    CONVERT(VARCHAR(10),DATEPART(DAY, dtCreatedDate)),',',
+                    CONVERT(VARCHAR(10),DATEPART(HOUR, dtCreatedDate)+2),
+                     '))'
+                     ) AS HORA_LEAD
+         ,CASE WHEN ((select top 1 count(1) as soma_SMS from tblSMSDetails SMS_ENVIADOS
+                         where (SMS_ENVIADOS.dtCreatedDate >= CONVERT(date, GETDATE()))
+                      group by SUBSTRING(CONVERT(varchar,dtCreatedDate,114),1,2)
+                      order by count(1) desc) = count(1)) THEN CONVERT(varchar(MAX),CONCAT(count(1),', indexLabel: @highest@,markerColor: @red@, markerType: @triangle@')) 
+               WHEN ((select top 1 count(1) as soma_SMS from tblSMSDetails SMS_ENVIADOS
+                         where (SMS_ENVIADOS.dtCreatedDate >= CONVERT(date, GETDATE()))
+                      group by SUBSTRING(CONVERT(varchar,dtCreatedDate,114),1,2)
+                      order by count(1) asc) = count(1)) THEN CONVERT(varchar(MAX),CONCAT(count(1),', indexLabel: @lowest@,markerColor: @DarkSlateGrey@, markerType: @cross@')) 
+                ELSE CONVERT(varchar,count(1)) 
+              END AS soma_SMS
+                    ,CONVERT(VARCHAR(10),DATEPART(HOUR, dtCreatedDate)) as HORA
+ 
+                          from tblSMSDetails SMS_ENVIADOS
+                         where (SMS_ENVIADOS.dtCreatedDate >= CONVERT(date, GETDATE()))
+                      group by CONVERT(VARCHAR(10),DATEPART(YEAR, dtCreatedDate)),
+                               CONVERT(VARCHAR(10),DATEPART(MONTH, dtCreatedDate)-1),
+                               CONVERT(VARCHAR(10),DATEPART(DAY, dtCreatedDate)),
+                               CONVERT(VARCHAR(10),DATEPART(HOUR, dtCreatedDate)+2),
+                               DATEPART(HOUR, dtCreatedDate)
+                     order by DATEPART(HOUR, dtCreatedDate) asc
+ ";
+   
+   $result_3 = sqlsrv_prepare($conn, $sql3);
+   sqlsrv_execute($result_3);
+   
+         if (!($result_3)) {
+                echo ("Falha na inclusão do registro");
+                print_r(sqlsrv_errors());
+         }   
+   ;
+$aux1 = 0;
+$mediaSMS = 0;
+$somaSMS = 0;
+
+while($row3 = sqlsrv_fetch_array($result_3))
+{
+$aux1 ++;
+$point_3 = array("x" => $row3['HORA_LEAD'], "y" => $row3['soma_SMS']);
+array_push($data_points_3, $point_3);
+$mediaSMS = $mediaSMS + $row3['soma_SMS'];
+$somaSMS = $somaSMS + $row3['soma_SMS'];
+}
+
+$Data_SMS = json_encode($data_points_3, JSON_NUMERIC_CHECK);   // gabiara hehehe
+
+$Data_SMS = str_replace('"new', 'new', $Data_SMS);
+$Data_SMS = str_replace('y":"', 'y":', $Data_SMS);
+$Data_SMS = str_replace('))"', '))', $Data_SMS); 
+$Data_SMS = str_replace('@', '"', $Data_SMS);
+$Data_SMS = str_replace('""}', '"}', $Data_SMS);
+// print_r($Data_SMS);exit;
+$mediaSMS = $mediaSMS/$aux1;
+$mediaSMS = round($mediaSMS,0);
+//print_r($media);
+// exit;
+
+
+
+
+
+
+
+
+
 
 
 
@@ -120,7 +203,6 @@ var chart2 = new CanvasJS.Chart("chartContainer2", {
 		text: "Criados Hoje ("+soma2+" Leads)"
 	},
 	axisY: {
-		title: " ",
 		suffix: "un ",
 		stripLines: [{
 			value: media2,
@@ -132,7 +214,7 @@ var chart2 = new CanvasJS.Chart("chartContainer2", {
         interval:1, 
         intervalType: "hour",        
         valueFormatString: "hh TT", 
-        labelAngle: -25
+        labelAngle: -75
       },
 	data: [{
 		type: "spline",
@@ -140,6 +222,47 @@ var chart2 = new CanvasJS.Chart("chartContainer2", {
 	}]
 });
 chart2.render();
+
+
+
+
+
+
+
+
+
+
+var jsonSMS = <?php echo $Data_SMS ; ?>;
+var mediaSMS = <?php echo $mediaSMS ; ?>;
+var somaSMS = <?php echo $somaSMS ; ?>;
+var chart3 = new CanvasJS.Chart("chartContainer3", {
+  animationEnabled: true,  
+  title:{
+    text: "SMS por HORA"
+  },
+  axisY: {
+    title: "Quantidade Enviada",
+    suffix: "Un",
+    stripLines: [{
+      value: 20,
+      label: "Média do Dia: "+mediaSMS
+    }]
+  },
+  axisX:{
+        title: "Horas",
+        interval:1, 
+        intervalType: "hour",        
+        valueFormatString: "hh TT", 
+        labelAngle: -75
+      },
+  data: [{
+    type: "spline",
+    dataPoints: jsonSMS
+  }]
+});
+chart3.render();
+
+
 
 
 }
@@ -170,7 +293,9 @@ chart2.render();
 
 
 
-<div id="chartContainer2" style="height: <?php echo $tamanho ?>px; width: 50%; float:right"></div>
+<div id="chartContainer2" style="height: <?php echo $tamanho ?>px; width: 50%; float:right"><br /></div>
+<br>
+<div id="chartContainer3" style="height: 300px; width: 100%; margin-top: 500px"></div>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </body>
 </html>
