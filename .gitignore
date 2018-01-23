@@ -1,7 +1,6 @@
 # Ignora Arquivos e cache BD
-config.php
-connection.php
-connectionADM.php
-Connect.php
-config_teste.php
-connectionTALISMA.php
+/PlanilhaTrocas/config.php
+/PlanilhaTrocas/connection.php
+/AdmCrm/connectionADM.php
+/PlanilhaTrocas/Connect.php
+/BI/connectionTALISMA.php
