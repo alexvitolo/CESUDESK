@@ -20,7 +20,7 @@ $conn = sqlsrv_connect($serverName, $connectionOptions);
 if( $conn === false ) {
     die( print_r( sqlsrv_errors(), true)); //See why it fails
 }
-    
+
 // $sql = "SELECT ID, NAME, GRUPO, QTD_TROCA FROM tb_crm_trocas";
 //  $stmt = sqlsrv_prepare($conn, $sql);
 //  $result = sqlsrv_execute($stmt);
@@ -40,6 +40,6 @@ if( $conn === false ) {
  //      $resultPDO = $statement->fetchAll(PDO::FETCH_ASSOC);
  // } else {
  //  error_log("Erro na chamada do metodo: " . __METHOD__ . ", arquivo: " . __FILE__ . ", linha: " . __LINE__);
- // }
+ // } teste
 
 ?>

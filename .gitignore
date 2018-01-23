@@ -1,0 +1,7 @@
+# Ignora Arquivos e cache BD
+config.php
+connection.php
+connectionADM.php
+Connect.php
+config_teste.php
+connectionTALISMA.php
