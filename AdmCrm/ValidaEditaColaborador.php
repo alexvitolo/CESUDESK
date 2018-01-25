@@ -51,8 +51,8 @@ $dtDesligamento = $_POST["dtDesligamento"];
 $motivoDesligamento = $_POST["motivoDesligamento"]; 
 $subMotivoDesligamento = $_POST["subMotivoDesligamento"];
 
-
-
+$dtFeriasIni = $_POST["dtFeriasIni"]; 
+$dtFeriasFim = $_POST["dtFeriasFim"]; 
 
 $today = date("Y-m-d");
 
@@ -170,6 +170,19 @@ if(isset($_POST['validaDadosColaborador']))
       }
 
 
+      if ($dtFeriasIni == 'null' || $STATUS ='ATIVO') {
+        $dtFeriasIni = ",DT_FERIAS_INI = null ";
+      }else{
+        $dtFeriasIni = ",DT_FERIAS_INI = '{$dtFeriasIni}' ";
+      }
+
+      if ($dtFeriasFim == 'null' || $STATUS ='ATIVO') {
+        $dtFeriasFim = ",DT_FERIAS_FIM = null ";
+      }else{
+        $dtFeriasFim = ",DT_FERIAS_FIM = '{$dtFeriasFim}' ";
+      }
+
+
 
 $updateSquila = " UPDATE tb_crm_colaborador
                      SET ID_MATRICULA = '{$MATRICULA}'
@@ -184,6 +197,8 @@ $updateSquila = " UPDATE tb_crm_colaborador
                         ,TELEFONE = '{$telefone}'
                         ,DT_ADMISSAO = '{$dtAdmissao}'
                         ,DT_NASCIMENTO = '{$dtNascimento}'
+                        ".$dtFeriasIni."
+                        ".$dtFeriasFim."
                         ,LOGIN_TELEFONIA = '{$loginTelefonia}'
                         ,CODIGO_PORTAL = '{$codPortal}'
                         ,ID_HORARIO = '{$horario}'
