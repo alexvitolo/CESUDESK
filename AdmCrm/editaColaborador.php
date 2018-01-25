@@ -31,6 +31,8 @@ $squiladica = "SELECT TC.ID_COLABORADOR,
                       TC.TELEFONE,
                       TC.DT_NASCIMENTO,
                       TC.DT_ADMISSAO,
+                      TC.DT_FERIAS_INI,
+                      TC.DT_FERIAS_FIM,
                       TC.EMAIL,
                       TC.STATUS_COLABORADOR,
                       TC.ID_MATRICULA,
@@ -56,6 +58,10 @@ $vetorSQL = sqlsrv_fetch_array($result_squila);
 $DT_NASCIMENTO = date_format($vetorSQL['DT_NASCIMENTO'], "Y-m-d");
 $DT_ADMISSAO = date_format($vetorSQL['DT_ADMISSAO'], "Y-m-d");
 
+if ($vetorSQL['DT_FERIAS_INI'] <> '' || $vetorSQL['DT_FERIAS_FIM'] <> ''){
+    $DT_FERIAS_INI = date_format($vetorSQL['DT_FERIAS_INI'], "Y-m-d");
+    $DT_FERIAS_FIM = date_format($vetorSQL['DT_FERIAS_FIM'], "Y-m-d");
+}
 
 $sqlSupervisores = "SELECT tc.ID_COLABORADOR AS ID_SUP
                       ,tc.NOME AS NOME_SUP
@@ -469,6 +475,23 @@ sqlsrv_execute($result_MotivoP);
                              </select>
                             </td>
                            </tr>
+
+                           <tr>
+                            <td>
+                             <label style="margin-left: 15px">Férias Início: </label>
+                            </td>
+                            <td align="left">
+                             <input type="date" name="dtFeriasIni" value="<?php echo $DT_FERIAS_INI; ?>">
+                            </td> 
+                            <td style="width:100px";>
+                             <label style="margin-left: 15px">Férias Fim: </label>
+                            </td>
+                            <td align="left">
+                             <input type="date" name="dtFeriasFim" value="<?php echo $DT_FERIAS_FIM; ?>">
+                            </td> 
+                          </tr>
+
+
                           </table>
                          </fieldset>
                         <br>
@@ -531,7 +554,7 @@ sqlsrv_execute($result_MotivoP);
 
 
                            <td>
-                             <label style="margin-left: 20px" >Motivo Desligamento </label>
+                             <label style="margin-left: 20px" >Motivo Desligamento:  </label>
                             </td>
                             <td align="left">
                               <select name="motivoDesligamento"> 
@@ -543,7 +566,7 @@ sqlsrv_execute($result_MotivoP);
                             </td>
 
                             <td>
-                             <label style="margin-left: 15px" >Sub-Motivo Desligamento </label>
+                             <label style="margin-left: 15px" >Sub-Motivo Desligamento: </label>
                             </td>
                             <td align="left">
                              <select style="margin-left: 15px"  name="subMotivoDesligamento">
@@ -662,6 +685,12 @@ sqlsrv_execute($result_MotivoP);
 
     function getConfirmation(){
        // var retVal = confirm("Do you want to continue ?");
+      if (Form.STATUS.value == 'FERIAS' & (Form.dtFeriasIni.value == '' || Form.dtFeriasFim.value == '')){
+        alert('Preencha o campo DATA FERIAS')
+        Form.dtFeriasIni.focus();
+        return false;
+       }
+
        if(  confirm(" Deseja confirmar a edição ? ") == true ){
           return true;
        }
