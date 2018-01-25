@@ -170,13 +170,13 @@ if(isset($_POST['validaDadosColaborador']))
       }
 
 
-      if ($dtFeriasIni == 'null' || $STATUS ='ATIVO') {
+      if ($dtFeriasIni == 'null' || $STATUS =='ATIVO') {
         $dtFeriasIni = ",DT_FERIAS_INI = null ";
       }else{
         $dtFeriasIni = ",DT_FERIAS_INI = '{$dtFeriasIni}' ";
       }
 
-      if ($dtFeriasFim == 'null' || $STATUS ='ATIVO') {
+      if ($dtFeriasFim == 'null' || $STATUS =='ATIVO') {
         $dtFeriasFim = ",DT_FERIAS_FIM = null ";
       }else{
         $dtFeriasFim = ",DT_FERIAS_FIM = '{$dtFeriasFim}' ";
