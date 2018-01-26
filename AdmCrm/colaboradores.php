@@ -71,6 +71,7 @@ sqlsrv_execute($result_squila);
     <!-- Custom styles for this template -->
     <link href="assets/css/style.css" rel="stylesheet">
     <link href="assets/css/style-responsive.css" rel="stylesheet">
+    <link href="..\AdmCrm\colaboradores.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -230,6 +231,7 @@ sqlsrv_execute($result_squila);
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Tabela Colaboradores </h4>
                             <hr>
+                            <div class="se-pre-con"></div>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input> <a href="cadastroColaborador.php"><input style="float:right; margin-right: 50px" type="button" value="Novo Colaborador" ></input></a><a href="UserReport_Export_colaboradores.php"><input style="float:right; margin-right: 50px" type="button" value="Relatório Colaboradores" ></input></a>
                               <thead>
                               <tr>
@@ -313,6 +315,7 @@ sqlsrv_execute($result_squila);
 
     <!--script for this page-->
 
+
   </body>
 </html>
 
@@ -358,6 +361,12 @@ sqlsrv_execute($result_squila);
   });
 
    })(document);
+
+
+   $(window).load(function() {
+    // Animate loader off screen
+    $(".se-pre-con").fadeOut("slow");;
+  });
         
 
 </script>
