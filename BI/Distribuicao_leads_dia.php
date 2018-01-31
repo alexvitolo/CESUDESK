@@ -12,7 +12,7 @@ $data_points = array();
    $sql = "     SELECT CONVERT(VARCHAR(10),CONVERT(DATE, LD.dh_distrib),103) AS DH_DISTRIB
                 ,(SELECT tName FROM tblteam where aTeamID = ld.teamid) as TEAM
                 ,COUNT(1) AS QT_LEAD
-           FROM Unicesumar_Lead_Distrib LD
+           FROM Unicesumar_Lead_Distrib LD WITH (NOLOCK)
      INNER JOIN tblUser u ON u.aUserID = LD.iduser
           WHERE CONVERT(DATE, LD.dh_distrib) = CONVERT(DATE, GETDATE()) 
             and ld.teamid <> 2
@@ -103,32 +103,32 @@ $media = round($media,0);
 
 $data_points_3 = array();
 
-   $sql3 = " SELECT CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, dtCreatedDate)),',', 
-                    CONVERT(VARCHAR(10),DATEPART(MONTH, dtCreatedDate)-1),',',
-                    CONVERT(VARCHAR(10),DATEPART(DAY, dtCreatedDate)),',',
-                    CONVERT(VARCHAR(10),DATEPART(HOUR, dtCreatedDate)+2),
+   $sql3 = " SELECT CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, dtStatusUpdatedDate)),',', 
+                    CONVERT(VARCHAR(10),DATEPART(MONTH, dtStatusUpdatedDate)-1),',',
+                    CONVERT(VARCHAR(10),DATEPART(DAY, dtStatusUpdatedDate)),',',
+                    CONVERT(VARCHAR(10),DATEPART(HOUR, dtStatusUpdatedDate)+2),
                      '))'
                      ) AS HORA_LEAD
-         ,CASE WHEN ((select top 1 count(1) as soma_SMS from tblSMSDetails SMS_ENVIADOS
-                         where (SMS_ENVIADOS.dtCreatedDate >= CONVERT(date, GETDATE()))
-                      group by SUBSTRING(CONVERT(varchar,dtCreatedDate,114),1,2)
+         ,CASE WHEN ((select top 1 count(1) as soma_SMS from tblSMSDetails SMS_ENVIADOS WITH (NOLOCK)
+                         where (SMS_ENVIADOS.dtStatusUpdatedDate >= CONVERT(date, GETDATE()))
+                      group by SUBSTRING(CONVERT(varchar,dtStatusUpdatedDate,114),1,2)
                       order by count(1) desc) = count(1)) THEN CONVERT(varchar(MAX),CONCAT(count(1),', indexLabel: @highest@,markerColor: @red@, markerType: @triangle@')) 
-               WHEN ((select top 1 count(1) as soma_SMS from tblSMSDetails SMS_ENVIADOS
-                         where (SMS_ENVIADOS.dtCreatedDate >= CONVERT(date, GETDATE()))
-                      group by SUBSTRING(CONVERT(varchar,dtCreatedDate,114),1,2)
+               WHEN ((select top 1 count(1) as soma_SMS from tblSMSDetails SMS_ENVIADOS WITH (NOLOCK)
+                         where (SMS_ENVIADOS.dtStatusUpdatedDate >= CONVERT(date, GETDATE()))
+                      group by SUBSTRING(CONVERT(varchar,dtStatusUpdatedDate,114),1,2)
                       order by count(1) asc) = count(1)) THEN CONVERT(varchar(MAX),CONCAT(count(1),', indexLabel: @lowest@,markerColor: @DarkSlateGrey@, markerType: @cross@')) 
                 ELSE CONVERT(varchar,count(1)) 
               END AS soma_SMS
-                    ,CONVERT(VARCHAR(10),DATEPART(HOUR, dtCreatedDate)) as HORA
+                    ,CONVERT(VARCHAR(10),DATEPART(HOUR, dtStatusUpdatedDate)) as HORA
  
-                          from tblSMSDetails SMS_ENVIADOS
-                         where (SMS_ENVIADOS.dtCreatedDate >= CONVERT(date, GETDATE()))
-                      group by CONVERT(VARCHAR(10),DATEPART(YEAR, dtCreatedDate)),
-                               CONVERT(VARCHAR(10),DATEPART(MONTH, dtCreatedDate)-1),
-                               CONVERT(VARCHAR(10),DATEPART(DAY, dtCreatedDate)),
-                               CONVERT(VARCHAR(10),DATEPART(HOUR, dtCreatedDate)+2),
-                               DATEPART(HOUR, dtCreatedDate)
-                     order by DATEPART(HOUR, dtCreatedDate) asc
+                          from tblSMSDetails SMS_ENVIADOS WITH (NOLOCK)
+                         where (SMS_ENVIADOS.dtStatusUpdatedDate >= CONVERT(date, GETDATE()))
+                      group by CONVERT(VARCHAR(10),DATEPART(YEAR, dtStatusUpdatedDate)),
+                               CONVERT(VARCHAR(10),DATEPART(MONTH, dtStatusUpdatedDate)-1),
+                               CONVERT(VARCHAR(10),DATEPART(DAY, dtStatusUpdatedDate)),
+                               CONVERT(VARCHAR(10),DATEPART(HOUR, dtStatusUpdatedDate)+2),
+                               DATEPART(HOUR, dtStatusUpdatedDate)
+                     order by DATEPART(HOUR, dtStatusUpdatedDate) asc
  ";
    
    $result_3 = sqlsrv_prepare($conn, $sql3);
@@ -167,6 +167,68 @@ $mediaSMS = round($mediaSMS,0);
 
 
 
+
+
+
+   $sql4 = " SELECT CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, dtCreatedDate)),',', 
+                    CONVERT(VARCHAR(10),DATEPART(MONTH, dtCreatedDate)-1),',',
+                    CONVERT(VARCHAR(10),DATEPART(DAY, dtCreatedDate)),',',
+                    CONVERT(VARCHAR(10),DATEPART(HOUR, dtCreatedDate)+2),
+                     '))'
+                     ) AS HORA_LEAD
+         ,CASE WHEN ((select top 1 count(1) as soma_SMS from tblSMSDetails SMS_ENVIADOS WITH (NOLOCK)
+                         where (SMS_ENVIADOS.dtCreatedDate >= CONVERT(date, GETDATE()))
+                      group by SUBSTRING(CONVERT(varchar,dtCreatedDate,114),1,2)
+                      order by count(1) desc) = count(1)) THEN CONVERT(varchar(MAX),CONCAT(count(1),', indexLabel: @highest@,markerColor: @red@, markerType: @triangle@')) 
+               WHEN ((select top 1 count(1) as soma_SMS from tblSMSDetails SMS_ENVIADOS WITH (NOLOCK)
+                         where (SMS_ENVIADOS.dtCreatedDate >= CONVERT(date, GETDATE()))
+                      group by SUBSTRING(CONVERT(varchar,dtCreatedDate,114),1,2)
+                      order by count(1) asc) = count(1)) THEN CONVERT(varchar(MAX),CONCAT(count(1),', indexLabel: @lowest@,markerColor: @DarkSlateGrey@, markerType: @cross@')) 
+                ELSE CONVERT(varchar,count(1)) 
+              END AS soma_SMS
+                    ,CONVERT(VARCHAR(10),DATEPART(HOUR, dtCreatedDate)) as HORA
+ 
+                          from tblSMSDetails SMS_ENVIADOS WITH (NOLOCK)
+                         where (SMS_ENVIADOS.dtCreatedDate >= CONVERT(date, GETDATE()))
+                      group by CONVERT(VARCHAR(10),DATEPART(YEAR, dtCreatedDate)),
+                               CONVERT(VARCHAR(10),DATEPART(MONTH, dtCreatedDate)-1),
+                               CONVERT(VARCHAR(10),DATEPART(DAY, dtCreatedDate)),
+                               CONVERT(VARCHAR(10),DATEPART(HOUR, dtCreatedDate)+2),
+                               DATEPART(HOUR, dtCreatedDate)
+                     order by DATEPART(HOUR, dtCreatedDate) asc
+ ";
+   
+   $result_3 = sqlsrv_prepare($conn, $sql3);
+   sqlsrv_execute($result_3);
+   
+         if (!($result_3)) {
+                echo ("Falha na inclusão do registro");
+                print_r(sqlsrv_errors());
+         }   
+   ;
+$aux1 = 0;
+$mediaSMS = 0;
+$somaSMS = 0;
+
+while($row3 = sqlsrv_fetch_array($result_3))
+{
+$aux1 ++;
+$point_3 = array("x" => $row3['HORA_LEAD'], "y" => $row3['soma_SMS']);
+array_push($data_points_3, $point_3);
+$mediaSMS = $mediaSMS + $row3['soma_SMS'];
+$somaSMS = $somaSMS + $row3['soma_SMS'];
+}
+
+$Data_SMS2 = json_encode($data_points_3, JSON_NUMERIC_CHECK);   // gabiara hehehe
+
+$Data_SMS2 = str_replace('"new', 'new', $Data_SMS2);
+$Data_SMS2 = str_replace('y":"', 'y":', $Data_SMS2);
+$Data_SMS2 = str_replace('))"', '))', $Data_SMS2); 
+$Data_SMS2 = str_replace('@', '"', $Data_SMS2);
+$Data_SMS2 = str_replace('""}', '"}', $Data_SMS2);
+// print_r($Data_SMS2);exit;
+$mediaSMS = $mediaSMS/$aux1;
+$mediaSMS = round($mediaSMS,0);
 
 
 
@@ -233,6 +295,7 @@ chart2.render();
 
 
 var jsonSMS = <?php echo $Data_SMS ; ?>;
+var jsonSMS2 = <?php echo $Data_SMS2 ; ?>;
 var mediaSMS = <?php echo $mediaSMS ; ?>;
 var somaSMS = <?php echo $somaSMS ; ?>;
 var chart3 = new CanvasJS.Chart("chartContainer3", {
@@ -248,6 +311,16 @@ var chart3 = new CanvasJS.Chart("chartContainer3", {
       label: "Média do Dia: "+mediaSMS
     }]
   },
+  toolTip: {
+    shared: true
+  },
+  legend: {
+    cursor: "pointer",
+    verticalAlign: "top",
+    horizontalAlign: "center",
+    dockInsidePlotArea: true,
+    itemclick: toogleDataSeries
+  },
   axisX:{
         title: "Horas",
         interval:1, 
@@ -256,13 +329,32 @@ var chart3 = new CanvasJS.Chart("chartContainer3", {
         labelAngle: -75
       },
   data: [{
+    type:"line",
+    axisYType: "secondary",
+    name: "DATA UPDATE",
+    showInLegend: true,
     type: "spline",
     dataPoints: jsonSMS
+  },
+  {
+    type:"line",
+    axisYType: "secondary",
+    name: "DATA CRIAÇÃO",
+    showInLegend: true,
+    type: "spline",
+    dataPoints: jsonSMS2
   }]
 });
 chart3.render();
 
-
+function toogleDataSeries(e){
+  if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+    e.dataSeries.visible = false;
+  } else{
+    e.dataSeries.visible = true;
+  }
+  chart3.render();
+}
 
 
 }
