@@ -168,7 +168,7 @@ $mediaSMS = round($mediaSMS,0);
 
 
 
-
+  $data_points_4 = array();
 
    $sql4 = " SELECT CONCAT('new Date ( Date.UTC (',CONVERT(VARCHAR(10),DATEPART(YEAR, dtCreatedDate)),',', 
                     CONVERT(VARCHAR(10),DATEPART(MONTH, dtCreatedDate)-1),',',
@@ -198,28 +198,28 @@ $mediaSMS = round($mediaSMS,0);
                      order by DATEPART(HOUR, dtCreatedDate) asc
  ";
    
-   $result_3 = sqlsrv_prepare($conn, $sql3);
-   sqlsrv_execute($result_3);
+   $result_4 = sqlsrv_prepare($conn, $sql4);
+   sqlsrv_execute($result_4);
    
-         if (!($result_3)) {
+         if (!($result_4)) {
                 echo ("Falha na inclusão do registro");
                 print_r(sqlsrv_errors());
          }   
    ;
-$aux1 = 0;
-$mediaSMS = 0;
-$somaSMS = 0;
+$aux2 = 0;
+$mediaSMS2 = 0;
+$somaSMS2 = 0;
 
-while($row3 = sqlsrv_fetch_array($result_3))
+while($row4 = sqlsrv_fetch_array($result_4))
 {
-$aux1 ++;
-$point_3 = array("x" => $row3['HORA_LEAD'], "y" => $row3['soma_SMS']);
-array_push($data_points_3, $point_3);
-$mediaSMS = $mediaSMS + $row3['soma_SMS'];
-$somaSMS = $somaSMS + $row3['soma_SMS'];
+$aux2 ++;
+$point_4 = array("x" => $row4['HORA_LEAD'], "y" => $row4['soma_SMS']);
+array_push($data_points_4, $point_4);
+$mediaSMS2 = $mediaSMS2 + $row3['soma_SMS'];
+$somaSMS2 = $somaSMS2 + $row3['soma_SMS'];
 }
 
-$Data_SMS2 = json_encode($data_points_3, JSON_NUMERIC_CHECK);   // gabiara hehehe
+$Data_SMS2 = json_encode($data_points_4, JSON_NUMERIC_CHECK);   // gabiara hehehe
 
 $Data_SMS2 = str_replace('"new', 'new', $Data_SMS2);
 $Data_SMS2 = str_replace('y":"', 'y":', $Data_SMS2);
@@ -227,8 +227,8 @@ $Data_SMS2 = str_replace('))"', '))', $Data_SMS2);
 $Data_SMS2 = str_replace('@', '"', $Data_SMS2);
 $Data_SMS2 = str_replace('""}', '"}', $Data_SMS2);
 // print_r($Data_SMS2);exit;
-$mediaSMS = $mediaSMS/$aux1;
-$mediaSMS = round($mediaSMS,0);
+$mediaSMS2 = $mediaSMS2/$aux2;
+$mediaSMS2 = round($mediaSMS2,0);
 
 
 
