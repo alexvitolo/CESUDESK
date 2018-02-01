@@ -215,8 +215,8 @@ while($row4 = sqlsrv_fetch_array($result_4))
 $aux2 ++;
 $point_4 = array("x" => $row4['HORA_LEAD'], "y" => $row4['soma_SMS']);
 array_push($data_points_4, $point_4);
-$mediaSMS2 = $mediaSMS2 + $row3['soma_SMS'];
-$somaSMS2 = $somaSMS2 + $row3['soma_SMS'];
+$mediaSMS2 = $mediaSMS2 + $row4['soma_SMS'];
+$somaSMS2 = $somaSMS2 + $row4['soma_SMS'];
 }
 
 $Data_SMS2 = json_encode($data_points_4, JSON_NUMERIC_CHECK);   // gabiara hehehe
@@ -294,11 +294,12 @@ chart2.render();
 
 
 
-var jsonSMS = <?php echo $Data_SMS ; ?>;
+var jsonSMS  = <?php echo $Data_SMS ; ?>;
 var jsonSMS2 = <?php echo $Data_SMS2 ; ?>;
 var mediaSMS = <?php echo $mediaSMS ; ?>;
-var somaSMS = <?php echo $somaSMS ; ?>;
-var chart3 = new CanvasJS.Chart("chartContainer3", {
+var somaSMS  = <?php echo $somaSMS ; ?>;
+var somaSMS2 = <?php echo $somaSMS2 ; ?>;
+var chart3   = new CanvasJS.Chart("chartContainer3", {
   animationEnabled: true,  
   title:{
     text: "SMS por HORA"
@@ -331,7 +332,7 @@ var chart3 = new CanvasJS.Chart("chartContainer3", {
   data: [{
     type:"line",
     axisYType: "secondary",
-    name: "DATA UPDATE",
+    name: "DATA UPDATE: " +somaSMS,
     showInLegend: true,
     type: "spline",
     dataPoints: jsonSMS
@@ -339,7 +340,7 @@ var chart3 = new CanvasJS.Chart("chartContainer3", {
   {
     type:"line",
     axisYType: "secondary",
-    name: "DATA CRIAÇÃO",
+    name: "DATA CRIAÇÃO: " +somaSMS2,
     showInLegend: true,
     type: "spline",
     dataPoints: jsonSMS2
