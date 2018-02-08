@@ -1,0 +1,3 @@
+ErrorDocument 404 /new404.php
+
+Options -Indexes 
