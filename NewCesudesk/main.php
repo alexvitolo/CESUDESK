@@ -1,7 +1,11 @@
 <?php include '..\NewCesudesk\connectionNEWCESUDESK.php'; 
 
-
 session_start();
+
+if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
+    // Ação a ser executada: mata o script e manda uma mensagem
+   echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
+}
 
 ?>
 
@@ -68,7 +72,7 @@ session_start();
 			</li>
 			<li><a href="widgets.html"><em class="fa fa-calendar">&nbsp;</em> Widgets</a></li>
 			<li><a href="charts.html"><em class="fa fa-bar-chart">&nbsp;</em> Charts</a></li>
-			<li><a href="index.php"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
+			<li><a href="ValidaLogout.php"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
 		</ul>
 	</div><!--/.sidebar-->
 		

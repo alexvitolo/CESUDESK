@@ -100,7 +100,7 @@ sqlsrv_execute($result_Usuario);
                   }   
                   else {
                              sqlsrv_free_stmt($result_InsertLoggedUser);
-                             echo  '<script type="text/javascript">alert("Bem-Vindo!");</script>';
+                             // echo  '<script type="text/javascript">alert("Bem-Vindo!");</script>';
                              echo  '<script type="text/javascript"> window.location.href = "main.php" </script>';
                     }
                   
