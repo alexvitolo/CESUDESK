@@ -1,0 +1,4 @@
+ErrorDocument 404 /CESUDESK/NewCesudesk/new404.php
+ErrorDocument 403 /CESUDESK/NewCesudesk/new404.php
+
+Options -Indexes 

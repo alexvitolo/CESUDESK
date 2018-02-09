@@ -40,7 +40,7 @@ $ACESSO_ADM = $_POST['ACESSO_ADM'];
                                         ('{$NOME}'
                                         ,'{$USUARIO}'
                                         ,'{$SENHA}'
-                                        ,'{$ACESSO_ADM}'
+                                        ,{$ACESSO_ADM}
                                         ,'S' )  ";
 
       $result_InsertSquilaUsuario = sqlsrv_query($conn, $insertSquilaUsuario); 
