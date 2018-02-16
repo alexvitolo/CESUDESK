@@ -8,6 +8,61 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 }
 
 
+$COD_CHAMADO = $_POST['cd_tarefa'];
+
+
+$squilVisu = "SELECT T.cd_tarefa
+                    ,T.desc_tarefa
+                    ,T.dh_cadastro
+                    ,T.dh_entrega_prev
+                    ,T.dh_fechamento
+                    ,T.inf_complementar
+                    ,T.prioridade
+                    ,T.qt_horasgastastarefa
+                    ,T.tem_anexo
+                    ,T.titulo
+                    ,T.tp_statustarefa
+                    ,T.cd_modulo
+                    ,T.projeto_cd_projeto
+                    ,T.solicitante_cd_usuario
+                    ,T.cd_tipotarefa
+                    ,P.desc_projeto
+                    ,M.desc_modulo
+                    ,TP.desc_tipotarefa
+               FROM DB_CRM_CESUDESK.dbo.tarefa T
+         INNER JOIN DB_CRM_CESUDESK.dbo.projeto P ON P.cd_projeto = T.projeto_cd_projeto
+         INNER JOIN DB_CRM_CESUDESK.dbo.modulo M ON M.cd_modulo = T.cd_modulo
+         INNER JOIN DB_CRM_CESUDESK.dbo.tipotarefa TP ON TP.cd_tipotarefa = T.cd_tipotarefa
+              WHERE T.cd_tarefa = {$COD_CHAMADO} ";
+
+$result_squilaVisu = sqlsrv_prepare($conn, $squilVisu);
+sqlsrv_execute($result_squilaVisu);
+
+$vetorSQLVisu = sqlsrv_fetch_array($result_squilaVisu);
+
+$dh_cadastro = date_format($vetorSQLVisu['dh_cadastro'], "Y-m-d");
+$dh_entrega_prev = date_format($vetorSQLVisu['dh_entrega_prev'], "Y-m-d");
+
+   if ($vetorSQLVisu['dh_fechamento'] <> '' ){
+       $dh_fechamento = date_format($vetorSQLVisu['dh_fechamento'], "Y-m-d");
+   }else{
+   	   $dh_fechamento = '';
+   }
+
+
+
+$squilAnexo = "SELECT A.cd_tarefa
+					 ,B.anexos_id
+					 ,C.nm_anexo as NomeArq
+                 FROM DB_CRM_CESUDESK.dbo.tarefa A 
+           INNER JOIN DB_CRM_CESUDESK.dbo.tarefa_anexo B on B.tarefa_cd_tarefa= A.cd_tarefa
+           INNER JOIN DB_CRM_CESUDESK.dbo.anexo C on C.id = B.anexos_id
+                WHERE A.cd_tarefa = {$COD_CHAMADO} ";
+
+$result_squilaAnexo = sqlsrv_prepare($conn, $squilAnexo);
+sqlsrv_execute($result_squilaAnexo);
+
+
 
 ?>
 
@@ -112,19 +167,20 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 								<h4>Dados Iniciais</h4>
 								<div class="form-group">
 									<label>Data de Cadastro</label>
-									<input name="" class="form-control" type="date" placeholder="" value="<?php echo date('Y-m-d'); ?>" readonly>
+									<input name="" class="form-control" type="date" placeholder="" value="<?php echo $dh_cadastro; ?>" readonly>
 								</div>
 								<div class="form-group">
 									<label>Data de Entrega</label>
-									<input name="dataEntrega" id="dataentrega" class="form-control" type="date" placeholder="">
+									<input name="dataEntrega" id="dataentrega" class="form-control" type="date" value="<?php echo $dh_entrega_prev; ?>" readonly>
+								</div>
+								<div class="form-group">
+									<label>Data Fechamento</label>
+									<input name="dataEntrega" id="datafechamento" class="form-control" type="date" value="<?php echo $dh_fechamento; ?>" readonly>
 								</div>
 									<div class="form-group">
 										<label>Prioridade</label>
 										<select name="" class="form-control">
-											<option>0</option>
-											<option>1</option>
-											<option>2</option>
-											<option>3</option>
+											<option><?php echo $vetorSQLVisu['prioridade']; ?></option>
 										</select>
 									</div>
 							</div>
@@ -134,28 +190,19 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 									<div class="form-group">
 										<label>Projeto</label>
 										<select name="" class="form-control">
-											<option>Option 1</option>
-											<option>Option 2</option>
-											<option>Option 3</option>
-											<option>Option 4</option>
+											<option><?php echo $vetorSQLVisu['desc_projeto']; ?></option>
 										</select>
 									</div>
 									<div class="form-group">
 										<label>Módulo</label>
 										<select name="" class="form-control">
-											<option>Option 1</option>
-											<option>Option 2</option>
-											<option>Option 3</option>
-											<option>Option 4</option>
+											<option><?php echo $vetorSQLVisu['desc_modulo']; ?></option>
 										</select>
 									</div>
 									<div class="form-group">
 										<label>Tipo de Tarefa</label>
 										<select name="" class="form-control">
-											<option>Option 1</option>
-											<option>Option 2</option>
-											<option>Option 3</option>
-											<option>Option 4</option>
+											<option><?php echo $vetorSQLVisu['desc_tipotarefa']; ?></option>
 										</select>
 									</div>
 									<div class="form-group">
@@ -170,16 +217,14 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 							<div class="tab-pane fade" id="tab3">
 								<h4>Anexos</h4>
 								<div class="form-group">
-									<label>Carregar Anexo</label>
-									<input type="file" name="anexo[1]">
-									<p class="help-block">Selecione um arquivo para anexar ao chamado.</p>
-									<div class="addJS"></div>
-								</div>
-								<button type="button" id='CriarAnexo'>Adicionar um novo anexo</button>
-								<button type="button" id='RemoverAnexo'>Limpar</button>
+								   <?php while ($row = sqlsrv_fetch_array($result_squilaAnexo)){ ?>
+								       <label>Carregar Anexo</label>
+									    <a href="ChamadoDownload.php?COD_CHAMADO=<?php echo $row['cd_tarefa']; ?>&ANEXO_ID=<?php echo $row['anexos_id']; ?>"><input type="button" value="<?php echo $row['NomeArq']; ?>" ></input></a><br><br>
+                                   <?php } ?>
 								</div>
 							</div>
 						</div>
+					</div>
 				</div><!--/.panel-->
 			   <button type="submit" onclick="return validar()" class="btn btn-primary">Abrir Chamado</button>
 			   <button type="reset" class="btn btn-default">Limpar Cadastro</button>
@@ -198,8 +243,8 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 	<script src="js/custom.js"></script>
 
 	<script language="javascript" type="text/javascript">
-		var aux =2 ; //Variavel indice para anexos
-		window.onload = function () 
+
+		window.onload = function ()
 		{
 	       var chart1 = document.getElementById("line-chart").getContext("2d");
 	       window.myLine = new Chart(chart1).Line(lineChartData, {
@@ -249,18 +294,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
             }
         };
 
-        $('#CriarAnexo').click(function(){
-        	$('.addJS').append("<div id='JSid'> <input type='file' name='anexo["+aux+"]'> <p class='help-block'>Selecione um arquivo para anexar ao chamado.</p> </div>");
-        	aux++;
-
-        });
-
-        $('#RemoverAnexo').click(function(){
-        	$("#JSid").remove();
-
-        });
-	
-	
+        
 	</script>
 		
 </body>
