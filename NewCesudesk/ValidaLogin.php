@@ -21,6 +21,7 @@ if ($_POST["SENHAVALIDA"] == "") {
 
 $squilaUsuario = "SELECT 
                       tl.NOME
+                     ,tl.ID
                      ,tl.USUARIO
                      ,tl.SENHA_USUARIO
                      ,tl.ACESSO_ADM
@@ -41,6 +42,7 @@ sqlsrv_execute($result_Usuario);
       $senhaCorreta = $row["SENHA_USUARIO"];
       $_SESSION['ID_COLABORADOR'] = $row["ID_COLABORADOR"];
       $_SESSION['MATRICULA'] = $row["ID_MATRICULA"];
+      $_SESSION['IDLOGIN'] = $row["ID"];
       $primeiraL = explode(" ", $row["NOME"]);
       $_SESSION['NOME'] = $primeiraL[0];
 

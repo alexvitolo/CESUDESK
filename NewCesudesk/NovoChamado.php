@@ -2,12 +2,37 @@
 
 session_start();
 
+$dataValida = date("Y-m-d" ,strtotime("now"));
+
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
     // Ação a ser executada: mata o script e manda uma mensagem
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
 
+
+$squilaProjeto = "SELECT cd_projeto
+                        ,desc_projeto
+                    FROM DB_CRM_CESUDESK.dbo.projeto ORDER by 1 DESC";
+
+$result_Projeto = sqlsrv_prepare($conn, $squilaProjeto);
+sqlsrv_execute($result_Projeto);
+
+
+$squilaModulo = "SELECT cd_modulo
+                        ,desc_modulo
+                    FROM DB_CRM_CESUDESK.dbo.modulo";
+
+$result_Modulo = sqlsrv_prepare($conn, $squilaModulo);
+sqlsrv_execute($result_Modulo);
+
+
+$squilaTipoTarefa = "SELECT cd_tipotarefa
+                       ,desc_tipotarefa
+                   FROM DB_CRM_CESUDESK.dbo.tipotarefa";
+
+$result_TipoTarefa = sqlsrv_prepare($conn, $squilaTipoTarefa);
+sqlsrv_execute($result_TipoTarefa);
 
 ?>
 
@@ -16,7 +41,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Lumino - Dashboard</title>
+	<title>NewCesudesk - CRM</title>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/datepicker3.css" rel="stylesheet">
@@ -70,6 +95,11 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
+					<?php  if ($_SESSION['ACESSO'] == 1){ ?>
+					<li><a class="" href="DistribuirChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Distribuir Chamado
+					</a></li>
+					<?php }; ?>
 				</ul>
 			</li>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
@@ -99,7 +129,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 				<h2>Gestão Chamado</h2>
 			</div>
 			<div class="col-md-10">
-			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaCadastroChamado.php">
+			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaCadastroChamado.php" enctype="multipart/form-data">
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
@@ -112,15 +142,15 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 								<h4>Dados Iniciais</h4>
 								<div class="form-group">
 									<label>Data de Cadastro</label>
-									<input name="" class="form-control" type="date" placeholder="" value="<?php echo date('Y-m-d'); ?>" readonly>
+									<input name="DATA_CADASTRO" class="form-control" type="date" placeholder="" value="<?php echo date('Y-m-d'); ?>" readonly>
 								</div>
 								<div class="form-group">
 									<label>Data de Entrega</label>
-									<input name="dataEntrega" id="dataentrega" class="form-control" type="date" placeholder="">
+									<input name="DATA_ENTREGA" id="dataentrega" min="<?php echo $dataValida ?>" class="form-control" type="date" placeholder="Data da Entrega">
 								</div>
 									<div class="form-group">
 										<label>Prioridade</label>
-										<select name="" class="form-control">
+										<select name="PRIORIDADE" class="form-control">
 											<option>0</option>
 											<option>1</option>
 											<option>2</option>
@@ -133,29 +163,26 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 								<h4>Dados da Solicitação</h4>
 									<div class="form-group">
 										<label>Projeto</label>
-										<select name="" class="form-control">
-											<option>Option 1</option>
-											<option>Option 2</option>
-											<option>Option 3</option>
-											<option>Option 4</option>
+										<select name="PROJETO" class="form-control">
+											 <?php while ($row = sqlsrv_fetch_array($result_Projeto)){ ?>
+											   <option value="<?php echo $row['cd_projeto']; ?>"><?php echo $row['desc_projeto'] ;?></option>
+											<?php } ?>
 										</select>
 									</div>
 									<div class="form-group">
 										<label>Módulo</label>
-										<select name="" class="form-control">
-											<option>Option 1</option>
-											<option>Option 2</option>
-											<option>Option 3</option>
-											<option>Option 4</option>
+										<select name="MODULO" class="form-control">
+											<?php while ($row = sqlsrv_fetch_array($result_Modulo)){ ?>
+											   <option value="<?php echo $row['cd_modulo']; ?>"><?php echo $row['desc_modulo'] ;?></option>
+											<?php } ?>
 										</select>
 									</div>
 									<div class="form-group">
 										<label>Tipo de Tarefa</label>
-										<select name="" class="form-control">
-											<option>Option 1</option>
-											<option>Option 2</option>
-											<option>Option 3</option>
-											<option>Option 4</option>
+										<select name="TIPO_TAREFA" class="form-control">
+											<?php while ($row = sqlsrv_fetch_array($result_TipoTarefa)){ ?>
+											   <option value="<?php echo $row['cd_tipotarefa']; ?>"><?php echo $row['desc_tipotarefa'] ;?></option>
+											<?php } ?>
 										</select>
 									</div>
 									<div class="form-group">
@@ -212,7 +239,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 
        function validar() 
        {           
-           if (FormCha.dataEntrega.value == "") {
+           if (FormCha.DATA_ENTREGA.value == "") {
            	alert('Preencha o campo "Data de Entrega"');
            	document.getElementById("tab1").className = "tab-pane fade in active";
            	document.getElementById("litab1").className = "active";
@@ -220,7 +247,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
    			document.getElementById("litab2").className = "";
    			document.getElementById("tab3").className = "tab-pane fade";
    			document.getElementById("litab3").className = "";
-           	FormCha.dataEntrega.focus();
+           	FormCha.DATA_ENTREGA.focus();
            	return false;
            }
 
@@ -247,6 +274,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
            	FormCha.descSoli.focus();
            	return false;
             }
+            return true;
         };
 
         $('#CriarAnexo').click(function(){

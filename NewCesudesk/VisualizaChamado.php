@@ -9,7 +9,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 
 
 $COD_CHAMADO = $_POST['cd_tarefa'];
-
+$ID_USUARIO = $_SESSION['IDLOGIN'];
 
 $squilVisu = "SELECT T.cd_tarefa
                     ,T.desc_tarefa
@@ -71,11 +71,12 @@ sqlsrv_execute($result_squilaAnexo);
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Lumino - Dashboard</title>
+	<title>NewCesudesk - CRM</title>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/datepicker3.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="VisualizaChamado.css">
 	
 	<!--Custom Font-->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -125,6 +126,11 @@ sqlsrv_execute($result_squilaAnexo);
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
+					<?php  if ($_SESSION['ACESSO'] == 1){ ?>
+					<li><a class="" href="DistribuirChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Distribuir Chamado
+					</a></li>
+					<?php }; ?>
 				</ul>
 			</li>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
@@ -154,13 +160,14 @@ sqlsrv_execute($result_squilaAnexo);
 				<h2>Gestão Chamado</h2>
 			</div>
 			<div class="col-md-10">
-			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaCadastroChamado.php">
+			 <form role="form" name="FormCha" method="post" id="formulario" action="">
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
 							<li class="active" id="litab1"><a href="#tab1" data-toggle="tab">Dados Iniciais</a></li>
 							<li id="litab2"><a href="#tab2" data-toggle="tab">Dados da Solicitação</a></li>
 							<li id="litab3"><a href="#tab3" data-toggle="tab">Anexos</a></li>
+							<li id="litab4"><a href="#tab4" data-toggle="tab">Comentários</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="tab1">
@@ -207,11 +214,11 @@ sqlsrv_execute($result_squilaAnexo);
 									</div>
 									<div class="form-group">
 									    <label>Título (Resumo da Solicitação)</label>
-									    <input name="resumoSoli" class="form-control" placeholder="Digite o título do chamado">
+									    <input name="resumoSoli" class="form-control" value="<?php echo $vetorSQLVisu['titulo']; ?>">
 								    </div>
 								    <div class="form-group">
 									    <label>Descrição</label>
-									    <textarea name="descSoli" class="form-control" rows="3"></textarea>
+									    <textarea name="descSoli" class="form-control" value=""><?php echo $vetorSQLVisu['desc_tarefa']; ?></textarea>
 								    </div>
 							</div>
 							<div class="tab-pane fade" id="tab3">
@@ -223,12 +230,31 @@ sqlsrv_execute($result_squilaAnexo);
                                    <?php } ?>
 								</div>
 							</div>
+		    </form>
+							<div class="tab-pane fade" id="tab4">
+								<h4>Comentários</h4>
+								<div class="form-group">
+									<form name="form1" id="form1">
+                                        <br />
+                                        Mensagem: <br />
+                                        <textarea name="msg"></textarea><br />
+                                        <a href="#" onclick="submitChat();">Send</a><br /><br />
+                                        </form>
+                                        <div class="chatbox">
+                                        	<div class="chatlogs">
+                                                 <div id="chatlogs">
+                                                  LOADING CHATLOG...
+                                                 </div>
+                                            </div>
+                                        </div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div><!--/.panel-->
-			   <button type="submit" onclick="return validar()" class="btn btn-primary">Abrir Chamado</button>
-			   <button type="reset" class="btn btn-default">Limpar Cadastro</button>
-			   </form><br><br>
+			   <button type="submit" onclick="return validar()" class="btn btn-primary">Atualizar Chamado</button>
+			   <button type="" class="btn btn-default">Cancelar</button>
+			   <br><br>
 			</div><!--/.col-->
 		</div><!--/.row-->
 	</div>	<!--/.main-->
@@ -296,6 +322,45 @@ sqlsrv_execute($result_squilaAnexo);
 
         
 	</script>
-		
+
+
+ <script
+  src="http://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+
+<script>
+
+function submitChat() {
+	if(form1.msg.value == '') {
+		alert("Campo Mensagem Obrigatório");
+		return;
+	}
+	var idLogin = <?php echo $ID_USUARIO ;?> ;
+	var msg = form1.msg.value; 
+	var codChamado = <?php echo $COD_CHAMADO ;?> ;
+	var xmlhttp = new XMLHttpRequest();
+	
+	xmlhttp.onreadystatechange = function() {
+		if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			document.getElementById('chatlogs').innerHTML = xmlhttp.responseText;
+		}
+	}
+	
+	xmlhttp.open('GET','ChamadoChatInsert.php?idLogin='+idLogin+'&msg='+msg+'&codChamado='+codChamado,true);
+	xmlhttp.send();
+
+}
+
+$(document).ready(function(e){
+	$.ajaxSetup({
+		cache: false
+	});
+	setInterval( function(){ $('#chatlogs').load('ChamadoChatLogs.php'); }, 2000 );
+});
+
+</script>
+
+
 </body>
 </html>

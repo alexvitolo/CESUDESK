@@ -7,6 +7,12 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
+if ($_SESSION['ACESSO'] <> 1 )  {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+}
+
+
 $ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
 $ID_LOGIN = $_SESSION['IDLOGIN'];
 
@@ -21,8 +27,8 @@ $squilaChamado = "SELECT cd_tarefa
                         ,solicitante_cd_usuario
                         ,cd_tipotarefa
                   FROM DB_CRM_CESUDESK.dbo.tarefa
-                 WHERE solicitante_cd_usuario = {$ID_LOGIN}
-              ORDER BY dh_entrega_prev desc";
+                 WHERE tp_statustarefa in ('Andamento','Aberta')
+              ORDER BY dh_entrega_prev asc";
 
 $result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
 sqlsrv_execute($result_squilaChamado);
@@ -91,10 +97,9 @@ sqlsrv_execute($result_squilaChamado);
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
-					
 					<?php  if ($_SESSION['ACESSO'] == 1){ ?>
 					<li><a class="" href="DistribuirChamados.php">
-						<span class="fa fa-arrow-right">&nbsp;</span> Distribuir Chamados
+						<span class="fa fa-arrow-right">&nbsp;</span> Distribuir Chamado
 					</a></li>
 					<?php }; ?>
 				</ul>
@@ -117,21 +122,21 @@ sqlsrv_execute($result_squilaChamado);
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Meus Chamados</h1>
+				<h1 class="page-header">Triagem</h1>
 			</div>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h2>Gestão Chamado</h2>
+				<h2>Distribuir Chamado para Equipe CRM</h2>
 			</div>
 			<div class="col-md-10">
 			 <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="VisualizaChamado.php">
+                        <form name="Form" method="post" id="formulario" action="RealizaTriagem.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela Colaboradores </h4>
+                            <h4><i class="fa fa-right"></i> Tabela de Chamados Abertos e Andamento </h4>
                             <hr>
                               <thead>
                               <tr>
@@ -140,7 +145,7 @@ sqlsrv_execute($result_squilaChamado);
                                   <th><i class=""></i> Prioridade </th>
                                   <th><i class=""></i> Data Entrega </th>
                                   <th><i class=""></i> Status </th>
-                                  <th><i class=""></i> Visualizar </th>
+                                  <th><i class=""></i> Direcionar Triagem </th>
 
                               </tr>
                               </thead>
@@ -149,7 +154,7 @@ sqlsrv_execute($result_squilaChamado);
                               	<?php  while($row = sqlsrv_fetch_array($result_squilaChamado)) { 
                                     if ($row['tp_statustarefa'] == "Fechada") {
                                       $corStatus = "label label-danger label-mini";
-                                    }elseif ($row['tp_statustarefa'] == "Andamento") {
+                                    }elseif ($row['tp_statustarefa'] == "Aberta") {
                                       $corStatus = "label label-success  label-mini";
                                     }else{
                                       $corStatus = "label label-warning  label-mini";
@@ -163,7 +168,7 @@ sqlsrv_execute($result_squilaChamado);
                       
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button style="margin-left: 25px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
+                                      <button style="margin-left: 50px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 
