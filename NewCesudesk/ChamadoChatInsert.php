@@ -3,7 +3,7 @@
 
 
 $idLogin = $_REQUEST['idLogin'];
-$msg   = $_REQUEST['msg'];
+$msg   = str_replace("'", '"', $_REQUEST['msg']);
 $codChamado = $_REQUEST['codChamado'];
 
 $ChatInsert = "INSERT INTO [DB_CRM_CESUDESK].[dbo].[mensagem_logs] (id_usuario, msg, id_tarefa) 
@@ -20,7 +20,11 @@ if (!($result_insert)) {
         }
 
 
-$ChatSelect = "SELECT B.USUARIO as username, A.msg, B.id as idLogin FROM [DB_CRM_CESUDESK].[dbo].[mensagem_logs] A INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_login] B ON A.id_usuario = B.id ORDER BY A.id DESC";
+$ChatSelect = "SELECT B.USUARIO as username, A.msg, B.id as idLogin 
+                 FROM [DB_CRM_CESUDESK].[dbo].[mensagem_logs] A 
+           INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_login] B ON A.id_usuario = B.id 
+                WHERE A.id_tarefa = {$codChamado}
+             ORDER BY A.id DESC";
 
 $result1 = sqlsrv_prepare($conn, $ChatSelect);
 sqlsrv_execute($result1);

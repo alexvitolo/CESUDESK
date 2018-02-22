@@ -7,7 +7,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
-$ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
+$ID_LOGIN       = $_SESSION['IDLOGIN'];
 $DATA_CADASTRO  = $_POST ["DATA_CADASTRO"]; // getdate();
 $DATA_ENTREGA   = $_POST ["DATA_ENTREGA"];
 $PRIORIDADE     = $_POST ["PRIORIDADE"];
@@ -44,7 +44,7 @@ $insertTarefa = " INSERT INTO [DB_CRM_CESUDESK].[dbo].[tarefa]
                              ,'Aberta'
                              ,{$MODULO}
                              ,{$PROJETO}
-                             ,{$ID_COLABORADOR}
+                             ,{$ID_LOGIN}
                              ,{$TIPO_TAREFA})";
 
                    

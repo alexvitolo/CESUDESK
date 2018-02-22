@@ -68,13 +68,22 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
-					<?php  if ($_SESSION['ACESSO'] == 1){ ?>
+				</ul>
+			</li>
+			<?php  if ($_SESSION['ACESSO'] == 1){ ?>
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-2">
+				<em class="fa fa-bug">&nbsp;</em> CRM <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
+				</a>
+				<ul class="children collapse" id="sub-item-2">
 					<li><a class="" href="DistribuirChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Distribuir Chamado
 					</a></li>
-					<?php }; ?>
+					<li><a class="" href="TratarChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
+					</a></li>
 				</ul>
 			</li>
+		    <?php }; ?>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
 			<li><a href="../AdmCrm/login.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
 			<li><a href="ValidaLogout.php"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>

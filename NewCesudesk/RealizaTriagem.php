@@ -11,17 +11,32 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 $COD_CHAMADO = $_POST['cd_tarefa'];
 $ID_USUARIO = $_SESSION['IDLOGIN'];
 
-$squilaUsuario= "SELECT ID
-                       ,USUARIO
-                       ,BO_ATIVO
-                       ,NOME
-                       ,RECEBE_TRIAGEM
-                  FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] 
+$squilaUsuario= "SELECT L.ID
+                       ,L.USUARIO
+                       ,L.BO_ATIVO
+                       ,L.NOME
+                       ,L.RECEBE_TRIAGEM
+                       ,ISNULL((SELECT 'S'
+                                  FROM [DB_CRM_CESUDESK].[dbo].[triagem] A 
+                            INNER JOIN [DB_CRM_CESUDESK].[dbo].[tarefa_triagem] B ON A.idtriagem = B.triagens_idtriagem
+					             WHERE B.tarefa_cd_tarefa = {$COD_CHAMADO}
+                                   AND A.cd_usuario = L.ID),'N') AS POSSUI_CHAMADO
+                  FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] L
                  WHERE RECEBE_TRIAGEM = 'S' 
                    AND BO_ATIVO = 'S' ";
 
 $result_squilaUsuario = sqlsrv_prepare($conn, $squilaUsuario);
 sqlsrv_execute($result_squilaUsuario);
+
+
+$squilaDesc   = "SELECT desc_tarefa
+                   FROM [DB_CRM_CESUDESK].[dbo].[tarefa]
+                  WHERE cd_tarefa = {$COD_CHAMADO}";
+
+$result_squilaDesc = sqlsrv_prepare($conn, $squilaDesc);
+sqlsrv_execute($result_squilaDesc);
+
+$vetorSQLDesc = sqlsrv_fetch_array($result_squilaDesc);
 
 
 ?>
@@ -36,7 +51,7 @@ sqlsrv_execute($result_squilaUsuario);
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/datepicker3.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="VisualizaChamado.css">
+	<link rel="stylesheet" type="text/css" href="RealizaTriagem.css">
 	
 	<!--Custom Font-->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -76,7 +91,7 @@ sqlsrv_execute($result_squilaUsuario);
 		<!-- </form> -->
 		<ul class="nav menu">
 			<li class=""><a href="main.php"><em class="fa fa-dashboard">&nbsp;</em>Resumo</a></li>
-			<li class="parent active"><a data-toggle="collapse" href="#sub-item-1">
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Chamados <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-1">
@@ -86,13 +101,22 @@ sqlsrv_execute($result_squilaUsuario);
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
-					<?php  if ($_SESSION['ACESSO'] == 1){ ?>
+				</ul>
+			</li>
+            <?php  if ($_SESSION['ACESSO'] == 1){ ?>
+			<li class="parent active"><a data-toggle="collapse" href="#sub-item-2">
+				<em class="fa fa-bug">&nbsp;</em> CRM <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
+				</a>
+				<ul class="children collapse" id="sub-item-2">
 					<li><a class="" href="DistribuirChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Distribuir Chamado
 					</a></li>
-					<?php }; ?>
+					<li><a class="" href="TratarChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
+					</a></li>
 				</ul>
 			</li>
+			<?php }; ?>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
 			<li><a href="../AdmCrm/login.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
 			<li><a href="ValidaLogout.php"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
@@ -120,7 +144,7 @@ sqlsrv_execute($result_squilaUsuario);
 				<h2>Escolha os colaboradores para receber a triagem</h2>
 			</div>
 			<div class="col-md-10">
-			 <form role="form" name="FormCha" method="post" id="formulario" action="">
+			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaTriagem.php">
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
@@ -128,26 +152,51 @@ sqlsrv_execute($result_squilaUsuario);
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="tab1">
-								<h4>Usuários</h4>                                                                                                                                                                                                                                
+
 								<div class="form-group">
-								   <select name="USUARIO_TRIAGEM[]" class="form-control">
-											 <?php while ($row = sqlsrv_fetch_array($result_squilaUsuario)){ ?>
-											   <option value="<?php echo $row['ID']; ?>"><?php echo $row['NOME'] ;?></option>
-											<?php } ?>
-								   </select><br>
-								   <div class="addJSUsuario"></div>
+							        <br><label>Chamado: </label>  <?php echo $COD_CHAMADO ?> <input type="hidden" value="<?php echo $COD_CHAMADO; ?>" name="COD_CHAMADO">
 								</div>
-								<button type="button" id='CriarUsuario'>Adicionar um novo Usuário</button>
-								<button type="button" id='RemoverUsuario'>Limpar</button>
-							</div>
-		                </form>
-							
+								<div class="form-group">
+							        <label>Descrição</label>
+							        <textarea readonly name="descSoli" class="form-control" value=""><?php echo $vetorSQLDesc['desc_tarefa']; ?></textarea>
+								</div>
+								<h4>Usuários</h4>                                                           
+								<div class="form-group">
+								   
+									<div class="card mb-5">
+                                      <div class="card-header">Fearures</div>
+                                        <div class="card-block p-0">
+                                          <table class="table table-bordered table-sm m-0">
+                                              <thead class="">
+                                                  <tr>
+                                                      <th>Triagem</th>
+                                                      <th>Nome Colaborador</th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody>
+                                              	<?php while ($row = sqlsrv_fetch_array($result_squilaUsuario)) { ?>
+                                                  <tr>
+                                                      <td>
+                                                          <div class="toggle-btn <?php if($row['POSSUI_CHAMADO'] == "S"){ echo "active";}  ; ?>">
+                                                             <input type="checkbox" name ="CheckboxID[]" class="cb-value" value="<?php echo $row['ID']; ?>" />
+                                                             <span class="round-btn"></span>
+                                                          </div>
+                                                      </td>
+                                                      <td><?php echo $row ['NOME'] ; ?></td>
+                                                  </tr>
+                                                <?php }; ?>
+                                              </tbody>
+                                          </table>
+                                       </div>
+                                    </div>
+								</div>
+							</div>	
 						</div>
 					</div>
 				</div><!--/.panel-->
-			   <button type="submit" onclick="return validar()" class="btn btn-primary">Realizar Triagem</button>
+			   <button type="submit" class="btn btn-primary">Realizar Triagem</button>
 			   <button type="" class="btn btn-default">Cancelar</button>
-			   <br><br>
+			   </form><br><br>
 			</div><!--/.col-->
 		</div><!--/.row-->
 	</div>	<!--/.main-->
@@ -160,22 +209,19 @@ sqlsrv_execute($result_squilaUsuario);
 	<script src="js/easypiechart-data.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/custom.js"></script>
+	<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 
-<script language="javascript" type="text/javascript">
-		var aux =2 ; //Variavel indice para anexos
+	<script>
+		$('.cb-value').click(function() {
+            var mainParent = $(this).parent('.toggle-btn');
+            
+            if($(mainParent).find('input.cb-value').is(':checked')) {
+                $(mainParent).addClass('active');
+            } else {
+                $(mainParent).removeClass('active');
+            }
 
-		$('#CriarUsuario').click(function(){
-        	$('.addJSUsuario').append("<div id='JSidUsuario'> <input type='file' name='anexo["+aux+"]'> <p class='help-block'>Selecione um arquivo para anexar ao chamado.</p> </div>");
-        	aux++;
-
-        });
-
-        $('#RemoverUsuario').click(function(){
-        	$("#JSidUsuario").remove();
-
-        });
-	
-	
+         });
 	</script>
 
 </body>

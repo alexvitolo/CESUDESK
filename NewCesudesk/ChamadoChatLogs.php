@@ -3,8 +3,13 @@
 session_start();
 
 $ID_USUARIO = $_SESSION['IDLOGIN'];
+$codChamado = $_SESSION['chamadoChat'];
 
-$squila = "SELECT B.USUARIO as username, A.msg , B.id as idLogin FROM [DB_CRM_CESUDESK].[dbo].[mensagem_logs] A INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_login] B ON A.id_usuario = B.id ORDER BY A.id DESC";
+$squila = "SELECT B.USUARIO as username, A.msg , B.id as idLogin 
+			 FROM [DB_CRM_CESUDESK].[dbo].[mensagem_logs] A 
+	   INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_login] B ON A.id_usuario = B.id 
+	   		WHERE A.id_tarefa = {$codChamado}
+	     ORDER BY A.id DESC";
 
 $result1 = sqlsrv_prepare($conn, $squila);
 sqlsrv_execute($result1);

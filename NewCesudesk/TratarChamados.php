@@ -7,28 +7,25 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
-if ($_SESSION['ACESSO'] <> 1 )  {
- // Ação a ser executada: mata o script e manda uma mensagem
- echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
-}
-
-
 $ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
 $ID_LOGIN = $_SESSION['IDLOGIN'];
 
 
-$squilaChamado = "SELECT cd_tarefa
-                        ,dh_entrega_prev
-                        ,prioridade
-                        ,titulo
-                        ,tp_statustarefa
-                        ,cd_modulo
-                        ,projeto_cd_projeto
-                        ,solicitante_cd_usuario
-                        ,cd_tipotarefa
-                  FROM DB_CRM_CESUDESK.dbo.tarefa
-                 WHERE tp_statustarefa in ('Andamento','Aberta')
-              ORDER BY dh_entrega_prev asc";
+$squilaChamado = "SELECT T.cd_tarefa
+                        ,T.dh_entrega_prev
+                        ,T.prioridade
+                        ,T.titulo
+                        ,T.tp_statustarefa
+                        ,T.cd_modulo
+                        ,T.projeto_cd_projeto
+                        ,T.solicitante_cd_usuario
+                        ,T.cd_tipotarefa
+                  FROM DB_CRM_CESUDESK.dbo.tarefa T
+            INNER JOIN DB_CRM_CESUDESK.dbo.tarefa_triagem TR ON TR.tarefa_cd_tarefa = T.cd_tarefa
+            INNER JOIN DB_CRM_CESUDESK.dbo.triagem R ON R.idtriagem = TR.triagens_idtriagem
+                 WHERE R.cd_usuario = {$ID_LOGIN}
+                   AND R.tp_statustriagem in ('Andamento','Aberto')
+              ORDER BY T.dh_entrega_prev asc";
 
 $result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
 sqlsrv_execute($result_squilaChamado);
@@ -125,27 +122,27 @@ sqlsrv_execute($result_squilaChamado);
 				<li><a href="#">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Meus Chamados</li>
+				<li class="active">Tratativa de Chamados</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Triagem</h1>
+				<h1 class="page-header">Chamados Triados</h1>
 			</div>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h2>Distribuir Chamado para Equipe CRM</h2>
+				<h2>Tratativa de Chamados</h2>
 			</div>
 			<div class="col-md-10">
 			 <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="RealizaTriagem.php">
+                        <form name="Form" method="post" id="formulario" action="TratarChamadosEdita.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela de Chamados Abertos e Andamento </h4>
+                            <h4><i class="fa fa-right"></i> Lista de Chamados para serem Tratados </h4>
                             <hr>
                               <thead>
                               <tr>
@@ -154,7 +151,7 @@ sqlsrv_execute($result_squilaChamado);
                                   <th><i class=""></i> Prioridade </th>
                                   <th><i class=""></i> Data Entrega </th>
                                   <th><i class=""></i> Status </th>
-                                  <th><i class=""></i> Direcionar Triagem </th>
+                                  <th><i class=""></i> Visualizar </th>
 
                               </tr>
                               </thead>
@@ -163,10 +160,10 @@ sqlsrv_execute($result_squilaChamado);
                               	<?php  while($row = sqlsrv_fetch_array($result_squilaChamado)) { 
                                     if ($row['tp_statustarefa'] == "Fechada") {
                                       $corStatus = "label label-danger label-mini";
-                                    }elseif ($row['tp_statustarefa'] == "Aberta") {
-                                      $corStatus = "label label-success  label-mini";
-                                    }else{
+                                    }elseif ($row['tp_statustarefa'] == "Andamento") {
                                       $corStatus = "label label-warning  label-mini";
+                                    }else{
+                                      $corStatus = "label label-success  label-mini";
                                     } 
                                     ?>                               
                                   <td><?php echo $row['cd_tarefa']; ?></a></td>
@@ -177,7 +174,7 @@ sqlsrv_execute($result_squilaChamado);
                       
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button style="margin-left: 50px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
+                                      <button style="margin-left: 25px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 

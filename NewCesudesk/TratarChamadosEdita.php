@@ -12,6 +12,7 @@ $COD_CHAMADO = $_POST['cd_tarefa'];
 $_SESSION['chamadoChat'] = $_POST['cd_tarefa'];
 $ID_USUARIO = $_SESSION['IDLOGIN'];
 
+
 $squilVisu = "SELECT T.cd_tarefa
                     ,T.desc_tarefa
                     ,T.dh_cadastro
@@ -140,9 +141,9 @@ sqlsrv_execute($result_squilaAnexo);
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
+		    <?php }; ?>
 				</ul>
 			</li>
-			<?php }; ?>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
 			<li><a href="../AdmCrm/login.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
 			<li><a href="ValidaLogout.php"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
@@ -178,6 +179,7 @@ sqlsrv_execute($result_squilaAnexo);
 							<li id="litab2"><a href="#tab2" data-toggle="tab">Dados da Solicitação</a></li>
 							<li id="litab3"><a href="#tab3" data-toggle="tab">Anexos</a></li>
 							<li id="litab4"><a href="#tab4" data-toggle="tab">Comentários</a></li>
+							<li id="litab4"><a href="#tab5" data-toggle="tab">Finalização</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="tab1">
@@ -257,6 +259,14 @@ sqlsrv_execute($result_squilaAnexo);
                                                  </div>
                                             </div>
                                         </div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="tab5">
+								<h4>Encerramento</h4><br>
+								<div class="form-group">
+								       <label>Finalizar Chamado</label>
+								        <button type="submit" class="btn btn-primary">Encerrar Chamado</button>
+									    <a></input></a><br><br>
 								</div>
 							</div>
 						</div>
