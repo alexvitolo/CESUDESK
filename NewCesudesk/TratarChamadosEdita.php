@@ -78,7 +78,7 @@ sqlsrv_execute($result_squilaAnexo);
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/datepicker3.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="VisualizaChamado.css">
+	<link rel="stylesheet" type="text/css" href="TratarChamadosEdita.css">
 	
 	<!--Custom Font-->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -118,7 +118,7 @@ sqlsrv_execute($result_squilaAnexo);
 		<!-- </form> -->
 		<ul class="nav menu">
 			<li class=""><a href="main.php"><em class="fa fa-dashboard">&nbsp;</em>Resumo</a></li>
-			<li class="parent active"><a data-toggle="collapse" href="#sub-item-1">
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Chamados <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-1">
@@ -131,7 +131,7 @@ sqlsrv_execute($result_squilaAnexo);
 				</ul>
 			</li>
             <?php  if ($_SESSION['ACESSO'] == 1){ ?>
-			<li class="parent"><a data-toggle="collapse" href="#sub-item-2">
+			<li class="parent active"><a data-toggle="collapse" href="#sub-item-2">
 				<em class="fa fa-bug">&nbsp;</em> CRM <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-2">
@@ -171,7 +171,7 @@ sqlsrv_execute($result_squilaAnexo);
 				<h2>Gestão Chamado</h2>
 			</div>
 			<div class="col-md-10">
-			 <form role="form" name="FormCha" method="post" id="formulario" action="">
+			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaTratarChamadosEdita.php" enctype="multipart/form-data">
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
@@ -240,7 +240,17 @@ sqlsrv_execute($result_squilaAnexo);
 								       <label>Carregar Anexo</label>
 									    <a href="ChamadoDownload.php?COD_CHAMADO=<?php echo $row['cd_tarefa']; ?>&ANEXO_ID=<?php echo $row['anexos_id']; ?>"><input type="button" value="<?php echo $row['NomeArq']; ?>" ></input></a><br><br>
                                    <?php } ?>
-								</div>
+
+                                        <h4>Adicionar Novo Anexo</h4>
+								        <div class="form-group">
+								        	<label>Carregar Anexo</label>
+								        	<input type="file" name="anexo[1]">
+								        	<p class="help-block">Selecione um arquivo para anexar ao chamado.</p><br>
+								        	<div class="addJS"></div>
+								        </div>
+								        <button type="button" id='CriarAnexo'>Adicionar um novo anexo</button>
+								        <button type="button" id='RemoverAnexo'>Limpar</button>
+								    </div>
 							</div>
 		    </form>
 							<div class="tab-pane fade" id="tab4">
@@ -249,8 +259,8 @@ sqlsrv_execute($result_squilaAnexo);
 									<form name="form1" id="form1">
                                         <br />
                                         Mensagem: <br />
-                                        <textarea name="msg"></textarea><br />
-                                        <a href="#" onclick="submitChat();">Send</a><br /><br />
+                                        <textarea name="msg" cols="100" rows="3" id="textareaMSG"></textarea><br />
+                                        <a href="#" id="SubChat" onclick="submitChat();">Send</a><br /><br />
                                         </form>
                                         <div class="chatbox">
                                         	<div class="chatlogs">
@@ -265,12 +275,13 @@ sqlsrv_execute($result_squilaAnexo);
 								<h4>Encerramento</h4><br>
 								<div class="form-group">
 								       <label>Finalizar Chamado</label>
-								        <button type="submit" class="btn btn-primary">Encerrar Chamado</button>
+								        <a href="ValidaEncerraChamado?COD_CHAMADO=<?php echo $COD_CHAMADO; ?>"><button type="button" class="btn btn-primary">Encerrar Chamado</button></a>
 									    <a></input></a><br><br>
 								</div>
 							</div>
 						</div>
 					</div>
+					<button type="submit" class="btn btn-primary">Atualizar Chamado</button>
 				</div><!--/.panel-->
 			   <br><br>
 			</div><!--/.col-->
@@ -287,6 +298,7 @@ sqlsrv_execute($result_squilaAnexo);
 	<script src="js/custom.js"></script>
 
 	<script language="javascript" type="text/javascript">
+		var aux =2 ; //Variavel indice para anexos
 
 		window.onload = function ()
 		{
@@ -330,12 +342,31 @@ function submitChat() {
 
 }
 
-$(document).ready(function(e){
-	$.ajaxSetup({
-		cache: false
-	});
-	setInterval( function(){ $('#chatlogs').load('ChamadoChatLogs.php'); }, 2000 );
-});
+    $(document).ready(function(e){
+    	$.ajaxSetup({
+    		cache: false
+    	});
+    	setInterval( function(){ $('#chatlogs').load('ChamadoChatLogs.php'); }, 2000 );
+    });
+
+
+        $('#CriarAnexo').click(function(){
+        	$('.addJS').append("<div id='JSid'> <input type='file' name='anexo["+aux+"]'> <p class='help-block'>Selecione um arquivo para anexar ao chamado.</p> </div>");
+        	aux++;
+
+        });
+
+        $('#RemoverAnexo').click(function(){
+        	$("#JSid").remove();
+
+        });
+
+        $("#textareaMSG").keyup(function(event) {
+            if (event.keyCode === 13) {
+                $("#SubChat").click();
+                document.getElementById("textareaMSG").value = "";
+            }
+        });
 
 </script>
 

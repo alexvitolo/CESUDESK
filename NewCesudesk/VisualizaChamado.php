@@ -247,8 +247,8 @@ sqlsrv_execute($result_squilaAnexo);
 									<form name="form1" id="form1">
                                         <br />
                                         Mensagem: <br />
-                                        <textarea name="msg"></textarea><br />
-                                        <a href="#" onclick="submitChat();">Send</a><br /><br />
+                                        <textarea name="msg" cols="100" rows="3" id="textareaMSG"></textarea><br />
+                                        <a href="#" id="SubChat" onclick="submitChat();">Send</a><br /><br />
                                         </form>
                                         <div class="chatbox">
                                         	<div class="chatlogs">
@@ -326,6 +326,14 @@ $(document).ready(function(e){
 	});
 	setInterval( function(){ $('#chatlogs').load('ChamadoChatLogs.php'); }, 2000 );
 });
+
+$("#textareaMSG").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#SubChat").click();
+        document.getElementById("textareaMSG").value = "";
+    }
+});
+
 
 </script>
 

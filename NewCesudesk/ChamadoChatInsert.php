@@ -6,8 +6,8 @@ $idLogin = $_REQUEST['idLogin'];
 $msg   = str_replace("'", '"', $_REQUEST['msg']);
 $codChamado = $_REQUEST['codChamado'];
 
-$ChatInsert = "INSERT INTO [DB_CRM_CESUDESK].[dbo].[mensagem_logs] (id_usuario, msg, id_tarefa) 
-                    VALUES ({$idLogin},'{$msg}',{$codChamado}) ";
+$ChatInsert = "INSERT INTO [DB_CRM_CESUDESK].[dbo].[mensagem_logs] (id_usuario, msg, id_tarefa, dt_insert) 
+                    VALUES ({$idLogin},'{$msg}',{$codChamado}, GETDATE()) ";
 
 $result_insert = sqlsrv_query($conn, $ChatInsert);
 

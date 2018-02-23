@@ -7,6 +7,37 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
+$USUARIO = $_SESSION['IDLOGIN'];
+
+$squilaResumo = "SELECT TOP 1 CASE 
+		                WHEN M.id_usuario ={$USUARIO} THEN 'S' 
+		                ELSE 'N' 
+		                END POSSUI_COMENT
+		                ,T.cd_tarefa
+		                ,(SELECT COUNT(1) 
+                                   FROM [DB_CRM_CESUDESK].[dbo].[tarefa] 
+                                  WHERE tp_statustarefa in ('Aberta', 'Andamento')
+                                    AND solicitante_cd_usuario = {$USUARIO}) as COUNT_CHAMADO
+                        ,(SELECT COUNT(1)
+                          			FROM  [DB_CRM_CESUDESK].[dbo].[tarefa]
+                          		   WHERE solicitante_cd_usuario = {$USUARIO}) as TOTAL_CHAMADO
+                  FROM [DB_CRM_CESUDESK].[dbo].[tarefa] T
+            INNER JOIN [DB_CRM_CESUDESK].[dbo].[mensagem_logs] M ON M.id_tarefa = T.cd_tarefa
+            INNER JOIN (SELECT MAX(ML.id) ID_ZICA
+								   ,ML.id_tarefa
+					      FROM [DB_CRM_CESUDESK].[dbo].[mensagem_logs] ML
+			          GROUP BY ML.id_tarefa) XCLEB ON XCLEB.ID_ZICA = M.id 
+						                               AND XCLEB.id_tarefa =M.id_tarefa
+                 WHERE T.solicitante_cd_usuario = {$USUARIO}
+                   AND T.tp_statustarefa in ('Aberta', 'Andamento')
+			       AND M.dt_insert is not null
+			       ORDER BY M.dt_insert desc";
+
+$result_squilaResumo= sqlsrv_prepare($conn, $squilaResumo);
+sqlsrv_execute($result_squilaResumo);
+
+$VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
+
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +50,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/datepicker3.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="main.css">
 	
 	<!--Custom Font-->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -57,7 +89,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 			</div>
 		</form>
 		<ul class="nav menu">
-			<li class="active"><a href="index.php"><em class="fa fa-dashboard">&nbsp;</em>Resumo</a></li>
+			<li class="active"><a href="main.php"><em class="fa fa-dashboard">&nbsp;</em>Resumo</a></li>
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Chamados <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
@@ -105,14 +137,21 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 				<h1 class="page-header">Dashboard</h1>
 			</div>
 		</div><!--/.row-->
+
+    	 <?php if ($VetorResumo['POSSUI_COMENT'] == 'N'){ ?>
+		    <div class="alert"><span class="fa-icon fa fa-exclamation-triangle"> </span>
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                Você possui Comentários Novos ! Chamado : <?php echo $VetorResumo['cd_tarefa']; ?>
+            </div>
+         <?php } ?>
 		
 		<div class="panel panel-container">
 			<div class="row">
 				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
 					<div class="panel panel-teal panel-widget border-right">
-						<div class="row no-padding"><em class="fa fa-xl fa-shopping-cart color-blue"></em>
-							<div class="large">120</div>
-							<div class="text-muted">New Orders</div>
+						<div class="row no-padding"><em class="fa fa-xl fa-spin fa-refresh color-blue"></em>
+							<div class="large"><?php echo $VetorResumo['COUNT_CHAMADO']; ?></div>
+							<div class="text-muted">Chamados Abertos</div>
 						</div>
 					</div>
 				</div>
@@ -120,7 +159,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 					<div class="panel panel-blue panel-widget border-right">
 						<div class="row no-padding"><em class="fa fa-xl fa-comments color-orange"></em>
 							<div class="large">52</div>
-							<div class="text-muted">Comments</div>
+							<div class="text-muted">Comentários Pentendes</div>
 						</div>
 					</div>
 				</div>
@@ -135,8 +174,8 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
 					<div class="panel panel-red panel-widget ">
 						<div class="row no-padding"><em class="fa fa-xl fa-search color-red"></em>
-							<div class="large">25.2k</div>
-							<div class="text-muted">Page Views</div>
+							<div class="large"><?php echo $VetorResumo['TOTAL_CHAMADO']; ?></div>
+							<div class="text-muted">Total de Chamados</div>
 						</div>
 					</div>
 				</div>
@@ -151,23 +190,6 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 							<li class="dropdown"><a class="pull-right dropdown-toggle" data-toggle="dropdown" href="#">
 								<em class="fa fa-cogs"></em>
 							</a>
-								<ul class="dropdown-menu dropdown-menu-right">
-									<li>
-										<ul class="dropdown-settings">
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 1
-											</a></li>
-											<li class="divider"></li>
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 2
-											</a></li>
-											<li class="divider"></li>
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 3
-											</a></li>
-										</ul>
-									</li>
-								</ul>
 							</li>
 						</ul>
 						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span></div>
@@ -214,248 +236,6 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 				</div>
 			</div>
 		</div><!--/.row-->
-		
-		<div class="row">
-			<div class="col-md-6">
-				<div class="panel panel-default chat">
-					<div class="panel-heading">
-						Chat
-						<ul class="pull-right panel-settings panel-button-tab-right">
-							<li class="dropdown"><a class="pull-right dropdown-toggle" data-toggle="dropdown" href="#">
-								<em class="fa fa-cogs"></em>
-							</a>
-								<ul class="dropdown-menu dropdown-menu-right">
-									<li>
-										<ul class="dropdown-settings">
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 1
-											</a></li>
-											<li class="divider"></li>
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 2
-											</a></li>
-											<li class="divider"></li>
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 3
-											</a></li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span></div>
-					<div class="panel-body">
-						<ul>
-							<li class="left clearfix"><span class="chat-img pull-left">
-								<img src="http://placehold.it/60/30a5ff/fff" alt="User Avatar" class="img-circle" />
-								</span>
-								<div class="chat-body clearfix">
-									<div class="header"><strong class="primary-font">John Doe</strong> <small class="text-muted">32 mins ago</small></div>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ante turpis, rutrum ut ullamcorper sed, dapibus ac nunc.</p>
-								</div>
-							</li>
-							<li class="right clearfix"><span class="chat-img pull-right">
-								<img src="http://placehold.it/60/dde0e6/5f6468" alt="User Avatar" class="img-circle" />
-								</span>
-								<div class="chat-body clearfix">
-									<div class="header"><strong class="pull-left primary-font">Jane Doe</strong> <small class="text-muted">6 mins ago</small></div>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ante turpis, rutrum ut ullamcorper sed, dapibus ac nunc.</p>
-								</div>
-							</li>
-							<li class="left clearfix"><span class="chat-img pull-left">
-								<img src="http://placehold.it/60/30a5ff/fff" alt="User Avatar" class="img-circle" />
-								</span>
-								<div class="chat-body clearfix">
-									<div class="header"><strong class="primary-font">John Doe</strong> <small class="text-muted">32 mins ago</small></div>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ante turpis, rutrum ut ullamcorper sed, dapibus ac nunc.</p>
-								</div>
-							</li>
-						</ul>
-					</div>
-					<div class="panel-footer">
-						<div class="input-group">
-							<input id="btn-input" type="text" class="form-control input-md" placeholder="Type your message here..." /><span class="input-group-btn">
-								<button class="btn btn-primary btn-md" id="btn-chat">Send</button>
-						</span></div>
-					</div>
-				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						To-do List
-						<ul class="pull-right panel-settings panel-button-tab-right">
-							<li class="dropdown"><a class="pull-right dropdown-toggle" data-toggle="dropdown" href="#">
-								<em class="fa fa-cogs"></em>
-							</a>
-								<ul class="dropdown-menu dropdown-menu-right">
-									<li>
-										<ul class="dropdown-settings">
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 1
-											</a></li>
-											<li class="divider"></li>
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 2
-											</a></li>
-											<li class="divider"></li>
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 3
-											</a></li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span></div>
-					<div class="panel-body">
-						<ul class="todo-list">
-							<li class="todo-list-item">
-								<div class="checkbox">
-									<input type="checkbox" id="checkbox-1" />
-									<label for="checkbox-1">Make coffee</label>
-								</div>
-								<div class="pull-right action-buttons"><a href="#" class="trash">
-									<em class="fa fa-trash"></em>
-								</a></div>
-							</li>
-							<li class="todo-list-item">
-								<div class="checkbox">
-									<input type="checkbox" id="checkbox-2" />
-									<label for="checkbox-2">Check emails</label>
-								</div>
-								<div class="pull-right action-buttons"><a href="#" class="trash">
-									<em class="fa fa-trash"></em>
-								</a></div>
-							</li>
-							<li class="todo-list-item">
-								<div class="checkbox">
-									<input type="checkbox" id="checkbox-3" />
-									<label for="checkbox-3">Reply to Jane</label>
-								</div>
-								<div class="pull-right action-buttons"><a href="#" class="trash">
-									<em class="fa fa-trash"></em>
-								</a></div>
-							</li>
-							<li class="todo-list-item">
-								<div class="checkbox">
-									<input type="checkbox" id="checkbox-4" />
-									<label for="checkbox-4">Make more coffee</label>
-								</div>
-								<div class="pull-right action-buttons"><a href="#" class="trash">
-									<em class="fa fa-trash"></em>
-								</a></div>
-							</li>
-							<li class="todo-list-item">
-								<div class="checkbox">
-									<input type="checkbox" id="checkbox-5" />
-									<label for="checkbox-5">Work on the new design</label>
-								</div>
-								<div class="pull-right action-buttons"><a href="#" class="trash">
-									<em class="fa fa-trash"></em>
-								</a></div>
-							</li>
-							<li class="todo-list-item">
-								<div class="checkbox">
-									<input type="checkbox" id="checkbox-6" />
-									<label for="checkbox-6">Get feedback on design</label>
-								</div>
-								<div class="pull-right action-buttons"><a href="#" class="trash">
-									<em class="fa fa-trash"></em>
-								</a></div>
-							</li>
-						</ul>
-					</div>
-					<div class="panel-footer">
-						<div class="input-group">
-							<input id="btn-input" type="text" class="form-control input-md" placeholder="Add new task" /><span class="input-group-btn">
-								<button class="btn btn-primary btn-md" id="btn-todo">Add</button>
-						</span></div>
-					</div>
-				</div>
-			</div><!--/.col-->
-			
-			
-			<div class="col-md-6">
-				<div class="panel panel-default ">
-					<div class="panel-heading">
-						Timeline
-						<ul class="pull-right panel-settings panel-button-tab-right">
-							<li class="dropdown"><a class="pull-right dropdown-toggle" data-toggle="dropdown" href="#">
-								<em class="fa fa-cogs"></em>
-							</a>
-								<ul class="dropdown-menu dropdown-menu-right">
-									<li>
-										<ul class="dropdown-settings">
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 1
-											</a></li>
-											<li class="divider"></li>
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 2
-											</a></li>
-											<li class="divider"></li>
-											<li><a href="#">
-												<em class="fa fa-cog"></em> Settings 3
-											</a></li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span></div>
-					<div class="panel-body timeline-container">
-						<ul class="timeline">
-							<li>
-								<div class="timeline-badge"><em class="glyphicon glyphicon-pushpin"></em></div>
-								<div class="timeline-panel">
-									<div class="timeline-heading">
-										<h4 class="timeline-title">Lorem ipsum dolor sit amet</h4>
-									</div>
-									<div class="timeline-body">
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer at sodales nisl. Donec malesuada orci ornare risus finibus feugiat.</p>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="timeline-badge primary"><em class="glyphicon glyphicon-link"></em></div>
-								<div class="timeline-panel">
-									<div class="timeline-heading">
-										<h4 class="timeline-title">Lorem ipsum dolor sit amet</h4>
-									</div>
-									<div class="timeline-body">
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="timeline-badge"><em class="glyphicon glyphicon-camera"></em></div>
-								<div class="timeline-panel">
-									<div class="timeline-heading">
-										<h4 class="timeline-title">Lorem ipsum dolor sit amet</h4>
-									</div>
-									<div class="timeline-body">
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer at sodales nisl. Donec malesuada orci ornare risus finibus feugiat.</p>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="timeline-badge"><em class="glyphicon glyphicon-paperclip"></em></div>
-								<div class="timeline-panel">
-									<div class="timeline-heading">
-										<h4 class="timeline-title">Lorem ipsum dolor sit amet</h4>
-									</div>
-									<div class="timeline-body">
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div><!--/.col-->
-			<div class="col-sm-12">
-				<p class="back-link">Lumino Theme by <a href="https://www.medialoot.com">Medialoot</a></p>
-			</div>
-		</div><!--/.row-->
 	</div>	<!--/.main-->
 	
 	<script src="js/jquery-1.11.1.min.js"></script>
@@ -467,15 +247,35 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/custom.js"></script>
 	<script>
-		window.onload = function () {
-	var chart1 = document.getElementById("line-chart").getContext("2d");
-	window.myLine = new Chart(chart1).Line(lineChartData, {
-	responsive: true,
-	scaleLineColor: "rgba(0,0,0,.2)",
-	scaleGridLineColor: "rgba(0,0,0,.05)",
-	scaleFontColor: "#c5c7cc"
-	});
-};
+      window.onload = function () {
+	      var chart1 = document.getElementById("line-chart").getContext("2d");
+	      window.myLine = new Chart(chart1).Line(lineChartData, {
+	      responsive: true,
+	      scaleLineColor: "rgba(0,0,0,.2)",
+	      scaleGridLineColor: "rgba(0,0,0,.05)",
+	      scaleFontColor: "#c5c7cc"
+	      });
+      };
+
+    // Get all elements with class="closebtn"
+    var close = document.getElementsByClassName("closebtn");
+    var i;
+
+// Loop through all close buttons
+for (i = 0; i < close.length; i++) {
+    // When someone clicks on a close button
+    close[i].onclick = function(){
+
+        // Get the parent of <span class="closebtn"> (<div class="alert">)
+        var div = this.parentElement;
+
+        // Set the opacity of div to 0 (transparent)
+        div.style.opacity = "0";
+
+        // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
+        setTimeout(function(){ div.style.display = "none"; }, 600);
+    }
+}
 	</script>
 		
 </body>
