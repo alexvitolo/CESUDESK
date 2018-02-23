@@ -38,6 +38,16 @@ sqlsrv_execute($result_squilaResumo);
 
 $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 
+
+
+// gráficos chart JS
+
+ $sql = "SELECT CONCAT('2',DATENAME(MONTH,GETDATE()),'2',',2',DATENAME(MONTH, GETDATE()-35),'2',',2',DATENAME(MONTH, GETDATE()-70),'2') as test";
+   $sql = str_replace("2", '"', $sql);
+   $result = sqlsrv_prepare($conn, $sql);
+   sqlsrv_execute($result);
+   $result = sqlsrv_fetch_array($result);
+
 ?>
 
 <!DOCTYPE html>
@@ -241,7 +251,7 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 	<script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/chart.min.js"></script>
-	<script src="js/chart-data.js"></script>
+	<!-- <script src="js/chart-data.js"></script> -->
 	<script src="js/easypiechart.js"></script>
 	<script src="js/easypiechart-data.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
@@ -276,6 +286,36 @@ for (i = 0; i < close.length; i++) {
         setTimeout(function(){ div.style.display = "none"; }, 600);
     }
 }
+
+
+var lineChartData = {
+		labels : [<?php echo $result['test'] ?>],
+		datasets : [
+			{
+				label: "My First dataset",
+				fillColor : "rgba(220,220,220,0.2)",
+				strokeColor : "rgba(220,220,220,1)",
+				pointColor : "rgba(220,220,220,1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(220,220,220,1)",
+				data : [<?php echo '500,500,2000'; ?>]
+			},
+			{
+				label: "My Second dataset",
+				fillColor : "rgba(48, 164, 255, 0.2)",
+				strokeColor : "rgba(48, 164, 255, 1)",
+				pointColor : "rgba(48, 164, 255, 1)",
+				pointStrokeColor : "#fff",
+				pointHighlightFill : "#fff",
+				pointHighlightStroke : "rgba(48, 164, 255, 1)",
+				data : [800,700,600]
+			}
+		]
+
+    }
+
+
 	</script>
 		
 </body>
