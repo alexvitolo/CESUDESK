@@ -39,14 +39,49 @@ sqlsrv_execute($result_squilaResumo);
 $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 
 
+if ( $_SESSION['ACESSO'] <> 1) {  // Visão do supervisor chamados abertos
 
-// gráficos chart JS
+   $TituloGrafico = "Histórico Meus Chamados Abertos";
 
- $sql = "SELECT CONCAT('2',DATENAME(MONTH,GETDATE()),'2',',2',DATENAME(MONTH, GETDATE()-35),'2',',2',DATENAME(MONTH, GETDATE()-70),'2') as test";
-   $sql = str_replace("2", '"', $sql);
-   $result = sqlsrv_prepare($conn, $sql);
-   sqlsrv_execute($result);
-   $result = sqlsrv_fetch_array($result);
+   $squilaDadosGrafico = "SELECT [cd_tarefa]
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,Getdate())-2 )as MES1
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,Getdate())-1 )as MES2
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,Getdate()) )as MES3
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,Getdate())-2 )as FIM1
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,Getdate())-1 )as FIM2
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,Getdate()) )as FIM3
+	                             ,CONCAT('2',DATENAME(MONTH,GETDATE()),'2',',2',DATENAME(MONTH, GETDATE()-35),'2',',2',DATENAME(MONTH, GETDATE()-70),'2') as NomeMes
+                            FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO}";
+   
+   $squilaDadosGrafico = str_replace("@", '"', $squilaDadosGrafico);
+   $result_squilaGrafico= sqlsrv_prepare($conn, $squilaDadosGrafico);
+   sqlsrv_execute($result_squilaGrafico);
+   
+   $VetorGrafico = sqlsrv_fetch_array($result_squilaGrafico);
+
+}
+
+if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
+
+   $TituloGrafico = "Resumo Número de Chamados";
+
+   $squilaDadosGrafico = "SELECT [cd_tarefa]
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) = DATEPART(mm,Getdate())-2 )as MES1
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) = DATEPART(mm,Getdate())-1 )as MES2
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) = DATEPART(mm,Getdate()) )as MES3
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,Getdate())-2 )as FIM1
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,Getdate())-1 )as FIM2
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,Getdate()) )as FIM3
+	                             ,CONCAT('@',DATENAME(MONTH,GETDATE()-70),'@',',@',DATENAME(MONTH, GETDATE()-35),'@',',@',DATENAME(MONTH, GETDATE()),'@') as NomeMes
+  						    FROM [DB_CRM_CESUDESK].[dbo].[tarefa]";
+   
+   $squilaDadosGrafico = str_replace("@", '"', $squilaDadosGrafico);
+   $result_squilaGrafico= sqlsrv_prepare($conn, $squilaDadosGrafico);
+   sqlsrv_execute($result_squilaGrafico);
+   
+   $VetorGrafico = sqlsrv_fetch_array($result_squilaGrafico);
+
+}
 
 ?>
 
@@ -168,8 +203,8 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
 					<div class="panel panel-blue panel-widget border-right">
 						<div class="row no-padding"><em class="fa fa-xl fa-comments color-orange"></em>
-							<div class="large">52</div>
-							<div class="text-muted">Comentários Pentendes</div>
+							<div class="large">--</div>
+							<div class="text-muted">Tempo Médio Chamado</div>
 						</div>
 					</div>
 				</div>
@@ -195,7 +230,7 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						Resumo Número de chamados 
+						<?php echo $TituloGrafico; ?> 
 						<ul class="pull-right panel-settings panel-button-tab-right">
 							<li class="dropdown"><a class="pull-right dropdown-toggle" data-toggle="dropdown" href="#">
 								<em class="fa fa-cogs"></em>
@@ -216,7 +251,7 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 			<div class="col-xs-6 col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-body easypiechart-panel">
-						<h4>New Orders</h4>
+						<h4>Conclusão</h4>
 						<div class="easypiechart" id="easypiechart-blue" data-percent="92" ><span class="percent">92%</span></div>
 					</div>
 				</div>
@@ -224,7 +259,7 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 			<div class="col-xs-6 col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-body easypiechart-panel">
-						<h4>Comments</h4>
+						<h4>Comentários</h4>
 						<div class="easypiechart" id="easypiechart-orange" data-percent="65" ><span class="percent">65%</span></div>
 					</div>
 				</div>
@@ -232,7 +267,7 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 			<div class="col-xs-6 col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-body easypiechart-panel">
-						<h4>New Users</h4>
+						<h4>Utilização</h4>
 						<div class="easypiechart" id="easypiechart-teal" data-percent="56" ><span class="percent">56%</span></div>
 					</div>
 				</div>
@@ -240,7 +275,7 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 			<div class="col-xs-6 col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-body easypiechart-panel">
-						<h4>Visitors</h4>
+						<h4>Total Acessos</h4>
 						<div class="easypiechart" id="easypiechart-red" data-percent="27" ><span class="percent">27%</span></div>
 					</div>
 				</div>
@@ -289,7 +324,7 @@ for (i = 0; i < close.length; i++) {
 
 
 var lineChartData = {
-		labels : [<?php echo $result['test'] ?>],
+		labels : [<?php echo $VetorGrafico['NomeMes'] ?>],
 		datasets : [
 			{
 				label: "My First dataset",
@@ -299,7 +334,7 @@ var lineChartData = {
 				pointStrokeColor : "#fff",
 				pointHighlightFill : "#fff",
 				pointHighlightStroke : "rgba(220,220,220,1)",
-				data : [<?php echo '500,500,2000'; ?>]
+				data : [<?php echo $VetorGrafico['MES1'].','.$VetorGrafico['MES3'].','.$VetorGrafico['MES2']; ?>]
 			},
 			{
 				label: "My Second dataset",
@@ -309,7 +344,7 @@ var lineChartData = {
 				pointStrokeColor : "#fff",
 				pointHighlightFill : "#fff",
 				pointHighlightStroke : "rgba(48, 164, 255, 1)",
-				data : [800,700,600]
+				data : [<?php echo $VetorGrafico['FIM1'].','.$VetorGrafico['FIM2'].','.$VetorGrafico['FIM3']; ?>]
 			}
 		]
 
