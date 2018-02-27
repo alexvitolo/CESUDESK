@@ -13,7 +13,7 @@ $COD_CHAMADO = $_GET['COD_CHAMADO'];
 $UpdateTriagem = " UPDATE [DB_CRM_CESUDESK].[dbo].[triagem]
                       SET dh_fim_triagem = GETDATE(),
                           inf_resultadotriagem = 'Encerrada',
-                          qt_horas_triagem = ,
+                          qt_horas_triagem = '00:00',
                           tp_statustriagem = 'Encerrada',
                     WHERE idtriagem in (SELECT triagens_idtriagem 
                                           FROM [DB_CRM_CESUDESK].[dbo].[tarefa_triagem]
@@ -31,7 +31,7 @@ $UpdateTriagem = " UPDATE [DB_CRM_CESUDESK].[dbo].[triagem]
 
  $UpdateTarefa = " UPDATE [DB_CRM_CESUDESK].[dbo].[tarefa]
                       SET dh_fechamento = GETDATE(),
-                          qt_horasgastastarefa = 
+                          qt_horasgastastarefa = '00:00'
                           tp_statustarefa = 'Fechada'
                     WHERE cd_tarefa {$COD_CHAMADO}";
 
