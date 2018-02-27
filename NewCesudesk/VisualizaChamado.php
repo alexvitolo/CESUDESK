@@ -2,37 +2,68 @@
 
 session_start();
 
-$dataValida = date("Y-m-d" ,strtotime("now"));
-
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
     // Ação a ser executada: mata o script e manda uma mensagem
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
 
+$COD_CHAMADO = $_POST['cd_tarefa'];
+$_SESSION['chamadoChat'] = $_POST['cd_tarefa'];
+$ID_USUARIO = $_SESSION['IDLOGIN'];
 
-$squilaProjeto = "SELECT cd_projeto
-                        ,desc_projeto
-                    FROM DB_CRM_CESUDESK.dbo.projeto ORDER by 1 DESC";
+$squilVisu = "SELECT T.cd_tarefa
+                    ,T.desc_tarefa
+                    ,T.dh_cadastro
+                    ,T.dh_entrega_prev
+                    ,T.dh_fechamento
+                    ,T.inf_complementar
+                    ,T.prioridade
+                    ,T.qt_horasgastastarefa
+                    ,T.tem_anexo
+                    ,T.titulo
+                    ,T.tp_statustarefa
+                    ,T.cd_modulo
+                    ,T.projeto_cd_projeto
+                    ,T.solicitante_cd_usuario
+                    ,T.cd_tipotarefa
+                    ,P.desc_projeto
+                    ,M.desc_modulo
+                    ,TP.desc_tipotarefa
+               FROM DB_CRM_CESUDESK.dbo.tarefa T
+         INNER JOIN DB_CRM_CESUDESK.dbo.projeto P ON P.cd_projeto = T.projeto_cd_projeto
+         INNER JOIN DB_CRM_CESUDESK.dbo.modulo M ON M.cd_modulo = T.cd_modulo
+         INNER JOIN DB_CRM_CESUDESK.dbo.tipotarefa TP ON TP.cd_tipotarefa = T.cd_tipotarefa
+              WHERE T.cd_tarefa = {$COD_CHAMADO} ";
 
-$result_Projeto = sqlsrv_prepare($conn, $squilaProjeto);
-sqlsrv_execute($result_Projeto);
+$result_squilaVisu = sqlsrv_prepare($conn, $squilVisu);
+sqlsrv_execute($result_squilaVisu);
+
+$vetorSQLVisu = sqlsrv_fetch_array($result_squilaVisu);
+
+$dh_cadastro = date_format($vetorSQLVisu['dh_cadastro'], "Y-m-d");
+$dh_entrega_prev = date_format($vetorSQLVisu['dh_entrega_prev'], "Y-m-d");
+
+   if ($vetorSQLVisu['dh_fechamento'] <> '' ){
+       $dh_fechamento = date_format($vetorSQLVisu['dh_fechamento'], "Y-m-d");
+   }else{
+   	   $dh_fechamento = '';
+   }
 
 
-$squilaModulo = "SELECT cd_modulo
-                        ,desc_modulo
-                    FROM DB_CRM_CESUDESK.dbo.modulo";
 
-$result_Modulo = sqlsrv_prepare($conn, $squilaModulo);
-sqlsrv_execute($result_Modulo);
+$squilAnexo = "SELECT A.cd_tarefa
+					 ,B.anexos_id
+					 ,C.nm_anexo as NomeArq
+                 FROM DB_CRM_CESUDESK.dbo.tarefa A 
+           INNER JOIN DB_CRM_CESUDESK.dbo.tarefa_anexo B on B.tarefa_cd_tarefa= A.cd_tarefa
+           INNER JOIN DB_CRM_CESUDESK.dbo.anexo C on C.id = B.anexos_id
+                WHERE A.cd_tarefa = {$COD_CHAMADO} ";
+
+$result_squilaAnexo = sqlsrv_prepare($conn, $squilAnexo);
+sqlsrv_execute($result_squilaAnexo);
 
 
-$squilaTipoTarefa = "SELECT cd_tipotarefa
-                       ,desc_tipotarefa
-                   FROM DB_CRM_CESUDESK.dbo.tipotarefa";
-
-$result_TipoTarefa = sqlsrv_prepare($conn, $squilaTipoTarefa);
-sqlsrv_execute($result_TipoTarefa);
 
 ?>
 
@@ -46,6 +77,7 @@ sqlsrv_execute($result_TipoTarefa);
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/datepicker3.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="VisualizaChamado.css">
 	
 	<!--Custom Font-->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -138,32 +170,34 @@ sqlsrv_execute($result_TipoTarefa);
 				<h2>Gestão Chamado</h2>
 			</div>
 			<div class="col-md-10">
-			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaCadastroChamado.php" enctype="multipart/form-data">
+			 <form role="form" name="FormCha" method="post" id="formulario" action="">
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
 							<li class="active" id="litab1"><a href="#tab1" data-toggle="tab">Dados Iniciais</a></li>
 							<li id="litab2"><a href="#tab2" data-toggle="tab">Dados da Solicitação</a></li>
 							<li id="litab3"><a href="#tab3" data-toggle="tab">Anexos</a></li>
+							<li id="litab4"><a href="#tab4" data-toggle="tab">Comentários</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="tab1">
 								<h4>Dados Iniciais</h4>
 								<div class="form-group">
 									<label>Data de Cadastro</label>
-									<input name="DATA_CADASTRO" class="form-control" type="date" placeholder="" value="<?php echo date('Y-m-d'); ?>" readonly>
+									<input name="" class="form-control" type="date" placeholder="" value="<?php echo $dh_cadastro; ?>" readonly>
 								</div>
 								<div class="form-group">
 									<label>Data de Entrega</label>
-									<input name="DATA_ENTREGA" id="dataentrega" min="<?php echo $dataValida ?>" class="form-control" type="date" placeholder="Data da Entrega">
+									<input name="dataEntrega" id="dataentrega" class="form-control" type="date" value="<?php echo $dh_entrega_prev; ?>" readonly>
+								</div>
+								<div class="form-group">
+									<label>Data Fechamento</label>
+									<input name="dataEntrega" id="datafechamento" class="form-control" type="date" value="<?php echo $dh_fechamento; ?>" readonly>
 								</div>
 									<div class="form-group">
 										<label>Prioridade</label>
-										<select name="PRIORIDADE" class="form-control">
-											<option>0</option>
-											<option>1</option>
-											<option>2</option>
-											<option>3</option>
+										<select name="" class="form-control" readonly>
+											<option><?php echo $vetorSQLVisu['prioridade']; ?></option>
 										</select>
 									</div>
 							</div>
@@ -172,54 +206,63 @@ sqlsrv_execute($result_TipoTarefa);
 								<h4>Dados da Solicitação</h4>
 									<div class="form-group">
 										<label>Projeto</label>
-										<select name="PROJETO" class="form-control">
-											 <?php while ($row = sqlsrv_fetch_array($result_Projeto)){ ?>
-											   <option value="<?php echo $row['cd_projeto']; ?>"><?php echo $row['desc_projeto'] ;?></option>
-											<?php } ?>
+										<select name="" class="form-control" readonly>
+											<option><?php echo $vetorSQLVisu['desc_projeto']; ?></option>
 										</select>
 									</div>
 									<div class="form-group">
 										<label>Módulo</label>
-										<select name="MODULO" class="form-control">
-											<?php while ($row = sqlsrv_fetch_array($result_Modulo)){ ?>
-											   <option value="<?php echo $row['cd_modulo']; ?>"><?php echo $row['desc_modulo'] ;?></option>
-											<?php } ?>
+										<select name="" class="form-control" readonly>
+											<option><?php echo $vetorSQLVisu['desc_modulo']; ?></option>
 										</select>
 									</div>
 									<div class="form-group">
 										<label>Tipo de Tarefa</label>
-										<select name="TIPO_TAREFA" class="form-control">
-											<?php while ($row = sqlsrv_fetch_array($result_TipoTarefa)){ ?>
-											   <option value="<?php echo $row['cd_tipotarefa']; ?>"><?php echo $row['desc_tipotarefa'] ;?></option>
-											<?php } ?>
+										<select name="" class="form-control" readonly>
+											<option><?php echo $vetorSQLVisu['desc_tipotarefa']; ?></option>
 										</select>
 									</div>
 									<div class="form-group">
 									    <label>Título (Resumo da Solicitação)</label>
-									    <input name="resumoSoli" class="form-control" placeholder="Digite o título do chamado">
+									    <input name="resumoSoli" class="form-control" value="<?php echo $vetorSQLVisu['titulo']; ?>" readonly>
 								    </div>
 								    <div class="form-group">
 									    <label>Descrição</label>
-									    <textarea name="descSoli" class="form-control" rows="3"></textarea>
+									    <textarea name="descSoli" class="form-control" value="" readonly><?php echo $vetorSQLVisu['desc_tarefa']; ?></textarea>
 								    </div>
 							</div>
 							<div class="tab-pane fade" id="tab3">
 								<h4>Anexos</h4>
 								<div class="form-group">
-									<label>Carregar Anexo</label>
-									<input type="file" name="anexo[1]">
-									<p class="help-block">Selecione um arquivo para anexar ao chamado.</p>
-									<div class="addJS"></div>
+								   <?php while ($row = sqlsrv_fetch_array($result_squilaAnexo)){ ?>
+								       <label>Carregar Anexo</label>
+									    <a href="ChamadoDownload.php?COD_CHAMADO=<?php echo $row['cd_tarefa']; ?>&ANEXO_ID=<?php echo $row['anexos_id']; ?>"><input type="button" value="<?php echo $row['NomeArq']; ?>" ></input></a><br><br>
+                                   <?php } ?>
 								</div>
-								<button type="button" id='CriarAnexo'>Adicionar um novo anexo</button>
-								<button type="button" id='RemoverAnexo'>Limpar</button>
+							</div>
+		    </form>
+							<div class="tab-pane fade" id="tab4">
+								<h4>Comentários</h4>
+								<div class="form-group">
+									<form name="form1" id="form1">
+                                        <br />
+                                        Mensagem: <br />
+                                        <textarea name="msg" cols="100" rows="3" id="textareaMSG"></textarea><br />
+                                        <a href="#" id="SubChat" onclick="submitChat();">Send</a><br /><br />
+                                        </form>
+                                        <div class="chatbox">
+                                        	<div class="chatlogs">
+                                                 <div id="chatlogs">
+                                                  LOADING CHATLOG...
+                                                 </div>
+                                            </div>
+                                        </div>
 								</div>
 							</div>
 						</div>
+					</div>
 				</div><!--/.panel-->
-			   <button type="submit" onclick="return validar()" class="btn btn-primary">Abrir Chamado</button>
-			   <button type="reset" class="btn btn-default">Limpar Cadastro</button>
-			   </form><br><br>
+			   <br><br>
 			</div><!--/.col-->
 		</div><!--/.row-->
 	</div>	<!--/.main-->
@@ -234,8 +277,8 @@ sqlsrv_execute($result_TipoTarefa);
 	<script src="js/custom.js"></script>
 
 	<script language="javascript" type="text/javascript">
-		var aux =2 ; //Variavel indice para anexos
-		window.onload = function () 
+
+		window.onload = function ()
 		{
 	       var chart1 = document.getElementById("line-chart").getContext("2d");
 	       window.myLine = new Chart(chart1).Line(lineChartData, {
@@ -245,60 +288,55 @@ sqlsrv_execute($result_TipoTarefa);
 	       scaleFontColor: "#c5c7cc"
 	       });
         };
-
-       function validar() 
-       {           
-           if (FormCha.DATA_ENTREGA.value == "") {
-           	alert('Preencha o campo "Data de Entrega"');
-           	document.getElementById("tab1").className = "tab-pane fade in active";
-           	document.getElementById("litab1").className = "active";
-   			document.getElementById("tab2").className = "tab-pane fade";
-   			document.getElementById("litab2").className = "";
-   			document.getElementById("tab3").className = "tab-pane fade";
-   			document.getElementById("litab3").className = "";
-           	FormCha.DATA_ENTREGA.focus();
-           	return false;
-           }
-
-           if (FormCha.resumoSoli.value == "") {
-           	alert('Preencha o campo "Resumo Solicitação"');
-           	document.getElementById("tab2").className = "tab-pane fade in active";
-           	document.getElementById("litab2").className = "active";
-   			document.getElementById("tab1").className = "tab-pane fade";
-   			document.getElementById("litab1").className = "";
-   			document.getElementById("tab3").className = "tab-pane fade";
-   			document.getElementById("litab3").className = "";
-           	FormCha.resumoSoli.focus();
-           	return false;
-           }
-
-           if (FormCha.descSoli.value == "") {
-           	alert('Preencha o campo "Descrição"');
-           	document.getElementById("tab2").className = "tab-pane fade in active";
-           	document.getElementById("litab2").className = "active";
-   			document.getElementById("tab1").className = "tab-pane fade";
-   			document.getElementById("litab1").className = "";
-   			document.getElementById("tab3").className = "tab-pane fade";
-   			document.getElementById("litab3").className = "";
-           	FormCha.descSoli.focus();
-           	return false;
-            }
-            return true;
-        };
-
-        $('#CriarAnexo').click(function(){
-        	$('.addJS').append("<div id='JSid'> <input type='file' name='anexo["+aux+"]'> <p class='help-block'>Selecione um arquivo para anexar ao chamado.</p> </div>");
-        	aux++;
-
-        });
-
-        $('#RemoverAnexo').click(function(){
-        	$("#JSid").remove();
-
-        });
-	
-	
+        
 	</script>
-		
+
+
+ <script
+  src="http://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+
+<script>
+
+function submitChat() {
+	if(form1.msg.value == '') {
+		alert("Campo Mensagem Obrigatório");
+		return;
+	}
+	var idLogin = <?php echo $ID_USUARIO ;?> ;
+	var msg = form1.msg.value; 
+	var codChamado = <?php echo $COD_CHAMADO ;?> ;
+	var xmlhttp = new XMLHttpRequest();
+	
+	xmlhttp.onreadystatechange = function() {
+		if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			document.getElementById('chatlogs').innerHTML = xmlhttp.responseText;
+		}
+	}
+	
+	xmlhttp.open('GET','ChamadoChatInsert.php?idLogin='+idLogin+'&msg='+msg+'&codChamado='+codChamado,true);
+	xmlhttp.send();
+
+}
+
+$(document).ready(function(e){
+	$.ajaxSetup({
+		cache: false
+	});
+	setInterval( function(){ $('#chatlogs').load('ChamadoChatLogs.php'); }, 2000 );
+});
+
+$("#textareaMSG").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#SubChat").click();
+        document.getElementById("textareaMSG").value = "";
+    }
+});
+
+
+</script>
+
+
 </body>
 </html>
