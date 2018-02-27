@@ -158,7 +158,7 @@ $vetorSQLDesc = sqlsrv_fetch_array($result_squilaDesc);
 								</div>
 								<div class="form-group">
 							        <label>Descrição</label>
-							        <textarea readonly name="descSoli" class="form-control" value=""><?php echo $vetorSQLDesc['desc_tarefa']; ?></textarea>
+							        <textarea readonly name="descSoli" cols="100" rows="8" class="form-control" value=""><?php echo $vetorSQLDesc['desc_tarefa']; ?></textarea>
 								</div>
 								<h4>Usuários</h4>                                                           
 								<div class="form-group">
