@@ -39,42 +39,38 @@ sqlsrv_execute($result_squilaResumo);
 $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 
 
-
-
-$squilaIndicador = "SELECT (SELECT COUNT(1) 
-                                   FROM [DB_CRM_CESUDESK].[dbo].[tarefa] 
-                                  WHERE tp_statustarefa in ('Aberta', 'Andamento')
-                                    ) as COUNT_CHAMADO
-                        ,(SELECT COUNT(1)
-                          			FROM  [DB_CRM_CESUDESK].[dbo].[tarefa]
-                          		    ) as TOTAL_CHAMADO";
-
-$result_squilaIndicador= sqlsrv_prepare($conn, $squilaIndicador);
-sqlsrv_execute($result_squilaIndicador);
-
-$VetorIndicador = sqlsrv_fetch_array($result_squilaIndicador);
-
-
-
-if ( $_SESSION['ACESSO'] <> 1 or $_SESSION['ACESSO'] =="" ) {  // Visão do supervisor chamados abertos
+if ( ($_SESSION['ACESSO'] <> 1) or ($_SESSION['ACESSO'] =="" ) ) {  // Visão do supervisor chamados abertos
 
    $TituloGrafico = "Histórico Meus Chamados Abertos";
 
-   $squilaDadosGrafico = "SELECT [cd_tarefa]
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -2, GetDate())) )as MES1
+   $squilaDadosGrafico = "SELECT 
+	                              (SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -2, GetDate())) )as MES1
 	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -1, GetDate())) )as MES2
 	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, 0, GetDate())) )as MES3
 	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -2, GetDate())) )as FIM1
 	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -1, GetDate())) )as FIM2
 	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, 0, GetDate())) )as FIM3
-	                             ,CONCAT('@',DATENAME(mm,DateAdd(month, -2, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, -1, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, 0, GetDate())),'@') as NomeMes
-                            FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO}";
+	                             ,CONCAT('@',DATENAME(mm,DateAdd(month, -2, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, -1, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, 0, GetDate())),'@') as NomeMes";
    
    $squilaDadosGrafico = str_replace("@", '"', $squilaDadosGrafico);
    $result_squilaGrafico= sqlsrv_prepare($conn, $squilaDadosGrafico);
    sqlsrv_execute($result_squilaGrafico);
    
    $VetorGrafico = sqlsrv_fetch_array($result_squilaGrafico);
+
+
+   $squilaIndicador = "SELECT (SELECT COUNT(1) 
+                                   FROM [DB_CRM_CESUDESK].[dbo].[tarefa] 
+                                  WHERE tp_statustarefa in ('Aberta', 'Andamento')
+                                    AND solicitante_cd_usuario = {$USUARIO}) as COUNT_CHAMADO
+                        ,(SELECT COUNT(1)
+                          			FROM  [DB_CRM_CESUDESK].[dbo].[tarefa]
+                          		   WHERE solicitante_cd_usuario = {$USUARIO} ) as TOTAL_CHAMADO";
+
+   $result_squilaIndicador= sqlsrv_prepare($conn, $squilaIndicador);
+   sqlsrv_execute($result_squilaIndicador);
+   
+   $VetorIndicador = sqlsrv_fetch_array($result_squilaIndicador);
 
 }
 
@@ -82,21 +78,34 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 
    $TituloGrafico = "Resumo Número de Chamados";
 
-   $squilaDadosGrafico = "SELECT [cd_tarefa]
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -2, GetDate())) )as MES1
+   $squilaDadosGrafico = "SELECT (SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) =                              DATEPART(mm,DateAdd(month, -2, GetDate())) )as MES1
 	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -1, GetDate())) )as MES2
 	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, 0, GetDate())) )as MES3
 	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -2, GetDate())) )as FIM1
 	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -1, GetDate())) )as FIM2
 	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, 0, GetDate())) )as FIM3
-	                             ,CONCAT('@',DATENAME(mm,DateAdd(month, -2, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, -1, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, 0, GetDate())),'@') as NomeMes
-  						    FROM [DB_CRM_CESUDESK].[dbo].[tarefa]";
+	                             ,CONCAT('@',DATENAME(mm,DateAdd(month, -2, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, -1, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, 0, GetDate())),'@') as NomeMes";
    
    $squilaDadosGrafico = str_replace("@", '"', $squilaDadosGrafico);
    $result_squilaGrafico= sqlsrv_prepare($conn, $squilaDadosGrafico);
    sqlsrv_execute($result_squilaGrafico);
    
    $VetorGrafico = sqlsrv_fetch_array($result_squilaGrafico);
+
+
+   $squilaIndicador = "SELECT (SELECT COUNT(1) 
+                                   FROM [DB_CRM_CESUDESK].[dbo].[tarefa] 
+                                  WHERE tp_statustarefa in ('Aberta', 'Andamento')
+                                    ) as COUNT_CHAMADO
+                        ,(SELECT COUNT(1)
+                          			FROM  [DB_CRM_CESUDESK].[dbo].[tarefa]
+                          		    ) as TOTAL_CHAMADO";
+
+   $result_squilaIndicador= sqlsrv_prepare($conn, $squilaIndicador);
+   sqlsrv_execute($result_squilaIndicador);
+   
+   $VetorIndicador = sqlsrv_fetch_array($result_squilaIndicador);
+
 
 }
 
