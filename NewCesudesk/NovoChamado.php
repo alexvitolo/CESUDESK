@@ -13,7 +13,9 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 
 $squilaProjeto = "SELECT cd_projeto
                         ,desc_projeto
-                    FROM DB_CRM_CESUDESK.dbo.projeto ORDER by 1 DESC";
+                    FROM DB_CRM_CESUDESK.dbo.projeto
+                   WHERE tp_statusprojeto ='Andamento' 
+                   ORDER by 1 DESC";
 
 $result_Projeto = sqlsrv_prepare($conn, $squilaProjeto);
 sqlsrv_execute($result_Projeto);
@@ -21,7 +23,8 @@ sqlsrv_execute($result_Projeto);
 
 $squilaModulo = "SELECT cd_modulo
                         ,desc_modulo
-                    FROM DB_CRM_CESUDESK.dbo.modulo";
+                    FROM DB_CRM_CESUDESK.dbo.modulo
+                ORDER by desc_modulo";
 
 $result_Modulo = sqlsrv_prepare($conn, $squilaModulo);
 sqlsrv_execute($result_Modulo);
@@ -29,7 +32,8 @@ sqlsrv_execute($result_Modulo);
 
 $squilaTipoTarefa = "SELECT cd_tipotarefa
                        ,desc_tipotarefa
-                   FROM DB_CRM_CESUDESK.dbo.tipotarefa";
+                   FROM DB_CRM_CESUDESK.dbo.tipotarefa
+               ORDER by desc_tipotarefa";
 
 $result_TipoTarefa = sqlsrv_prepare($conn, $squilaTipoTarefa);
 sqlsrv_execute($result_TipoTarefa);
@@ -107,6 +111,15 @@ sqlsrv_execute($result_TipoTarefa);
 					</a></li>
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
+					</a></li>
+				</ul>
+			</li>
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
+				<em class="fa fa-wrench">&nbsp;</em> Gestão Cesudesk <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
+				</a>
+				<ul class="children collapse" id="sub-item-3">
+					<li><a class="" href="RelatoriosCesudesk.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Relatórios
 					</a></li>
 				</ul>
 			</li>

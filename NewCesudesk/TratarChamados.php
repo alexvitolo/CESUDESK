@@ -7,6 +7,11 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
+if ($_SESSION['ACESSO'] <> 1 )  {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+}
+
 $ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
 $ID_LOGIN = $_SESSION['IDLOGIN'];
 
@@ -24,8 +29,8 @@ $squilaChamado = "SELECT T.cd_tarefa
             INNER JOIN DB_CRM_CESUDESK.dbo.tarefa_triagem TR ON TR.tarefa_cd_tarefa = T.cd_tarefa
             INNER JOIN DB_CRM_CESUDESK.dbo.triagem R ON R.idtriagem = TR.triagens_idtriagem
                  WHERE R.cd_usuario = {$ID_LOGIN}
-                   AND R.tp_statustriagem in ('Andamento','Aberto')
-              ORDER BY T.dh_entrega_prev asc";
+                   AND T.tp_statustarefa in ('Andamento','Aberta')
+              ORDER BY T.cd_tarefa asc";
 
 $result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
 sqlsrv_execute($result_squilaChamado);
@@ -109,6 +114,15 @@ sqlsrv_execute($result_squilaChamado);
 					</a></li>
 				</ul>
 			</li>
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
+				<em class="fa fa-wrench">&nbsp;</em> Gestão Cesudesk <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
+				</a>
+				<ul class="children collapse" id="sub-item-3">
+					<li><a class="" href="RelatoriosCesudesk.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Relatórios
+					</a></li>
+				</ul>
+			</li>
 			<?php }; ?>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
 			<li><a href="../AdmCrm/login.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
@@ -158,9 +172,9 @@ sqlsrv_execute($result_squilaChamado);
                               <tbody>
                               <tr>
                               	<?php  while($row = sqlsrv_fetch_array($result_squilaChamado)) { 
-                                    if ($row['tp_statustarefa'] == "Fechada") {
+                                    if (date_format($row['dh_entrega_prev'],'d-m-Y') < getdate()) {
                                       $corStatus = "label label-danger label-mini";
-                                    }elseif ($row['tp_statustarefa'] == "Andamento") {
+                                    }elseif (date_format($row['dh_entrega_prev'],'d-m-Y') == getdate()) {
                                       $corStatus = "label label-warning  label-mini";
                                     }else{
                                       $corStatus = "label label-success  label-mini";
@@ -169,8 +183,8 @@ sqlsrv_execute($result_squilaChamado);
                                   <td><?php echo $row['cd_tarefa']; ?></a></td>
                                   <td><?php echo $row['titulo']; ?></a></td>
                                   <td><?php echo $row['prioridade']; ?></a></td>
-                                  <td><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statustarefa']; ?></a></td></span>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td></span>
+                                  <td><?php echo $row['tp_statustarefa']; ?></a></td>
                       
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
