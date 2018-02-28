@@ -193,6 +193,15 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 					<li><a class="" href="RelatoriosCesudesk.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Relatórios
 					</a></li>
+					<li><a class="" href="Modulos.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Módulos
+					</a></li>
+					<li><a class="" href="Projetos.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Projetos
+					</a></li>
+					<li><a class="" href="TipoTarefa.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Tipos de Tarefas
+					</a></li>
 				</ul>
 			</li>
 		    <?php }; ?>

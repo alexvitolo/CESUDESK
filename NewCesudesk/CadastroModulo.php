@@ -10,33 +10,10 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 }
 
 
-
-$squilaProjeto = "SELECT cd_projeto
-                        ,desc_projeto
-                    FROM DB_CRM_CESUDESK.dbo.projeto
-                   WHERE tp_statusprojeto ='Andamento' 
-                   ORDER by 1 DESC";
-
-$result_Projeto = sqlsrv_prepare($conn, $squilaProjeto);
-sqlsrv_execute($result_Projeto);
-
-
-$squilaModulo = "SELECT cd_modulo
-                        ,desc_modulo
-                    FROM DB_CRM_CESUDESK.dbo.modulo
-                ORDER by desc_modulo";
-
-$result_Modulo = sqlsrv_prepare($conn, $squilaModulo);
-sqlsrv_execute($result_Modulo);
-
-
-$squilaTipoTarefa = "SELECT cd_tipotarefa
-                       ,desc_tipotarefa
-                   FROM DB_CRM_CESUDESK.dbo.tipotarefa
-               ORDER by desc_tipotarefa";
-
-$result_TipoTarefa = sqlsrv_prepare($conn, $squilaTipoTarefa);
-sqlsrv_execute($result_TipoTarefa);
+if ($_SESSION['ACESSO'] <> 1 )  {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+}
 
 ?>
 
@@ -89,7 +66,7 @@ sqlsrv_execute($result_TipoTarefa);
 		<!-- </form> -->
 		<ul class="nav menu">
 			<li class=""><a href="main.php"><em class="fa fa-dashboard">&nbsp;</em>Resumo</a></li>
-			<li class="parent active"><a data-toggle="collapse" href="#sub-item-1">
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Chamados <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-1">
@@ -114,7 +91,7 @@ sqlsrv_execute($result_TipoTarefa);
 					</a></li>
 				</ul>
 			</li>
-			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
+			<li class="parent active"><a data-toggle="collapse" href="#sub-item-3">
 				<em class="fa fa-wrench">&nbsp;</em> Gestão Cesudesk <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-3">
@@ -145,101 +122,42 @@ sqlsrv_execute($result_TipoTarefa);
 				<li><a href="#">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Novo Chamado</li>
+				<li class="active">Módulos</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Novo Chamado</h1>
+				<h1 class="page-header">Novo Módulo</h1>
 			</div>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h2>Gestão Chamado</h2>
+				<h2>Cadastro de um Novo Módulo</h2>
 			</div>
 			<div class="col-md-10">
 			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaCadastroChamado.php" enctype="multipart/form-data">
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
-							<li class="active" id="litab1"><a href="#tab1" data-toggle="tab">Dados Iniciais</a></li>
-							<li id="litab2"><a href="#tab2" data-toggle="tab">Dados da Solicitação</a></li>
-							<li id="litab3"><a href="#tab3" data-toggle="tab">Anexos</a></li>
+							<li class="active" id="litab1"><a href="#tab1" data-toggle="tab">Dados Modulo</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="tab1">
 								<h4>Dados Iniciais</h4>
 								<div class="form-group">
-									<label>Data de Cadastro</label>
-									<input name="DATA_CADASTRO" class="form-control" type="date" placeholder="" value="<?php echo date('Y-m-d'); ?>" readonly>
+									<label>Descrição do Módulo</label>
+									<input name="DESC_MODULO" class="form-control" placeholder=""  required>
 								</div>
 								<div class="form-group">
-									<label>Data de Entrega</label>
-									<input name="DATA_ENTREGA" id="dataentrega" min="<?php echo $dataValida ?>" class="form-control" type="date" placeholder="Data da Entrega">
-								</div>
-									<div class="form-group">
-										<label>Prioridade</label>
-										<select name="PRIORIDADE" class="form-control">
-											<option>0</option>
-											<option>1</option>
-											<option>2</option>
-											<option>3</option>
-										</select>
-									</div>
-							</div>
-
-							<div class="tab-pane fade" id="tab2">
-								<h4>Dados da Solicitação</h4>
-									<div class="form-group">
-										<label>Projeto</label>
-										<select name="PROJETO" class="form-control">
-											 <?php while ($row = sqlsrv_fetch_array($result_Projeto)){ ?>
-											   <option value="<?php echo $row['cd_projeto']; ?>"><?php echo $row['desc_projeto'] ;?></option>
-											<?php } ?>
-										</select>
-									</div>
-									<div class="form-group">
-										<label>Módulo</label>
-										<select name="MODULO" class="form-control">
-											<?php while ($row = sqlsrv_fetch_array($result_Modulo)){ ?>
-											   <option value="<?php echo $row['cd_modulo']; ?>"><?php echo $row['desc_modulo'] ;?></option>
-											<?php } ?>
-										</select>
-									</div>
-									<div class="form-group">
-										<label>Tipo de Tarefa</label>
-										<select name="TIPO_TAREFA" class="form-control">
-											<?php while ($row = sqlsrv_fetch_array($result_TipoTarefa)){ ?>
-											   <option value="<?php echo $row['cd_tipotarefa']; ?>"><?php echo $row['desc_tipotarefa'] ;?></option>
-											<?php } ?>
-										</select>
-									</div>
-									<div class="form-group">
-									    <label>Título (Resumo da Solicitação)</label>
-									    <input name="resumoSoli" class="form-control" placeholder="Digite o título do chamado">
-								    </div>
-								    <div class="form-group">
-									    <label>Descrição</label>
-									    <textarea name="descSoli" class="form-control" rows="3"></textarea>
-								    </div>
-							</div>
-							<div class="tab-pane fade" id="tab3">
-								<h4>Anexos</h4>
-								<div class="form-group">
-									<label>Carregar Anexo</label>
-									<input type="file" name="anexo[1]">
-									<p class="help-block">Selecione um arquivo para anexar ao chamado.</p>
-									<div class="addJS"></div>
-								</div>
-								<button type="button" id='CriarAnexo'>Adicionar um novo anexo</button>
-								<button type="button" id='RemoverAnexo'>Limpar</button>
+									<label>Informação Complementar</label>
+									<input name="INF_COMPL" class="form-control" placeholder="Digite Aqui as Informações Complementares" required>
 								</div>
 							</div>
 						</div>
 				</div><!--/.panel-->
-			   <button type="submit" onclick="return validar()" class="btn btn-primary">Abrir Chamado</button>
+			   <button type="submit" onclick="return validar()" class="btn btn-primary">Cadastrar Módulo</button>
 			   <button type="reset" class="btn btn-default">Limpar Cadastro</button>
 			   </form><br><br>
 			</div><!--/.col-->
