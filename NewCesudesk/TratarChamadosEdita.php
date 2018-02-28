@@ -141,9 +141,18 @@ sqlsrv_execute($result_squilaAnexo);
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
-		    <?php }; ?>
 				</ul>
 			</li>
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
+				<em class="fa fa-wrench">&nbsp;</em> Gestão Cesudesk <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
+				</a>
+				<ul class="children collapse" id="sub-item-3">
+					<li><a class="" href="RelatoriosCesudesk.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Relatórios
+					</a></li>
+				</ul>
+			</li>
+		    <?php }; ?>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
 			<li><a href="../AdmCrm/login.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
 			<li><a href="ValidaLogout.php"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
@@ -275,7 +284,7 @@ sqlsrv_execute($result_squilaAnexo);
 								<h4>Encerramento</h4><br>
 								<div class="form-group">
 								       <label>Finalizar Chamado</label>
-								        <a href="ValidaEncerraChamado?COD_CHAMADO=<?php echo $COD_CHAMADO; ?>"><button type="button" class="btn btn-primary">Encerrar Chamado</button></a>
+								        <a href="ValidaEncerraChamado.php?COD_CHAMADO=<?php echo $COD_CHAMADO; ?>"><button type="button" class="btn btn-primary">Encerrar Chamado</button></a>
 									    <a></input></a><br><br>
 								</div>
 							</div>

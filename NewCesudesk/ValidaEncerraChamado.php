@@ -14,7 +14,7 @@ $UpdateTriagem = " UPDATE [DB_CRM_CESUDESK].[dbo].[triagem]
                       SET dh_fim_triagem = GETDATE(),
                           inf_resultadotriagem = 'Encerrada',
                           qt_horas_triagem = '00:00',
-                          tp_statustriagem = 'Encerrada',
+                          tp_statustriagem = 'Encerrada'
                     WHERE idtriagem in (SELECT triagens_idtriagem 
                                           FROM [DB_CRM_CESUDESK].[dbo].[tarefa_triagem]
                                          WHERE tarefa_cd_tarefa = {$COD_CHAMADO })";
@@ -31,9 +31,9 @@ $UpdateTriagem = " UPDATE [DB_CRM_CESUDESK].[dbo].[triagem]
 
  $UpdateTarefa = " UPDATE [DB_CRM_CESUDESK].[dbo].[tarefa]
                       SET dh_fechamento = GETDATE(),
-                          qt_horasgastastarefa = '00:00'
+                          qt_horasgastastarefa = '00:00',
                           tp_statustarefa = 'Fechada'
-                    WHERE cd_tarefa {$COD_CHAMADO}";
+                    WHERE cd_tarefa = {$COD_CHAMADO}";
 
                    
  $result_UpdateTarefa = sqlsrv_query($conn, $UpdateTarefa);
