@@ -137,7 +137,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 				<h2>Cadastro de um Novo Módulo</h2>
 			</div>
 			<div class="col-md-10">
-			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaCadastroChamado.php" enctype="multipart/form-data">
+			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaCadastroModulo.php" enctype="multipart/form-data">
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">

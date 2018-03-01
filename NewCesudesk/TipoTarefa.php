@@ -13,25 +13,13 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 }
 
 
-$ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
-$ID_LOGIN = $_SESSION['IDLOGIN'];
+$squilaTipoTarefa= "SELECT cd_tipotarefa
+                        ,desc_tipotarefa
+                   FROM [DB_CRM_CESUDESK].[dbo].[tipotarefa]
+                  ORDER BY 1 desc";
 
-
-$squilaChamado = "SELECT cd_tarefa
-                        ,dh_entrega_prev
-                        ,prioridade
-                        ,titulo
-                        ,tp_statustarefa
-                        ,cd_modulo
-                        ,projeto_cd_projeto
-                        ,solicitante_cd_usuario
-                        ,cd_tipotarefa
-                  FROM DB_CRM_CESUDESK.dbo.tarefa
-                 WHERE tp_statustarefa in ('Andamento','Aberta')
-              ORDER BY dh_entrega_prev asc";
-
-$result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
-sqlsrv_execute($result_squilaChamado);
+$result_squilaTipoTarefa = sqlsrv_prepare($conn, $squilaTipoTarefa);
+sqlsrv_execute($result_squilaTipoTarefa);
 
 
 
@@ -100,7 +88,7 @@ sqlsrv_execute($result_squilaChamado);
 				</ul>
 			</li>
             <?php  if ($_SESSION['ACESSO'] == 1){ ?>
-			<li class="parent active"><a data-toggle="collapse" href="#sub-item-2">
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-2">
 				<em class="fa fa-bug">&nbsp;</em> CRM <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-2">
@@ -112,7 +100,7 @@ sqlsrv_execute($result_squilaChamado);
 					</a></li>
 				</ul>
 			</li>
-			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
+			<li class="parent active"><a data-toggle="collapse" href="#sub-item-3">
 				<em class="fa fa-wrench">&nbsp;</em> Gestão Cesudesk <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-3">
@@ -143,66 +131,45 @@ sqlsrv_execute($result_squilaChamado);
 				<li><a href="#">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Meus Chamados</li>
+				<li class="active">Tipo Tarefa</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Triagem</h1>
+				<h1 class="page-header">Tipo de Tarefas</h1>
 			</div>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h2>Distribuir Chamado para Equipe CRM</h2>
+				<h2>Tipos de Tarefas Cadastradas no Cesudesk</h2>
 			</div>
 			<div class="col-md-10">
 			 <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="RealizaTriagem.php">
+                        <form name="Form" method="post" id="formulario" action="">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela de Chamados Abertos e Andamento </h4>
+                            <h4><i class="fa fa-right"></i> Tabela de Tarefas Cadastradas </h4><br>
+                            <a href="CadastroTipoTarefa.php"><button type="button" class="btn btn-primary">Adicionar Tipo Tarefa</button></a>
                             <hr>
                               <thead>
                               <tr>
-                                  <th><i class=""></i> Código Chamado </th>
-                                  <th><i class=""></i> Título </th>
-                                  <th><i class=""></i> Prioridade </th>
-                                  <th><i class=""></i> Data Entrega </th>
-                                  <th><i class=""></i> Status </th>
-                                  <th><i class=""></i> Direcionar Triagem </th>
-
+                                  <th><i class=""></i> Cod Tipo Tarefa </th>
+                                  <th><i class=""></i> Descrição </th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
-                              	<?php  while($row = sqlsrv_fetch_array($result_squilaChamado)) { 
-                                    if ($row['tp_statustarefa'] == "Fechada") {
-                                      $corStatus = "label label-danger label-mini";
-                                    }elseif ($row['tp_statustarefa'] == "Aberta") {
-                                      $corStatus = "label label-success  label-mini";
-                                    }else{
-                                      $corStatus = "label label-warning  label-mini";
-                                    } 
-                                    ?>                               
-                                  <td><?php echo $row['cd_tarefa']; ?></a></td>
-                                  <td><?php echo $row['titulo']; ?></a></td>
-                                  <td><?php echo $row['prioridade']; ?></a></td>
-                                  <td><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statustarefa']; ?></a></td></span>
-                      
-                                  <td>
-                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button style="margin-left: 50px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
-                                  </td>
+                              	<?php  while($row = sqlsrv_fetch_array($result_squilaTipoTarefa)) { 
+                              		   ?>
+                                  <td><?php echo $row['cd_tipotarefa']; ?></a></td>
+                                  <td><?php echo $row['desc_tipotarefa']; ?></a></td>
                               </tr>
-
                               <?php 
                                      }
                               ?>
-                              
                               </tbody>
                           </table>
                         </form>

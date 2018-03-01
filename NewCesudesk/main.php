@@ -44,12 +44,12 @@ if ( ($_SESSION['ACESSO'] <> 1) or ($_SESSION['ACESSO'] =="" ) ) {  // Visão do
    $TituloGrafico = "Histórico Meus Chamados Abertos";
 
    $squilaDadosGrafico = "SELECT 
-	                              (SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -2, GetDate())) )as MES1
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -1, GetDate())) )as MES2
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, 0, GetDate())) )as MES3
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -2, GetDate())) )as FIM1
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -1, GetDate())) )as FIM2
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, 0, GetDate())) )as FIM3
+	                              (SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -2, GetDate())) AND DATEPART(year,dh_cadastro) = DATEPART(year,GETDATE()) )as MES1
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -1, GetDate())) AND DATEPART(year,dh_cadastro) = DATEPART(year,GETDATE()) )as MES3
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, 0, GetDate())) AND DATEPART(year,dh_cadastro) = DATEPART(year,GETDATE()) )as MES2
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -2, GetDate())) AND DATEPART(year,dh_fechamento) = DATEPART(year,GETDATE()) )as FIM1
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -1, GetDate())) AND DATEPART(year,dh_fechamento) = DATEPART(year,GETDATE()) )as FIM3
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE solicitante_cd_usuario = {$USUARIO} AND  DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, 0, GetDate()) AND DATEPART(year,dh_fechamento) = DATEPART(year,GETDATE())) )as FIM2
 	                             ,CONCAT('@',DATENAME(mm,DateAdd(month, -2, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, -1, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, 0, GetDate())),'@') as NomeMes";
    
    $squilaDadosGrafico = str_replace("@", '"', $squilaDadosGrafico);
@@ -78,12 +78,12 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 
    $TituloGrafico = "Resumo Número de Chamados";
 
-   $squilaDadosGrafico = "SELECT (SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) =                              DATEPART(mm,DateAdd(month, -2, GetDate())) )as MES1
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -1, GetDate())) )as MES2
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, 0, GetDate())) )as MES3
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -2, GetDate())) )as FIM1
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -1, GetDate())) )as FIM2
-	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, 0, GetDate())) )as FIM3
+   $squilaDadosGrafico = "SELECT (SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) =                              DATEPART(mm,DateAdd(month, -2, GetDate())) AND DATEPART(year,dh_cadastro) = DATEPART(year,GETDATE()) )as MES1
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, -1, GetDate())) AND DATEPART(year,dh_cadastro) = DATEPART(year,GETDATE()) )as MES3
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_cadastro) = DATEPART(mm,DateAdd(month, 0, GetDate())) AND DATEPART(year,dh_cadastro) = DATEPART(year,GETDATE()) )as MES2
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -2, GetDate())) AND DATEPART(year,dh_fechamento) = DATEPART(year,GETDATE()) )as FIM1
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, -1, GetDate())) AND DATEPART(year,dh_fechamento) = DATEPART(year,GETDATE()) )as FIM3
+	                             ,(SELECT COUNT(1) FROM [DB_CRM_CESUDESK].[dbo].[tarefa] WHERE DATEPART(mm,dh_fechamento) = DATEPART(mm,DateAdd(month, 0, GetDate())) AND DATEPART(year,dh_fechamento) = DATEPART(year,GETDATE()) )as FIM2
 	                             ,CONCAT('@',DATENAME(mm,DateAdd(month, -2, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, -1, GetDate())),'@',',@',DATENAME(mm,DateAdd(month, 0, GetDate())),'@') as NomeMes";
    
    $squilaDadosGrafico = str_replace("@", '"', $squilaDadosGrafico);

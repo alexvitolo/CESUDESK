@@ -2,31 +2,18 @@
 
 session_start();
 
+$dataValida = date("Y-m-d" ,strtotime("now"));
+
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
     // Ação a ser executada: mata o script e manda uma mensagem
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
+
 if ($_SESSION['ACESSO'] <> 1 )  {
  // Ação a ser executada: mata o script e manda uma mensagem
  echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
 }
-
-
-$squilaProjeto= "SELECT cd_projeto
-                        ,desc_projeto
-                        ,dh_fechamento
-                        ,dt_inicio
-                        ,inf_complementar
-                        ,tp_statusprojeto
-  				   FROM [DB_CRM_CESUDESK].[dbo].[projeto]
-                  ORDER BY tp_statusprojeto,cd_projeto desc";
-
-$result_squilaProjeto = sqlsrv_prepare($conn, $squilaProjeto);
-sqlsrv_execute($result_squilaProjeto);
-
-
-
 
 ?>
 
@@ -141,65 +128,46 @@ sqlsrv_execute($result_squilaProjeto);
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Projetos</h1>
+				<h1 class="page-header">Novo Projeto</h1>
 			</div>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h2>Projetos Cadastrados no Cesudesk</h2>
+				<h2>Cadastro de um Novo Projeto</h2>
 			</div>
 			<div class="col-md-10">
-			 <div class="row mt">
-                  <div class="col-md-12">
-                      <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="EditaProjeto.php">
-                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela de Projetos Cadastrados </h4><br>
-                            <a href="CadastroProjeto.php"><button type="button" class="btn btn-primary">Adicionar Projeto</button></a>
-                            <hr>
-                              <thead>
-                              <tr>
-                                  <th><i class=""></i> Cod Projeto </th>
-                                  <th><i class=""></i> Descrição </th>
-                                  <th><i class=""></i> Inf. Complementar </th>
-                                  <th style="width:110px"><i class=""></i> Data Inicio </th>
-                                  <th><i class=""></i> Data Fechamento </th>
-                                  <th><i class=""></i> Status </th>
-                                  <th><i class=""></i> Editar </th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                              	<?php  while($row = sqlsrv_fetch_array($result_squilaProjeto)) { 
-                              	             if ($row['tp_statusprojeto'] == "Fechado") {
-                                              $corStatus = "label label-danger label-mini";
-                                            }elseif ($row['tp_statusprojeto'] == "Andamento") {
-                                              $corStatus = "label label-success  label-mini";
-                                            }else{
-                                              $corStatus = "label label-warning  label-mini";
-                                            } 
-                              		   ?>
-                                  <td><?php echo $row['cd_projeto']; ?></a></td>
-                                  <td><?php echo $row['desc_projeto']; ?></a></td>
-                                  <td><?php echo $row['inf_complementar']; ?></a></td>
-                                  <td><?php echo date_format($row['dt_inicio'],'d-m-Y'); ?></a></td>
-                                  <td><?php echo date_format($row['dh_fechamento'],'d-m-Y'); ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statusprojeto']; ?></a></td></span>
-                                  <td>
-                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button style="margin-left: 25px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_projeto'] ?>"  name="cd_projeto"><i class="fa fa-pencil"></i></button>
-                                  </td>
-                              </tr>
-                              <?php 
-                                     }
-                              ?>
-                              </tbody>
-                          </table>
-                        </form>
-                      </div><!-- /content-panel -->
-                  </div><!-- /col-md-12 -->
-              </div><!-- /row -->
+			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaCadastroProjeto.php" enctype="multipart/form-data">
+				<div class="panel panel-default">
+					<div class="panel-body tabs">
+						<ul class="nav nav-pills">
+							<li class="active" id="litab1"><a href="#tab1" data-toggle="tab">Dados Projeto</a></li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="tab1">
+								<h4>Dados Iniciais</h4>
+								<div class="form-group">
+									<label>Descrição do Projeto</label>
+									<input name="DESC_PROJETO" class="form-control" placeholder=""  required>
+								</div>
+								<div class="form-group">
+									<label>Data Início</label>
+									<input name="DT_INICIO" class="form-control" type="date" placeholder=""  required>
+								</div>
+								<div class="form-group">
+									<label>Data Fechamento</label>
+									<input name="DT_FECHAMENTO" class="form-control" type="date" placeholder=""  required>
+								</div>
+								<div class="form-group">
+									<label>Informação Complementar</label>
+									<input name="INF_COMPL" class="form-control" placeholder="Digite Aqui as Informações Complementares" required>
+								</div>
+							</div>
+						</div>
+				</div><!--/.panel-->
+			   <button type="submit" onclick="return validar()" class="btn btn-primary">Cadastrar Projeto</button>
+			   <button type="reset" class="btn btn-default">Limpar Cadastro</button>
+			   </form><br><br>
 			</div><!--/.col-->
 		</div><!--/.row-->
 	</div>	<!--/.main-->
@@ -212,17 +180,8 @@ sqlsrv_execute($result_squilaProjeto);
 	<script src="js/easypiechart-data.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/custom.js"></script>
-	<script>
-		window.onload = function () {
-	       var chart1 = document.getElementById("line-chart").getContext("2d");
-	       window.myLine = new Chart(chart1).Line(lineChartData, {
-	       responsive: true,
-	       scaleLineColor: "rgba(0,0,0,.2)",
-	       scaleGridLineColor: "rgba(0,0,0,.05)",
-	       scaleFontColor: "#c5c7cc"
-	       });
-         };
 
+	<script language="javascript" type="text/javascript">
 	</script>
 		
 </body>

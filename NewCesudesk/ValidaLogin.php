@@ -28,7 +28,7 @@ $squilaUsuario = "SELECT
                      ,tc.ID_MATRICULA
                      ,tc.ID_COLABORADOR
                 FROM tb_crm_login tl
-          INNER JOIN tb_crm_colaborador tc on tc.LOGIN_REDE = tl.USUARIO
+          LEFT JOIN tb_crm_colaborador tc on tc.LOGIN_REDE = tl.USUARIO
                 WHERE USUARIO = '{$USERVALIDA}' 
                   AND tc.STATUS_COLABORADOR = 'ATIVO' 
                   AND tl.BO_ATIVO = 'S' " ;
