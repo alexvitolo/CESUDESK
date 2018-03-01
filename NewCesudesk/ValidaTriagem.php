@@ -28,7 +28,7 @@ foreach($_POST['CheckboxID'] as $key => $value ){
    $ResultValidaTriagem= sqlsrv_query($conn, $SelectValidaTriagem);
    sqlsrv_execute($ResultValidaTriagem);
 
-   $VetorValidaTriagem = sqlsrv_fetch_array($ResultValidaTriagem);;
+   $VetorValidaTriagem = sqlsrv_fetch_array($ResultValidaTriagem);
 
 
    if ($VetorValidaTriagem == null) {

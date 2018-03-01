@@ -2,41 +2,18 @@
 
 session_start();
 
+$dataValida = date("Y-m-d" ,strtotime("now"));
+
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
     // Ação a ser executada: mata o script e manda uma mensagem
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
+
 if ($_SESSION['ACESSO'] <> 1 )  {
  // Ação a ser executada: mata o script e manda uma mensagem
  echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
 }
-
-$ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
-$ID_LOGIN = $_SESSION['IDLOGIN'];
-
-
-$squilaChamado = "SELECT T.cd_tarefa
-                        ,T.dh_entrega_prev
-                        ,T.prioridade
-                        ,T.titulo
-                        ,T.tp_statustarefa
-                        ,T.cd_modulo
-                        ,T.projeto_cd_projeto
-                        ,T.solicitante_cd_usuario
-                        ,T.cd_tipotarefa
-                  FROM DB_CRM_CESUDESK.dbo.tarefa T
-            INNER JOIN DB_CRM_CESUDESK.dbo.tarefa_triagem TR ON TR.tarefa_cd_tarefa = T.cd_tarefa
-            INNER JOIN DB_CRM_CESUDESK.dbo.triagem R ON R.idtriagem = TR.triagens_idtriagem
-                 WHERE R.cd_usuario = {$ID_LOGIN}
-                   AND T.tp_statustarefa in ('Andamento','Aberta')
-              ORDER BY T.cd_tarefa asc";
-
-$result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
-sqlsrv_execute($result_squilaChamado);
-
-
-
 
 ?>
 
@@ -102,7 +79,7 @@ sqlsrv_execute($result_squilaChamado);
 				</ul>
 			</li>
             <?php  if ($_SESSION['ACESSO'] == 1){ ?>
-			<li class="parent active"><a data-toggle="collapse" href="#sub-item-2">
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-2">
 				<em class="fa fa-bug">&nbsp;</em> CRM <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-2">
@@ -114,7 +91,7 @@ sqlsrv_execute($result_squilaChamado);
 					</a></li>
 				</ul>
 			</li>
-			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
+			<li class="parent active"><a data-toggle="collapse" href="#sub-item-3">
 				<em class="fa fa-wrench">&nbsp;</em> Gestão Cesudesk <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-3">
@@ -145,72 +122,40 @@ sqlsrv_execute($result_squilaChamado);
 				<li><a href="#">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Tratativa de Chamados</li>
+				<li class="active">Tipo Tarefa</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Chamados Triados</h1>
+				<h1 class="page-header">Nova Tarefa</h1>
 			</div>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h2>Tratativa de Chamados</h2>
+				<h2>Cadastro de uma Nova Tarefa</h2>
 			</div>
 			<div class="col-md-10">
-			 <div class="row mt">
-                  <div class="col-md-12">
-                      <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="TratarChamadosEdita.php">
-                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Lista de Chamados para serem Tratados </h4>
-                            <hr>
-                              <thead>
-                              <tr>
-                                  <th><i class=""></i> Código Chamado </th>
-                                  <th><i class=""></i> Título </th>
-                                  <th><i class=""></i> Prioridade </th>
-                                  <th><i class=""></i> Data Entrega </th>
-                                  <th><i class=""></i> Status </th>
-                                  <th><i class=""></i> Visualizar </th>
-
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                              	<?php  while($row = sqlsrv_fetch_array($result_squilaChamado)) { 
-                                    if (date_format($row['dh_entrega_prev'],'d-m-Y') < getdate()) {
-                                      $corStatus = "label label-danger label-mini";
-                                    }elseif (date_format($row['dh_entrega_prev'],'d-m-Y') == getdate()) {
-                                      $corStatus = "label label-warning  label-mini";
-                                    }else{
-                                      $corStatus = "label label-success  label-mini";
-                                    } 
-                                    ?>                               
-                                  <td><?php echo $row['cd_tarefa']; ?></a></td>
-                                  <td><?php echo $row['titulo']; ?></a></td>
-                                  <td><?php echo $row['prioridade']; ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td></span>
-                                  <td><?php echo $row['tp_statustarefa']; ?></a></td>
-                      
-                                  <td>
-                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button style="margin-left: 25px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
-                                  </td>
-                              </tr>
-
-                              <?php 
-                                     }
-                              ?>
-                              
-                              </tbody>
-                          </table>
-                        </form>
-                      </div><!-- /content-panel -->
-                  </div><!-- /col-md-12 -->
-              </div><!-- /row -->
+			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaCadastroTipoTarefa.php">
+				<div class="panel panel-default">
+					<div class="panel-body tabs">
+						<ul class="nav nav-pills">
+							<li class="active" id="litab1"><a href="#tab1" data-toggle="tab">Dados Modulo</a></li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="tab1">
+								<h4>Dados Iniciais</h4>
+								<div class="form-group">
+									<label>Descrição da Tarefa</label>
+									<input name="DESC_TAREFA" class="form-control" placeholder=""  required>
+								</div>
+							</div>
+						</div>
+				</div><!--/.panel-->
+			   <button type="submit" onclick="" class="btn btn-primary">Cadastrar Tarefa</button>
+			   <button type="reset" class="btn btn-default">Limpar Cadastro</button>
+			   </form><br><br>
 			</div><!--/.col-->
 		</div><!--/.row-->
 	</div>	<!--/.main-->
@@ -223,17 +168,8 @@ sqlsrv_execute($result_squilaChamado);
 	<script src="js/easypiechart-data.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/custom.js"></script>
-	<script>
-		window.onload = function () {
-	       var chart1 = document.getElementById("line-chart").getContext("2d");
-	       window.myLine = new Chart(chart1).Line(lineChartData, {
-	       responsive: true,
-	       scaleLineColor: "rgba(0,0,0,.2)",
-	       scaleGridLineColor: "rgba(0,0,0,.05)",
-	       scaleFontColor: "#c5c7cc"
-	       });
-         };
 
+	<script language="javascript" type="text/javascript">
 	</script>
 		
 </body>
