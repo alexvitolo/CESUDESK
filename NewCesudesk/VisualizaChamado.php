@@ -101,7 +101,7 @@ sqlsrv_execute($result_squilaAnexo);
 	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
 		<div class="profile-sidebar">
 			<div class="profile-userpic">
-				<img src="http://placehold.it/50/30a5ff/fff" class="img-responsive" alt="">
+				<img src="imag\people_512.png" class="img-responsive" alt="">
 			</div>
 			<div class="profile-usertitle">
 				<div class="profile-usertitle-name"><?php echo $_SESSION['NOME']; ?></div>
@@ -295,17 +295,6 @@ sqlsrv_execute($result_squilaAnexo);
 	<script src="js/custom.js"></script>
 
 	<script language="javascript" type="text/javascript">
-
-		window.onload = function ()
-		{
-	       var chart1 = document.getElementById("line-chart").getContext("2d");
-	       window.myLine = new Chart(chart1).Line(lineChartData, {
-	       responsive: true,
-	       scaleLineColor: "rgba(0,0,0,.2)",
-	       scaleGridLineColor: "rgba(0,0,0,.05)",
-	       scaleFontColor: "#c5c7cc"
-	       });
-        };
         
 	</script>
 

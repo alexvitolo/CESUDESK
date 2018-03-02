@@ -11,22 +11,21 @@ $ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
 $ID_LOGIN = $_SESSION['IDLOGIN'];
 
 
-$squilaChamado = "SELECT cd_tarefa
-                        ,dh_entrega_prev
-                        ,prioridade
-                        ,titulo
-                        ,tp_statustarefa
-                        ,cd_modulo
-                        ,projeto_cd_projeto
-                        ,solicitante_cd_usuario
-                        ,cd_tipotarefa
-                  FROM DB_CRM_CESUDESK.dbo.tarefa
-                 WHERE solicitante_cd_usuario = {$ID_LOGIN}
-              ORDER BY dh_entrega_prev desc";
+$squilaChamado = "SELECT TOP 120 cd_tarefa
+                                ,dh_entrega_prev
+                                ,prioridade
+                                ,titulo
+                                ,tp_statustarefa
+                                ,cd_modulo
+                                ,projeto_cd_projeto
+                                ,solicitante_cd_usuario
+                                ,cd_tipotarefa
+                          FROM DB_CRM_CESUDESK.dbo.tarefa
+                         WHERE solicitante_cd_usuario = {$ID_LOGIN}
+                      ORDER BY tp_statustarefa,dh_entrega_prev desc";
 
 $result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
 sqlsrv_execute($result_squilaChamado);
-
 
 
 
@@ -65,7 +64,7 @@ sqlsrv_execute($result_squilaChamado);
 	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
 		<div class="profile-sidebar">
 			<div class="profile-userpic">
-				<img src="http://placehold.it/50/30a5ff/fff" class="img-responsive" alt="">
+				<img src="imag\people_512.png" class="img-responsive" alt="">
 			</div>
 			<div class="profile-usertitle">
 				<div class="profile-usertitle-name"><?php echo $_SESSION['NOME']; ?></div>
@@ -157,7 +156,7 @@ sqlsrv_execute($result_squilaChamado);
                       <div class="content-panel">
                         <form name="Form" method="post" id="formulario" action="VisualizaChamado.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela Colaboradores </h4>
+                            <h4><i class="fa fa-right"></i> Tabela Chamados Recentes </h4>
                             <hr>
                               <thead>
                               <tr>
