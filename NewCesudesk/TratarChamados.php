@@ -38,6 +38,27 @@ sqlsrv_execute($result_squilaChamado);
 
 
 
+$squilaAlert = "SELECT TOP 1 CASE 
+		                WHEN M.id_usuario ={$ID_LOGIN} THEN 'S' 
+		                ELSE 'N' 
+		                END POSSUI_COMENT
+		                ,T.cd_tarefa
+                  FROM [DB_CRM_CESUDESK].[dbo].[tarefa] T
+            INNER JOIN [DB_CRM_CESUDESK].[dbo].[mensagem_logs] M ON M.id_tarefa = T.cd_tarefa
+            INNER JOIN (SELECT MAX(ML.id) ID_ZICA
+								   ,ML.id_tarefa
+					      FROM [DB_CRM_CESUDESK].[dbo].[mensagem_logs] ML
+			          GROUP BY ML.id_tarefa) XCLEB ON XCLEB.ID_ZICA = M.id 
+						                               AND XCLEB.id_tarefa =M.id_tarefa
+                 WHERE T.tp_statustarefa in ('Aberta', 'Andamento')
+			       AND M.dt_insert is not null
+			       ORDER BY M.dt_insert desc";
+
+$result_squilaAlert= sqlsrv_prepare($conn, $squilaAlert);
+sqlsrv_execute($result_squilaAlert);
+
+$VetorAlert = sqlsrv_fetch_array($result_squilaAlert);
+
 
 ?>
 
@@ -51,6 +72,7 @@ sqlsrv_execute($result_squilaChamado);
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/datepicker3.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="TratarChamados.css">
 	
 	<!--Custom Font-->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -155,6 +177,14 @@ sqlsrv_execute($result_squilaChamado);
 				<h1 class="page-header">Chamados Triados</h1>
 			</div>
 		</div><!--/.row-->
+
+			 <?php if ($VetorAlert['POSSUI_COMENT'] == 'N'){ ?>
+		             <div class="alert"><span class="fa-icon fa fa-exclamation-triangle"> </span>
+                     <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                     Você possui Comentários Novos ! Chamado : <?php echo $VetorAlert['cd_tarefa']; ?>
+                     </div>
+            <?php } ?>
+
 		
 		<div class="row">
 			<div class="col-lg-12">
@@ -235,6 +265,27 @@ sqlsrv_execute($result_squilaChamado);
 	       scaleFontColor: "#c5c7cc"
 	       });
          };
+
+    // Get all elements with class="closebtn"
+    var close = document.getElementsByClassName("closebtn");
+    var i;
+
+    // Loop through all close buttons
+    for (i = 0; i < close.length; i++) {
+        // When someone clicks on a close button
+        close[i].onclick = function(){
+    
+            // Get the parent of <span class="closebtn"> (<div class="alert">)
+            var div = this.parentElement;
+    
+            // Set the opacity of div to 0 (transparent)
+            div.style.opacity = "0";
+    
+            // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
+            setTimeout(function(){ div.style.display = "none"; }, 600);
+        }
+    }
+
 
 	</script>
 		
