@@ -25,6 +25,7 @@ $squilaChamado = "SELECT T.cd_tarefa
                         ,T.projeto_cd_projeto
                         ,T.solicitante_cd_usuario
                         ,T.cd_tipotarefa
+                        ,(SELECT USUARIO FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] WHERE ID = T.solicitante_cd_usuario) as NM_SOLICITA
                   FROM DB_CRM_CESUDESK.dbo.tarefa T
             INNER JOIN DB_CRM_CESUDESK.dbo.tarefa_triagem TR ON TR.tarefa_cd_tarefa = T.cd_tarefa
             INNER JOIN DB_CRM_CESUDESK.dbo.triagem R ON R.idtriagem = TR.triagens_idtriagem
@@ -73,7 +74,7 @@ sqlsrv_execute($result_squilaChamado);
 	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
 		<div class="profile-sidebar">
 			<div class="profile-userpic">
-				<img src="http://placehold.it/50/30a5ff/fff" class="img-responsive" alt="">
+				<img src="imag\people_512.png" class="img-responsive" alt="">
 			</div>
 			<div class="profile-usertitle">
 				<div class="profile-usertitle-name"><?php echo $_SESSION['NOME']; ?></div>
@@ -161,7 +162,7 @@ sqlsrv_execute($result_squilaChamado);
 			</div>
 			<div class="col-md-10">
 			 <div class="row mt">
-                  <div class="col-md-12">
+                  <div class="col-md-12" style="width: 1050px">
                       <div class="content-panel">
                         <form name="Form" method="post" id="formulario" action="TratarChamadosEdita.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
@@ -190,6 +191,7 @@ sqlsrv_execute($result_squilaChamado);
                                     } 
                                     ?>                               
                                   <td><?php echo $row['cd_tarefa']; ?></a></td>
+                                  <td><?php echo $row['NM_SOLICITA']; ?></a></td>
                                   <td><?php echo $row['titulo']; ?></a></td>
                                   <td><?php echo $row['prioridade']; ?></a></td>
                                   <td><span class="<?php echo $corStatus ?>"><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td></span>

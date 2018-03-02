@@ -17,18 +17,19 @@ $ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
 $ID_LOGIN = $_SESSION['IDLOGIN'];
 
 
-$squilaChamado = "SELECT cd_tarefa
-                        ,dh_entrega_prev
-                        ,prioridade
-                        ,titulo
-                        ,tp_statustarefa
-                        ,cd_modulo
-                        ,projeto_cd_projeto
-                        ,solicitante_cd_usuario
-                        ,cd_tipotarefa
-                  FROM DB_CRM_CESUDESK.dbo.tarefa
-                 WHERE tp_statustarefa in ('Andamento','Aberta')
-              ORDER BY dh_entrega_prev asc";
+$squilaChamado = "SELECT T.cd_tarefa
+                        ,T.dh_entrega_prev
+                        ,T.prioridade
+                        ,T.titulo
+                        ,T.tp_statustarefa
+                        ,T.cd_modulo
+                        ,T.projeto_cd_projeto
+                        ,T.solicitante_cd_usuario
+                        ,T.cd_tipotarefa
+                        ,(SELECT USUARIO FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] WHERE ID = T.solicitante_cd_usuario) as NM_SOLICITA
+                  FROM DB_CRM_CESUDESK.dbo.tarefa T
+                 WHERE T.tp_statustarefa in ('Andamento','Aberta')
+              ORDER BY T.tp_statustarefa,T.dh_entrega_prev asc";
 
 $result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
 sqlsrv_execute($result_squilaChamado);
@@ -71,7 +72,7 @@ sqlsrv_execute($result_squilaChamado);
 	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
 		<div class="profile-sidebar">
 			<div class="profile-userpic">
-				<img src="http://placehold.it/50/30a5ff/fff" class="img-responsive" alt="">
+				<img src="imag\people_512.png" class="img-responsive" alt="">
 			</div>
 			<div class="profile-usertitle">
 				<div class="profile-usertitle-name"><?php echo $_SESSION['NOME']; ?></div>
@@ -159,7 +160,7 @@ sqlsrv_execute($result_squilaChamado);
 			</div>
 			<div class="col-md-10">
 			 <div class="row mt">
-                  <div class="col-md-12">
+                  <div class="col-md-12" style="width: 1050px">
                       <div class="content-panel">
                         <form name="Form" method="post" id="formulario" action="RealizaTriagem.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
@@ -168,9 +169,10 @@ sqlsrv_execute($result_squilaChamado);
                               <thead>
                               <tr>
                                   <th><i class=""></i> Código Chamado </th>
+                                  <th><i class=""></i> Solicitante </th>
                                   <th><i class=""></i> Título </th>
                                   <th><i class=""></i> Prioridade </th>
-                                  <th><i class=""></i> Data Entrega </th>
+                                  <th style="width:110px"><i class=""></i> Data Entrega </th>
                                   <th><i class=""></i> Status </th>
                                   <th><i class=""></i> Direcionar Triagem </th>
 
@@ -185,15 +187,25 @@ sqlsrv_execute($result_squilaChamado);
                                       $corStatus = "label label-success  label-mini";
                                     }else{
                                       $corStatus = "label label-warning  label-mini";
-                                    } 
+                                    }
+
+                                    if ( (date_format($row['dh_entrega_prev'],'Y-m-d')) < date('Y-m-d') ) {
+                                    	 $CorStatus = 'bgcolor="#ffe6e6"';
+                                    }elseif ( (date_format($row['dh_entrega_prev'],'Y-m-d')) == date('Y-m-d') ) {
+                                    	$CorStatus = 'bgcolor="#ffffb3"';
+                                    }else{
+                                    	$CorStatus = '';
+                                    }
+
                                     ?>                               
-                                  <td><?php echo $row['cd_tarefa']; ?></a></td>
-                                  <td><?php echo $row['titulo']; ?></a></td>
-                                  <td><?php echo $row['prioridade']; ?></a></td>
-                                  <td><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statustarefa']; ?></a></td></span>
+                                  <td <?php echo $CorStatus ; ?> ><?php echo $row['cd_tarefa']; ?></a></td>
+                                  <td <?php echo $CorStatus ; ?> ><?php echo $row['NM_SOLICITA']; ?></a></td>
+                                  <td <?php echo $CorStatus ; ?> ><?php echo $row['titulo']; ?></a></td>
+                                  <td <?php echo $CorStatus ; ?>  style="text-align:center"><?php echo $row['prioridade']; ?></a></td>
+                                  <td <?php echo $CorStatus ; ?> ><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td>
+                                  <td <?php echo $CorStatus ; ?> ><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statustarefa']; ?></a></td></span>
                       
-                                  <td>
+                                  <td <?php echo $CorStatus ; ?> >
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                       <button style="margin-left: 50px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
                                   </td>
