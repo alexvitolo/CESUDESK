@@ -156,7 +156,8 @@ sqlsrv_execute($result_squilaChamado);
                       <div class="content-panel">
                         <form name="Form" method="post" id="formulario" action="VisualizaChamado.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela Chamados Recentes </h4>
+                            <h4><i class="fa fa-right"></i> Tabela Chamados Recentes </h4><br>
+                            <a href="RelatorioGeralMeusChamados.php"><button type="button" class="btn btn-primary">Relatório Geral Chamados</button></a>
                             <hr>
                               <thead>
                               <tr>
