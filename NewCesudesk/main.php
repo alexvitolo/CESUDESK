@@ -7,6 +7,11 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
+// refresh automático pág
+
+echo "<meta HTTP-EQUIV='refresh' CONTENT='320; URL=..\NewCesudesk\Main.php'>";
+
+
 $USUARIO = $_SESSION['IDLOGIN'];
 
 $squilaResumo = "SELECT TOP 1 CASE 
@@ -206,7 +211,7 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 			</li>
 		    <?php }; ?>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
-			<li><a href="../AdmCrm/login.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
+			<li><a href="../AdmCrm/validaSenhaLogin.php" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
 			<li><a href="ValidaLogout.php"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
 		</ul>
 	</div><!--/.sidebar-->
@@ -255,8 +260,8 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
 					<div class="panel panel-orange panel-widget border-right">
 						<div class="row no-padding"><em class="fa fa-xl fa-users color-teal"></em>
-							<div class="large">20</div>
-							<div class="text-muted">Acesso</div>
+							<div class="large">15</div>
+							<div class="text-muted">Acessos</div>
 						</div>
 					</div>
 				</div>

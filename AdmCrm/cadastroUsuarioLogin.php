@@ -233,7 +233,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 
                            <tr>
                             <td style="width:110px";><br>
-                             <label style="margin-left: 15px" for="nome">Acesso: </label>
+                             <label style="margin-left: 15px" for="nome">Nivel Acesso: </label>
                             </td>
                             <td align="left"><br>
                              <select name="ACESSO_ADM">
@@ -241,6 +241,19 @@ if ($_SESSION['ACESSO'] <> 1 )  {
                                     <option value=1>ADM</option>
                                     <option value=2>QUALIDADE</option> 
                                     <option value=null>SUPERVISOR</option>
+
+                             </select>
+                            </td>
+                           </tr>
+
+                           <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome">Acesso GCO ? </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="ACESSO_GCO">
+                                    <option value=N>Não</option>
+                                    <option value=S>Sim</option> 
 
                              </select>
                             </td>
