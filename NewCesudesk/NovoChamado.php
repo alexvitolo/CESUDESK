@@ -133,6 +133,17 @@ sqlsrv_execute($result_TipoTarefa);
 				</ul>
 			</li>
 			<?php }; ?>
+			<?php  if ($_SESSION['ACESSO'] == 2){ ?>
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-2">
+				<em class="fa fa-bookmark">&nbsp;</em> Qualidade <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
+				</a>
+				<ul class="children collapse" id="sub-item-2">
+					<li><a class="" href="TratarChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
+					</a></li>
+				</ul>
+			</li>
+			<?php }; ?>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
 			<li><a href="../AdmCrm/validaSenhaLogin.php" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
 			<li><a href="ValidaLogout.php"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
