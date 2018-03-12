@@ -112,6 +112,9 @@ sqlsrv_execute($result_TipoTarefa);
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
+<li><a class="" href="TodosChamadosQualidade.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
+					</a></li>
 				</ul>
 			</li>
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
@@ -140,6 +143,12 @@ sqlsrv_execute($result_TipoTarefa);
 				<ul class="children collapse" id="sub-item-2">
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
+					</a></li>
+					<li><a class="" href="TodosChamadosQualidade.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
+					</a></li>
+<li><a class="" href="TodosChamadosQualidade.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
 				</ul>
 			</li>
