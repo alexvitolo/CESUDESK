@@ -44,6 +44,8 @@ $squilaAlert = "SELECT TOP 1 CASE
 		                END POSSUI_COMENT
 		                ,T.cd_tarefa
                   FROM [DB_CRM_CESUDESK].[dbo].[tarefa] T
+            INNER JOIN [DB_CRM_CESUDESK].[dbo].[tarefa_triagem] TT ON TT.tarefa_cd_tarefa = T.cd_tarefa
+            INNER JOIN [DB_CRM_CESUDESK].[dbo].[triagem] TR ON TR.idtriagem = TT.triagens_idtriagem
             INNER JOIN [DB_CRM_CESUDESK].[dbo].[mensagem_logs] M ON M.id_tarefa = T.cd_tarefa
             INNER JOIN (SELECT MAX(ML.id) ID_ZICA
 								   ,ML.id_tarefa
@@ -52,6 +54,7 @@ $squilaAlert = "SELECT TOP 1 CASE
 						                               AND XCLEB.id_tarefa =M.id_tarefa
                  WHERE T.tp_statustarefa in ('Aberta', 'Andamento')
 			       AND M.dt_insert is not null
+			       AND TR.cd_usuario = {$ID_LOGIN}
 			       ORDER BY M.dt_insert desc";
 
 $result_squilaAlert= sqlsrv_prepare($conn, $squilaAlert);
