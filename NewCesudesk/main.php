@@ -4,7 +4,7 @@ session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
     // Ação a ser executada: mata o script e manda uma mensagem
-   echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
+   echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>'; 
 }
 
 // refresh automático pág
