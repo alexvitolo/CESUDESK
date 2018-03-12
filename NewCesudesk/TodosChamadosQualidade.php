@@ -4,54 +4,36 @@ session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
     // Ação a ser executada: mata o script e manda uma mensagem
-   echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
+   echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>'; 
+}
+
+if ($_SESSION['ACESSO'] == 0 )  {
+ // Ação a ser executada: mata o script e manda uma mensagem
+ echo  '<script type="text/javascript"> window.location.href = "main.php"  </script>';
 }
 
 $ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
 $ID_LOGIN = $_SESSION['IDLOGIN'];
 
 
-$squilaChamado = "SELECT TOP 120 cd_tarefa
-                                ,dh_entrega_prev
-                                ,prioridade
-                                ,titulo
-                                ,tp_statustarefa
-                                ,cd_modulo
-                                ,projeto_cd_projeto
-                                ,solicitante_cd_usuario
-                                ,cd_tipotarefa
-                          FROM DB_CRM_CESUDESK.dbo.tarefa
-                         WHERE solicitante_cd_usuario = {$ID_LOGIN}
-                      ORDER BY tp_statustarefa,dh_entrega_prev desc";
+$squilaChamado = "SELECT TOP 150 T.cd_tarefa
+                        ,T.dh_entrega_prev
+                        ,T.prioridade
+                        ,T.titulo
+                        ,T.tp_statustarefa
+                        ,T.cd_modulo
+                        ,T.projeto_cd_projeto
+                        ,T.solicitante_cd_usuario
+                        ,T.cd_tipotarefa
+                        ,(SELECT USUARIO FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] WHERE ID = T.solicitante_cd_usuario) as NM_SOLICITA
+                  FROM DB_CRM_CESUDESK.dbo.tarefa T
+            INNER JOIN DB_CRM_CESUDESK.dbo.tarefa_triagem TR ON TR.tarefa_cd_tarefa = T.cd_tarefa
+            INNER JOIN DB_CRM_CESUDESK.dbo.triagem R ON R.idtriagem = TR.triagens_idtriagem
+                 WHERE R.cd_usuario = {$ID_LOGIN}
+              ORDER BY T.tp_statustarefa asc ,T.cd_tarefa desc";
 
 $result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
 sqlsrv_execute($result_squilaChamado);
-
-
-
-$squilaResumo = "SELECT TOP 1 CASE 
-		                WHEN M.id_usuario ={$ID_LOGIN} THEN 'S' 
-		                ELSE 'N' 
-		                END POSSUI_COMENT
-		                ,T.cd_tarefa
-                  FROM [DB_CRM_CESUDESK].[dbo].[tarefa] T
-            INNER JOIN [DB_CRM_CESUDESK].[dbo].[mensagem_logs] M ON M.id_tarefa = T.cd_tarefa
-            INNER JOIN (SELECT MAX(ML.id) ID_ZICA
-								   ,ML.id_tarefa
-					      FROM [DB_CRM_CESUDESK].[dbo].[mensagem_logs] ML
-			          GROUP BY ML.id_tarefa) XCLEB ON XCLEB.ID_ZICA = M.id 
-						                               AND XCLEB.id_tarefa =M.id_tarefa
-                 WHERE T.solicitante_cd_usuario = {$ID_LOGIN}
-                   AND T.tp_statustarefa in ('Aberta', 'Andamento')
-			       AND M.dt_insert is not null
-			       ORDER BY M.dt_insert desc";
-
-$result_squilaResumo= sqlsrv_prepare($conn, $squilaResumo);
-sqlsrv_execute($result_squilaResumo);
-
-$VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
-
-
 
 
 ?>
@@ -66,7 +48,7 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/datepicker3.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="MeusChamados.css">
+	<link rel="stylesheet" type="text/css" href="TratarChamados.css">
 	
 	<!--Custom Font-->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -106,7 +88,7 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 		<!-- </form> -->
 		<ul class="nav menu">
 			<li class=""><a href="main.php"><em class="fa fa-dashboard">&nbsp;</em>Resumo</a></li>
-			<li class="parent active"><a data-toggle="collapse" href="#sub-item-1">
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Chamados <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-1">
@@ -128,9 +110,6 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 					</a></li>
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
-					</a></li>
-<li><a class="" href="TodosChamadosQualidade.php">
-						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
 				</ul>
 			</li>
@@ -154,7 +133,7 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 			</li>
 			<?php }; ?>
 			<?php  if ($_SESSION['ACESSO'] == 2){ ?>
-			<li class="parent"><a data-toggle="collapse" href="#sub-item-2">
+			<li class="parent active"><a data-toggle="collapse" href="#sub-item-2">
 				<em class="fa fa-bookmark">&nbsp;</em> Qualidade <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-2">
@@ -162,9 +141,6 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
 					<li><a class="" href="TodosChamadosQualidade.php">
-						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
-					</a></li>
-<li><a class="" href="TodosChamadosQualidade.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
 				</ul>
@@ -182,41 +158,33 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 				<li><a href="#">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Meus Chamados</li>
+				<li class="active">Chamados</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Meus Chamados</h1>
+				<h1 class="page-header">Chamados Triados Qualidade</h1>
 			</div>
 		</div><!--/.row-->
-
-
-		<?php if ($VetorResumo['POSSUI_COMENT'] == 'N'){ ?>
-		    <div class="alert"><span class="fa-icon fa fa-exclamation-triangle"> </span>
-                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                Você possui Comentários Novos ! Chamado : <?php echo $VetorResumo['cd_tarefa']; ?>
-            </div>
-         <?php } ?>
 
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h2>Gestão Chamado</h2>
+				<h2>Tratativa de Chamados</h2>
 			</div>
 			<div class="col-md-10">
 			 <div class="row mt">
-                  <div class="col-md-12">
+                  <div class="col-md-12" style="width: 1050px">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="VisualizaChamado.php">
+                        <form name="Form" method="post" id="formulario" action="TratarChamadosEdita.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela Chamados Recentes </h4><br>
-                            <a href="RelatorioGeralMeusChamados.php"><button type="button" class="btn btn-primary">Relatório Geral Chamados</button></a>
+                            <h4><i class="fa fa-right"></i> Lista de Chamados para serem Tratados </h4>
                             <hr>
                               <thead>
                               <tr>
                                   <th><i class=""></i> Código Chamado </th>
+                                  <th><i class=""></i> Solicitante </th>
                                   <th><i class=""></i> Título </th>
                                   <th><i class=""></i> Prioridade </th>
                                   <th><i class=""></i> Data Entrega </th>
@@ -228,19 +196,20 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
                               <tbody>
                               <tr>
                               	<?php  while($row = sqlsrv_fetch_array($result_squilaChamado)) { 
-                                    if ($row['tp_statustarefa'] == "Fechada") {
+                                    if (date_format($row['dh_entrega_prev'],'d-m-Y') < getdate()) {
                                       $corStatus = "label label-danger label-mini";
-                                    }elseif ($row['tp_statustarefa'] == "Andamento") {
+                                    }elseif (date_format($row['dh_entrega_prev'],'d-m-Y') == getdate()) {
                                       $corStatus = "label label-warning  label-mini";
                                     }else{
                                       $corStatus = "label label-success  label-mini";
                                     } 
                                     ?>                               
                                   <td><?php echo $row['cd_tarefa']; ?></a></td>
+                                  <td><?php echo $row['NM_SOLICITA']; ?></a></td>
                                   <td><?php echo $row['titulo']; ?></a></td>
                                   <td><?php echo $row['prioridade']; ?></a></td>
-                                  <td><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statustarefa']; ?></a></td></span>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td></span>
+                                  <td><?php echo $row['tp_statustarefa']; ?></a></td>
                       
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
@@ -280,27 +249,6 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 	       scaleFontColor: "#c5c7cc"
 	       });
          };
-
-             // Get all elements with class="closebtn"
-         var close = document.getElementsByClassName("closebtn");
-         var i;
-     
-     // Loop through all close buttons
-     for (i = 0; i < close.length; i++) {
-         // When someone clicks on a close button
-         close[i].onclick = function(){
-     
-             // Get the parent of <span class="closebtn"> (<div class="alert">)
-             var div = this.parentElement;
-     
-             // Set the opacity of div to 0 (transparent)
-             div.style.opacity = "0";
-     
-             // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
-             setTimeout(function(){ div.style.display = "none"; }, 600);
-         }
-     }
-
 
 	</script>
 		

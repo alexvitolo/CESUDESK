@@ -23,7 +23,8 @@ $squilaUsuario= "SELECT L.ID
                                    AND A.cd_usuario = L.ID),'N') AS POSSUI_CHAMADO
                   FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] L
                  WHERE RECEBE_TRIAGEM = 'S' 
-                   AND BO_ATIVO = 'S' ";
+                   AND BO_ATIVO = 'S' 
+              ORDER BY L.USUARIO asc ";
 
 $result_squilaUsuario = sqlsrv_prepare($conn, $squilaUsuario);
 sqlsrv_execute($result_squilaUsuario);
