@@ -4,12 +4,12 @@ session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
     // Ação a ser executada: mata o script e manda uma mensagem
-   echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
+   echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>'; 
 }
 
-if ($_SESSION['ACESSO'] <> 1 )  {
+if ($_SESSION['ACESSO'] == 0 )  {
  // Ação a ser executada: mata o script e manda uma mensagem
- echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
+ echo  '<script type="text/javascript"> window.location.href = "main.php"  </script>';
 }
 
 $ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
@@ -125,7 +125,7 @@ $VetorAlert = sqlsrv_fetch_array($result_squilaAlert);
 				</ul>
 			</li>
             <?php  if ($_SESSION['ACESSO'] == 1){ ?>
-			<li class="parent active"><a data-toggle="collapse" href="#sub-item-2">
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-2">
 				<em class="fa fa-bug">&nbsp;</em> CRM <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-2">
@@ -152,6 +152,17 @@ $VetorAlert = sqlsrv_fetch_array($result_squilaAlert);
 					</a></li>
 					<li><a class="" href="TipoTarefa.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tipos de Tarefas
+					</a></li>
+				</ul>
+			</li>
+			<?php }; ?>
+			<?php  if ($_SESSION['ACESSO'] == 2){ ?>
+			<li class="parent active"><a data-toggle="collapse" href="#sub-item-2">
+				<em class="fa fa-bookmark">&nbsp;</em> Qualidade <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
+				</a>
+				<ul class="children collapse" id="sub-item-2">
+					<li><a class="" href="TratarChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
 				</ul>
 			</li>
