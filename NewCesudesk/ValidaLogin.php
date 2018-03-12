@@ -27,10 +27,9 @@ $squilaUsuario = "SELECT
                      ,tl.ACESSO_ADM
                      ,tc.ID_MATRICULA
                      ,tc.ID_COLABORADOR
-                FROM tb_crm_login tl
-          LEFT JOIN tb_crm_colaborador tc on tc.LOGIN_REDE = tl.USUARIO
+                FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] tl
+           LEFT JOIN [DB_CRM_REPORT].[dbo].[tb_crm_colaborador] tc on tc.LOGIN_REDE = tl.USUARIO AND tc.STATUS_COLABORADOR = 'ATIVO' -- LEFT colaborador GCO nao obrigatorio
                 WHERE USUARIO = '{$USERVALIDA}' 
-                  AND tc.STATUS_COLABORADOR = 'ATIVO' 
                   AND tl.BO_ATIVO = 'S' " ;
 
 $result_Usuario = sqlsrv_prepare($conn, $squilaUsuario);
@@ -102,7 +101,7 @@ sqlsrv_execute($result_Usuario);
                   }   
                   else {
                              sqlsrv_free_stmt($result_InsertLoggedUser);
-                             // echo  '<script type="text/javascript">alert("Bem-Vindo!");</script>';
+                             echo  '<script type="text/javascript">alert("Bem-Vindo!");</script>';
                              echo  '<script type="text/javascript"> window.location.href = "main.php" </script>';
                     }
                   

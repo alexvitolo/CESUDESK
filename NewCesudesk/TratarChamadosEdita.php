@@ -163,7 +163,7 @@ sqlsrv_execute($result_squilaAnexo);
 			</li>
 		    <?php }; ?>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
-			<li><a href="../AdmCrm/login.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
+			<li><a href="../AdmCrm/validaSenhaLogin.php" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
 			<li><a href="ValidaLogout.php"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
 		</ul>
 	</div><!--/.sidebar-->
@@ -248,7 +248,7 @@ sqlsrv_execute($result_squilaAnexo);
 								    </div>
 								    <div class="form-group">
 									    <label>Descrição</label>
-									    <textarea name="descSoli" class="form-control" value="" readonly><?php echo $vetorSQLVisu['desc_tarefa']; ?></textarea>
+									    <textarea name="descSoli" class="form-control" value="" cols="100" rows="5" readonly><?php echo $vetorSQLVisu['desc_tarefa']; ?></textarea>
 								    </div>
 							</div>
 							<div class="tab-pane fade" id="tab3">
@@ -268,6 +268,7 @@ sqlsrv_execute($result_squilaAnexo);
 								        </div>
 								        <button type="button" id='CriarAnexo'>Adicionar um novo anexo</button>
 								        <button type="button" id='RemoverAnexo'>Limpar</button>
+								        <input type="hidden" name="COD_CHAMADO" value="<?php echo $COD_CHAMADO; ?>">
 								    </div>
 							</div>
 		    </form>

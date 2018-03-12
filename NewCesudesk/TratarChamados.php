@@ -157,7 +157,7 @@ $VetorAlert = sqlsrv_fetch_array($result_squilaAlert);
 			</li>
 			<?php }; ?>
 			<li><a href="../planilhatrocas/index.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-calendar">&nbsp;</em> Planilha troca</a></li>
-			<li><a href="../AdmCrm/login.php?USUARIO=<?php echo $_SESSION['USUARIO'] ;?>" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
+			<li><a href="../AdmCrm/validaSenhaLogin.php" target="_blank"><em class="fa fa-bar-chart">&nbsp;</em> Schedule</a></li>
 			<li><a href="ValidaLogout.php"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
 		</ul>
 	</div><!--/.sidebar-->
@@ -201,6 +201,7 @@ $VetorAlert = sqlsrv_fetch_array($result_squilaAlert);
                               <thead>
                               <tr>
                                   <th><i class=""></i> Código Chamado </th>
+                                  <th><i class=""></i> Solicitante </th>
                                   <th><i class=""></i> Título </th>
                                   <th><i class=""></i> Prioridade </th>
                                   <th><i class=""></i> Data Entrega </th>

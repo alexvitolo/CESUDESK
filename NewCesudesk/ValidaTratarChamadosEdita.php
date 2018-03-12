@@ -13,7 +13,7 @@ if ( ! isset( $_FILES['anexo'] )) {
      echo  '<script type="text/javascript"> window.location.href = "TratarChamados.php" </script>';
 }
 
-
+$COD_CHAMADO = $_POST['COD_CHAMADO'];
 
 foreach( $_FILES['anexo'] as $key => $value ){ 
 	// print_r($key);
@@ -59,7 +59,7 @@ foreach( $_FILES['anexo'] as $key => $value ){
                                                 ,anexos_id
                                                 )
                                          VALUES
-                                                ((SELECT TOP 1 cd_tarefa FROM [DB_CRM_CESUDESK].[dbo].[tarefa] ORDER BY 1 DESC)
+                                                ({$COD_CHAMADO}
                                                 ,(SELECT TOP 1 id FROM [DB_CRM_CESUDESK].[dbo].[anexo] ORDER BY 1 DESC)
                                                  ) ";  
 
@@ -78,6 +78,6 @@ foreach( $_FILES['anexo'] as $key => $value ){
 
 }
   echo  '<script type="text/javascript">alert("Chamado Atualizado !");</script>';
-  echo  '<script type="text/javascript"> window.location.href = "main.php" </script>';
+  echo  '<script type="text/javascript"> window.location.href = "TratarChamados.php" </script>';
 
 ?>

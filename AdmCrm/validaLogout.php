@@ -4,8 +4,8 @@ session_start();
 
 $USUARIO_SESSION = $_SESSION['USUARIO'];
 
- session_destroy();
+ // session_destroy();
 
-echo  '<script type="text/javascript"> window.location.href = "login.php?USUARIO='.$USUARIO_SESSION.'"  </script>';
+echo  '<script type="text/javascript"> window.location.href = "../NewCesudesk/main.php"</script>';
 
 ?>

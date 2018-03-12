@@ -4,20 +4,8 @@
 session_start();
 
 
-$USERVALIDA = $_POST["USERVALIDA"];
-$_SESSION['USUARIO'] = $USERVALIDA;
-
+$USERVALIDA = $_SESSION['USUARIO'];
 $_SESSION['TEMPOSESSION'] = date('H:i:s'); // session criada para validar o tempo de session de cada usuário
-
-
-if ($_POST["SENHAVALIDA"] == "") {
-                  echo  '<script type="text/javascript">alert("Senha com Campo Vazio");</script>';
-                  echo  '<script type="text/javascript"> window.location.href = "login.php?USUARIO='.$USERVALIDA.'"  </script>';
-
- }else{
-
-  $SENHA = $_POST["SENHAVALIDA"];
- }
 
 
 $squilaUsuario = "SELECT 
@@ -27,17 +15,19 @@ $squilaUsuario = "SELECT
                      ,tl.ACESSO_ADM
                      ,tc.ID_MATRICULA
                      ,tc.ID_COLABORADOR
+                     ,tl.ACESSO_GCO
                 FROM tb_crm_login tl
           INNER JOIN tb_crm_colaborador tc on tc.LOGIN_REDE = tl.USUARIO
                 WHERE USUARIO = '{$USERVALIDA}' 
                   AND tc.STATUS_COLABORADOR = 'ATIVO' 
-                  AND tl.BO_ATIVO = 'S' " ;
+                  AND tl.BO_ATIVO = 'S' 
+                  AND tl.ACESSO_GCO <> 'N' " ;
 
 $result_Usuario = sqlsrv_prepare($conn, $squilaUsuario);
 sqlsrv_execute($result_Usuario);
 
 
- while ($row = sqlsrv_fetch_array($result_Usuario)){
+ $row = sqlsrv_fetch_array($result_Usuario);
 
       $senhaCorreta = $row["SENHA_USUARIO"];
       $_SESSION['ID_COLABORADOR'] = $row["ID_COLABORADOR"];
@@ -66,9 +56,9 @@ sqlsrv_execute($result_Usuario);
       $_SESSION['SUGESTAO_COLABORADOR'] = 0;
   }
 
- }
+ 
 
-       if ($SENHA == $senhaCorreta) {
+       if ($row > 0) {
 
                      $deleteLoggedUser = "DELETE tb_loggeduser
                                                WHERE USUARIO = '{$_SESSION['USUARIO']}' ";
@@ -105,8 +95,8 @@ sqlsrv_execute($result_Usuario);
                   
 
         }else {
-                  echo  '<script type="text/javascript">alert("Senha Incorreta");</script>';
-                  echo  '<script type="text/javascript"> window.location.href = "login.php?USUARIO='.$USERVALIDA.' " </script>';
+                  echo  '<script type="text/javascript">alert("Acesso Negado");</script>';
+                  echo  '<script type="text/javascript"> window.location.href = "../NewCesudesk/main.php?"; close(); </script>';
         }
         
 

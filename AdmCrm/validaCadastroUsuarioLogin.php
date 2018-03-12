@@ -24,6 +24,7 @@ $NOME = $_POST['NOME'];
 $USUARIO = $_POST['USUARIO'];
 $SENHA = $_POST['SENHA']; 
 $ACESSO_ADM = $_POST['ACESSO_ADM'];
+$ACESSO_GCO = $_POST['ACESSO_GCO'];
 
 
 
@@ -35,15 +36,17 @@ $ACESSO_ADM = $_POST['ACESSO_ADM'];
                                         ,USUARIO
                                         ,SENHA_USUARIO
                                         ,ACESSO_ADM
+                                        ,ACESSO_GCO
                                         ,BO_ATIVO)
                                   VALUES
                                         ('{$NOME}'
                                         ,'{$USUARIO}'
                                         ,'{$SENHA}'
                                         ,{$ACESSO_ADM}
+                                        ,'{$ACESSO_GCO}'
                                         ,'S' )  ";
 
-      $result_InsertSquilaUsuario = sqlsrv_query($conn, $insertSquilaUsuario); 
+      $result_InsertSquilaUsuario = sqlsrv_query($conn, $insertSquilaUsuario);
  
 
 
