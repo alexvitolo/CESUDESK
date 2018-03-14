@@ -36,6 +36,10 @@ $squilaResumo = "SELECT TOP 1 CASE
                  WHERE T.solicitante_cd_usuario = {$USUARIO}
                    AND T.tp_statustarefa in ('Aberta', 'Andamento')
 			       AND M.dt_insert is not null
+			       AND 'N' = CASE 
+		                     WHEN M.id_usuario =22 THEN 'S' 
+		                     ELSE 'N' 
+		                     END
 			       ORDER BY M.dt_insert desc";
 
 $result_squilaResumo= sqlsrv_prepare($conn, $squilaResumo);
@@ -177,6 +181,9 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
+					<li><a class="" href="EquipeChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
+					</a></li>
 				</ul>
 			</li>
 			<?php  if ($_SESSION['ACESSO'] == 1){ ?>
@@ -220,7 +227,7 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
                          <li><a class="" href="TodosChamadosQualidade.php">
-						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
 					</a></li>
 				</ul>
 			</li>

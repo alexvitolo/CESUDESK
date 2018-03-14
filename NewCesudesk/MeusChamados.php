@@ -44,6 +44,10 @@ $squilaResumo = "SELECT TOP 1 CASE
                  WHERE T.solicitante_cd_usuario = {$ID_LOGIN}
                    AND T.tp_statustarefa in ('Aberta', 'Andamento')
 			       AND M.dt_insert is not null
+			       AND 'N' = CASE 
+		                     WHEN M.id_usuario ={$ID_LOGIN} THEN 'S' 
+		                     ELSE 'N' 
+		                     END
 			       ORDER BY M.dt_insert desc";
 
 $result_squilaResumo= sqlsrv_prepare($conn, $squilaResumo);
@@ -117,6 +121,9 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
+					<li><a class="" href="EquipeChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
+					</a></li>
 				</ul>
 			</li>
             <?php  if ($_SESSION['ACESSO'] == 1){ ?>
@@ -160,10 +167,10 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
 					<li><a class="" href="TodosChamadosQualidade.php">
-						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
 					</a></li>
 <li><a class="" href="TodosChamadosQualidade.php">
-						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
 					</a></li>
 				</ul>
 			</li>

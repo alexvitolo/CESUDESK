@@ -99,6 +99,9 @@ sqlsrv_execute($result_squilaChamado);
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
+					<li><a class="" href="EquipeChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
+					</a></li>
 				</ul>
 			</li>
             <?php  if ($_SESSION['ACESSO'] == 1){ ?>

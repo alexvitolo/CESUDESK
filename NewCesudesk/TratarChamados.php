@@ -38,7 +38,7 @@ sqlsrv_execute($result_squilaChamado);
 
 
 
-$squilaAlert = "SELECT TOP 1 CASE 
+$squilaAlert = "SELECT TOP 5 CASE 
 		                WHEN M.id_usuario ={$ID_LOGIN} THEN 'S' 
 		                ELSE 'N' 
 		                END POSSUI_COMENT
@@ -50,18 +50,33 @@ $squilaAlert = "SELECT TOP 1 CASE
             INNER JOIN (SELECT MAX(ML.id) ID_ZICA
 								   ,ML.id_tarefa
 					      FROM [DB_CRM_CESUDESK].[dbo].[mensagem_logs] ML
+					    WHERE ML.id_usuario <> (SELECT ID 
+					                              FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] LL
+					     					INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_colaborador] LC ON LC.LOGIN_REDE = LL.USUARIO
+					     							     WHERE LC.ID_GRUPO = 13)
 			          GROUP BY ML.id_tarefa) XCLEB ON XCLEB.ID_ZICA = M.id 
 						                               AND XCLEB.id_tarefa =M.id_tarefa
                  WHERE T.tp_statustarefa in ('Aberta', 'Andamento')
 			       AND M.dt_insert is not null
 			       AND TR.cd_usuario = {$ID_LOGIN}
+			       AND 'N' = CASE 
+		                     WHEN M.id_usuario ={$ID_LOGIN} THEN 'S' 
+		                     ELSE 'N' 
+		                     END
 			       ORDER BY M.dt_insert desc";
 
 $result_squilaAlert= sqlsrv_prepare($conn, $squilaAlert);
 sqlsrv_execute($result_squilaAlert);
 
-$VetorAlert = sqlsrv_fetch_array($result_squilaAlert);
+$VetorAlert['cd_tarefa'] = '';
+$VetorAlert['POSSUI_COMENT'] = 'S';
 
+while($row = sqlsrv_fetch_array($result_squilaAlert)) {
+	$VetorAlert['POSSUI_COMENT'] = 'N';
+	$VetorAlert['cd_tarefa'] .= $row['cd_tarefa'];
+	$VetorAlert['cd_tarefa'] .=' , ';
+
+}
 
 ?>
 
@@ -126,6 +141,9 @@ $VetorAlert = sqlsrv_fetch_array($result_squilaAlert);
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
+					<li><a class="" href="EquipeChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
+					</a></li>
 				</ul>
 			</li>
             <?php  if ($_SESSION['ACESSO'] == 1){ ?>
@@ -169,7 +187,7 @@ $VetorAlert = sqlsrv_fetch_array($result_squilaAlert);
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
 					<li><a class="" href="TodosChamadosQualidade.php">
-						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
 					</a></li>
 				</ul>
 			</li>
@@ -199,7 +217,7 @@ $VetorAlert = sqlsrv_fetch_array($result_squilaAlert);
 			 <?php if ($VetorAlert['POSSUI_COMENT'] == 'N'){ ?>
 		             <div class="alert"><span class="fa-icon fa fa-exclamation-triangle"> </span>
                      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-                     Você possui Comentários Novos ! Chamado : <?php echo $VetorAlert['cd_tarefa']; ?>
+                     Você possui Comentários Novos ! Chamado(s) : <?php echo $VetorAlert['cd_tarefa']; ?>
                      </div>
             <?php } ?>
 

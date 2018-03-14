@@ -129,6 +129,9 @@ sqlsrv_execute($result_squilaAnexo);
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
 					</a></li>
+					<li><a class="" href="EquipeChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
+					</a></li>
 				</ul>
 			</li>
             <?php  if ($_SESSION['ACESSO'] == 1){ ?>
@@ -172,7 +175,7 @@ sqlsrv_execute($result_squilaAnexo);
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
 					<li><a class="" href="TodosChamadosQualidade.php">
-						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
 					</a></li>
 				</ul>
 			</li>

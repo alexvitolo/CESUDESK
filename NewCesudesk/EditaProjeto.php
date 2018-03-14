@@ -1,4 +1,4 @@
-<?php include '..\NewCesudesk\connectionNEWCESUDESK.php'; 
+s<?php include '..\NewCesudesk\connectionNEWCESUDESK.php'; 
 
 session_start();
 
@@ -95,6 +95,9 @@ $VetorEditaProjeto = sqlsrv_fetch_array($result_squilaEdProjeto)
 					</a></li>
 					<li><a class="" href="MeusChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Meus Chamados
+					</a></li>
+					<li><a class="" href="EquipeChamados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
 					</a></li>
 				</ul>
 			</li>
