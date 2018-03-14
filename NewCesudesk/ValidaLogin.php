@@ -27,6 +27,7 @@ $squilaUsuario = "SELECT
                      ,tl.ACESSO_ADM
                      ,tc.ID_MATRICULA
                      ,tc.ID_COLABORADOR
+                     ,tc.ID_GRUPO
                 FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] tl
            LEFT JOIN [DB_CRM_REPORT].[dbo].[tb_crm_colaborador] tc on tc.LOGIN_REDE = tl.USUARIO AND tc.STATUS_COLABORADOR = 'ATIVO' -- LEFT colaborador GCO nao obrigatorio
                 WHERE USUARIO = '{$USERVALIDA}' 
@@ -44,6 +45,7 @@ sqlsrv_execute($result_Usuario);
       $_SESSION['IDLOGIN'] = $row["ID"];
       $primeiraL = explode(" ", $row["NOME"]);
       $_SESSION['NOME'] = $primeiraL[0];
+      $_SESSION['ID_GRUPO'] = $row["ID_GRUPO"];
 
 
     if ($row['ACESSO_ADM'] == 1) 

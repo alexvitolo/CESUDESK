@@ -7,10 +7,31 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
-if ($_SESSION['ACESSO'] <> 1 )  {
- // Ação a ser executada: mata o script e manda uma mensagem
- echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
-}
+$ID_COLABORADOR = $_SESSION['ID_COLABORADOR'];
+$ID_LOGIN = $_SESSION['IDLOGIN'];
+$ID_GRUPO = $_SESSION['ID_GRUPO'];
+
+//corrigir SQL
+$squilaChamado = "SELECT TOP 120 cd_tarefa
+                                ,dh_entrega_prev
+                                ,prioridade
+                                ,titulo
+                                ,tp_statustarefa
+                                ,cd_modulo
+                                ,projeto_cd_projeto
+                                ,solicitante_cd_usuario
+                                ,cd_tipotarefa
+								,(SELECT USUARIO FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] WHERE ID=solicitante_cd_usuario) as LOGIN_REDE
+                        FROM DB_CRM_CESUDESK.dbo.tarefa
+                       WHERE solicitante_cd_usuario in (SELECT ID
+                         									FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] TL2
+                         							  INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_colaborador] TC2 ON TC2.LOGIN_REDE = TL2.USUARIO AND TC2.ID_GRUPO = {$ID_GRUPO})
+                      ORDER BY tp_statustarefa,dh_entrega_prev desc";
+
+$result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
+sqlsrv_execute($result_squilaChamado);
+
+
 
 
 ?>
@@ -26,7 +47,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 	<link href="css/font-awesome.min.css" rel="stylesheet">
 	<link href="css/datepicker3.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="TratarChamadosEdita.css">
+	<link rel="stylesheet" type="text/css" href="MeusChamados.css">
 	
 	<!--Custom Font-->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -66,7 +87,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 		<!-- </form> -->
 		<ul class="nav menu">
 			<li class=""><a href="main.php"><em class="fa fa-dashboard">&nbsp;</em>Resumo</a></li>
-			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
+			<li class="parent active"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Chamados <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-1">
@@ -94,7 +115,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 					</a></li>
 				</ul>
 			</li>
-			<li class="parent active"><a data-toggle="collapse" href="#sub-item-3">
+			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
 				<em class="fa fa-wrench">&nbsp;</em> Gestão Cesudesk <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
 				<ul class="children collapse" id="sub-item-3">
@@ -112,8 +133,8 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 					</a></li>
 				</ul>
 			</li>
-		    <?php }; ?>
-		    <?php  if ($_SESSION['ACESSO'] == 2){ ?>
+			<?php }; ?>
+			<?php  if ($_SESSION['ACESSO'] == 2){ ?>
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-2">
 				<em class="fa fa-bookmark">&nbsp;</em> Qualidade <span data-toggle="collapse" href="#sub-item-2" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
@@ -122,6 +143,9 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
 					<li><a class="" href="TodosChamadosQualidade.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
+					</a></li>
+<li><a class="" href="TodosChamadosQualidade.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
 					</a></li>
 				</ul>
@@ -139,49 +163,75 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 				<li><a href="#">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Relatórios</li>
+				<li class="active">Chamados Equipe</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Relatórios NewCesudesk</h1>
+				<h1 class="page-header">Chamados Equipe</h1>
 			</div>
 		</div><!--/.row-->
+
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h2>Relatórios Personalizados</h2>
+				<h2>Gestão Chamado</h2>
 			</div>
 			<div class="col-md-10">
-			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaTratarChamadosEdita.php" enctype="multipart/form-data">
-				<div class="panel panel-default">
-					<div class="panel-body tabs">
-						<ul class="nav nav-pills">
-							<li class="active" id="litab1"><a href="#tab1" data-toggle="tab">Chamados Gerais</a></li>
-							<li id="litab2"><a href="#tab2" data-toggle="tab">Relatórios 2</a></li>
-						</ul>
-						<div class="tab-content">
-							<div class="tab-pane fade in active" id="tab1">
-								<h4>Relatório Personalizado 1</h4>
-								<div class="form-group">
-								       <label>Download</label>
-								        <a href="RelatorioGeralChamados.php"><button type="button" class="btn btn-primary">Relatório Geral Chamados</button></a>
-									    <a></input></a><br><br>
-								</div>
-							</div>
-							<div class="tab-pane fade" id="tab2">
-								<h4>Encerramento</h4><br>
-								<div class="form-group">
-								       <label>Relatório 2</label>
-								        <a href="ValidaEncerraChamado.php?COD_CHAMADO=<?php echo $COD_CHAMADO; ?>"><button type="button" class="btn btn-primary">Download Relatório 2</button></a>
-									    <a></input></a><br><br>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div><!--/.panel-->
-			   <br><br>
+			 <div class="row mt">
+                  <div class="col-md-12">
+                      <div class="content-panel">
+                        <form name="Form" method="post" id="formulario" action="VisualizaChamado.php">
+                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
+                            <h4><i class="fa fa-right"></i> Tabela Chamados Recentes da Equipe</h4><br>
+                            <hr>
+                              <thead>
+                              <tr>
+                                  <th><i class=""></i> Código Chamado </th>
+                                  <th><i class=""></i> Solicitante </th>
+                                  <th><i class=""></i> Título </th>
+                                  <th><i class=""></i> Prioridade </th>
+                                  <th style="width:110px"><i class=""></i> Data Entrega </th>
+                                  <th><i class=""></i> Status </th>
+                                  <th><i class=""></i> Visualizar </th>
+
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                              	<?php  while($row = sqlsrv_fetch_array($result_squilaChamado)) { 
+                                    if ($row['tp_statustarefa'] == "Fechada") {
+                                      $corStatus = "label label-danger label-mini";
+                                    }elseif ($row['tp_statustarefa'] == "Andamento") {
+                                      $corStatus = "label label-warning  label-mini";
+                                    }else{
+                                      $corStatus = "label label-success  label-mini";
+                                    } 
+                                    ?>                               
+                                  <td><?php echo $row['cd_tarefa']; ?></a></td>
+                                  <td><?php echo $row['LOGIN_REDE']; ?></a></td>
+                                  <td><?php echo $row['titulo']; ?></a></td>
+                                  <td><?php echo $row['prioridade']; ?></a></td>
+                                  <td><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statustarefa']; ?></a></td></span>
+                      
+                                  <td>
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button style="margin-left: 25px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
+                                  </td>
+                              </tr>
+
+                              <?php 
+                                     }
+                              ?>
+                              
+                              </tbody>
+                          </table>
+                        </form>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
+              </div><!-- /row -->
 			</div><!--/.col-->
 		</div><!--/.row-->
 	</div>	<!--/.main-->
@@ -194,12 +244,8 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 	<script src="js/easypiechart-data.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/custom.js"></script>
-
-	<script language="javascript" type="text/javascript">
-		var aux =2 ; //Variavel indice para anexos
-
-		window.onload = function ()
-		{
+	<script>
+		window.onload = function () {
 	       var chart1 = document.getElementById("line-chart").getContext("2d");
 	       window.myLine = new Chart(chart1).Line(lineChartData, {
 	       responsive: true,
@@ -207,67 +253,9 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 	       scaleGridLineColor: "rgba(0,0,0,.05)",
 	       scaleFontColor: "#c5c7cc"
 	       });
-        };
-        
+         };
+
 	</script>
-
-
- <script
-  src="http://code.jquery.com/jquery-2.2.4.min.js"
-  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-  crossorigin="anonymous"></script>
-
-<script>
-
-function submitChat() {
-	if(form1.msg.value == '') {
-		alert("Campo Mensagem Obrigatório");
-		return;
-	}
-	var idLogin = <?php echo $ID_USUARIO ;?> ;
-	var msg = form1.msg.value; 
-	var codChamado = <?php echo $COD_CHAMADO ;?> ;
-	var xmlhttp = new XMLHttpRequest();
-	
-	xmlhttp.onreadystatechange = function() {
-		if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			document.getElementById('chatlogs').innerHTML = xmlhttp.responseText;
-		}
-	}
-	
-	xmlhttp.open('GET','ChamadoChatInsert.php?idLogin='+idLogin+'&msg='+msg+'&codChamado='+codChamado,true);
-	xmlhttp.send();
-
-}
-
-    $(document).ready(function(e){
-    	$.ajaxSetup({
-    		cache: false
-    	});
-    	setInterval( function(){ $('#chatlogs').load('ChamadoChatLogs.php'); }, 2000 );
-    });
-
-
-        $('#CriarAnexo').click(function(){
-        	$('.addJS').append("<div id='JSid'> <input type='file' name='anexo["+aux+"]'> <p class='help-block'>Selecione um arquivo para anexar ao chamado.</p> </div>");
-        	aux++;
-
-        });
-
-        $('#RemoverAnexo').click(function(){
-        	$("#JSid").remove();
-
-        });
-
-        $("#textareaMSG").keyup(function(event) {
-            if (event.keyCode === 13) {
-                $("#SubChat").click();
-                document.getElementById("textareaMSG").value = "";
-            }
-        });
-
-</script>
-
-
+		
 </body>
 </html>
