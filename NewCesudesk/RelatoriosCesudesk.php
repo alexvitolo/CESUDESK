@@ -168,6 +168,10 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 								       <label>Download</label>
 								        <a href="RelatorioGeralChamados.php"><button type="button" class="btn btn-primary">Relatório Geral Chamados</button></a>
 									    <a></input></a><br><br>
+
+									    <label>Download</label>
+								        <a href="RelatorioGeralChamadosTriados.php"><button type="button" class="btn btn-primary">Relatório Geral Chamados com Triagem</button></a>
+									    <a></input></a><br><br>
 								</div>
 							</div>
 							<div class="tab-pane fade" id="tab2">
