@@ -44,12 +44,14 @@ $query = "SELECT tpes.ID_PESQUISA
                    ,tlig.DESCRICAO as DESC_RESULTADO_LIG
                    ,tpes.OBSERVACAO_PESQUISA
                    ,tpes.DESC_ID_TALISMA
+                   ,tcron.NUMERO as NUMERO_AVALIACAO
            FROM tb_qld_pesquisa tpes
      INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tpes.ID_COLABORADOR
      INNER JOIN tb_crm_processo tp ON tp.ID = tpes.ID_PROCESSO
      INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tpes.ID_GRUPO
      INNER JOIN tb_qld_objeto_talisma tbo ON tbo.ID_OBJETO_TALISMA = tpes.ID_OBJETO_TALISMA
-     INNER JOIN tb_qld_resultado_ligacao tlig ON tlig.ID_RESULT_LIG = tpes.ID_RESULT_LIG";
+     INNER JOIN tb_qld_resultado_ligacao tlig ON tlig.ID_RESULT_LIG = tpes.ID_RESULT_LIG
+     INNER JOIN tb_qld_cronograma_avaliacao tcron ON tcron.ID_AVALIACAO = tpes.ID_AVALIACAO";
 
 $result = sqlsrv_prepare($conn, $query);
 sqlsrv_execute($result);
@@ -80,6 +82,7 @@ sqlsrv_execute($result);
                          <th>DESC_RESULTADO_LIG</th>
                          <th>OBSERVACAO_PESQUISA</th>
                          <th>DESC_ID_TALISMA</th>
+                         <th>NUMERO_AVALIACAO</th>
                     
                     </tr> ';
 
@@ -109,7 +112,8 @@ sqlsrv_execute($result);
                          <td>'.$row["ID_RESULT_LIG"].'</td>   
                          <td>'.$row["DESC_RESULTADO_LIG"].'</td>  
                          <td>'.$row["OBSERVACAO_PESQUISA"].'</td>  
-                         <td>'.$row["DESC_ID_TALISMA"].'</td>  
+                         <td>'.$row["DESC_ID_TALISMA"].'</td> 
+                         <td>'.$row["NUMERO_AVALIACAO"].'</td> 
                  
     </tr>
    ';
