@@ -50,7 +50,7 @@ $squilaAlert = "SELECT TOP 5 CASE
             INNER JOIN (SELECT MAX(ML.id) ID_ZICA
 								   ,ML.id_tarefa
 					      FROM [DB_CRM_CESUDESK].[dbo].[mensagem_logs] ML
-					    WHERE ML.id_usuario <> (SELECT ID 
+					    WHERE ML.id_usuario not in (SELECT ID 
 					                              FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] LL
 					     					INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_colaborador] LC ON LC.LOGIN_REDE = LL.USUARIO
 					     							     WHERE LC.ID_GRUPO = 13)
@@ -74,9 +74,11 @@ $VetorAlert['POSSUI_COMENT'] = 'S';
 while($row = sqlsrv_fetch_array($result_squilaAlert)) {
 	$VetorAlert['POSSUI_COMENT'] = 'N';
 	$VetorAlert['cd_tarefa'] .= $row['cd_tarefa'];
-	$VetorAlert['cd_tarefa'] .=' , ';
+	$VetorAlert['cd_tarefa'] .=' ,';
 
 }
+
+$VetorAlert['cd_tarefa'] =substr($VetorAlert['cd_tarefa'], 0, -1);
 
 ?>
 
@@ -255,16 +257,26 @@ while($row = sqlsrv_fetch_array($result_squilaAlert)) {
                                       $corStatus = "label label-warning  label-mini";
                                     }else{
                                       $corStatus = "label label-success  label-mini";
-                                    } 
+                                    }
+                                    
+
+                                    $COD_AUX ="/".$row['cd_tarefa']."/";
+
+                                    if(preg_match($COD_AUX, $VetorAlert['cd_tarefa'])) {
+                                        $CorStatus = 'bgcolor="#b3ffb3"';
+                                    }else{
+                                    	$CorStatus = '';
+                                    }
+
                                     ?>                               
-                                  <td><?php echo $row['cd_tarefa']; ?></a></td>
-                                  <td><?php echo $row['NM_SOLICITA']; ?></a></td>
-                                  <td><?php echo $row['titulo']; ?></a></td>
-                                  <td><?php echo $row['prioridade']; ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td></span>
-                                  <td><?php echo $row['tp_statustarefa']; ?></a></td>
+                                  <td <?php echo $CorStatus ; ?> ><?php echo $row['cd_tarefa']; ?></a></td>
+                                  <td <?php echo $CorStatus ; ?> ><?php echo $row['NM_SOLICITA']; ?></a></td>
+                                  <td <?php echo $CorStatus ; ?> ><?php echo $row['titulo']; ?></a></td>
+                                  <td <?php echo $CorStatus ; ?> ><?php echo $row['prioridade']; ?></a></td>
+                                  <td <?php echo $CorStatus ; ?> ><span class="<?php echo $corStatus ?>"><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td></span>
+                                  <td <?php echo $CorStatus ; ?> ><?php echo $row['tp_statustarefa']; ?></a></td>
                       
-                                  <td>
+                                  <td <?php echo $CorStatus ; ?> >
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                       <button style="margin-left: 25px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
                                   </td>
