@@ -50,10 +50,6 @@ $squilaAlert = "SELECT TOP 5 CASE
             INNER JOIN (SELECT MAX(ML.id) ID_ZICA
 								   ,ML.id_tarefa
 					      FROM [DB_CRM_CESUDESK].[dbo].[mensagem_logs] ML
-					    WHERE ML.id_usuario not in (SELECT ID 
-					                              FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] LL
-					     					INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_colaborador] LC ON LC.LOGIN_REDE = LL.USUARIO
-					     							     WHERE LC.ID_GRUPO = 13)
 			          GROUP BY ML.id_tarefa) XCLEB ON XCLEB.ID_ZICA = M.id 
 						                               AND XCLEB.id_tarefa =M.id_tarefa
                  WHERE T.tp_statustarefa in ('Aberta', 'Andamento')
