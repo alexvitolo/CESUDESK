@@ -300,7 +300,7 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
 					<div class="panel panel-orange panel-widget border-right">
 						<div class="row no-padding"><em class="fa fa-xl fa-users color-teal"></em>
-							<div style="font-size: 36px"><?php echo date_format($VetorIndicador['ULTIMO_ACESSO'], "d-m-Y H:m"); ?></div>
+							<div style="font-size: 38px"><?php echo date_format($VetorIndicador['ULTIMO_ACESSO'], "d-m-Y H:i"); ?></div>
 							<div class="text-muted">Último Acesso</div>
 						</div>
 					</div>
