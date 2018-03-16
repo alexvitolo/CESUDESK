@@ -17,6 +17,11 @@ $conn = sqlsrv_connect($serverName, $connectionOptions);
 if( $conn === false ) {
     die( print_r(sqlsrv_errors(), true)); //See why it fails
 }
+
+if (($_POST['DATA_INI'] == '') || ($_POST['DATA_FIM'] == '') ) {
+ $_POST['DATA_INI'] = '2015-01-01';
+ $_POST['DATA_FIM'] = date("Y-m-d");
+}
     
 $query = "SELECT T.cd_tarefa
                 ,T.desc_tarefa
@@ -33,7 +38,9 @@ $query = "SELECT T.cd_tarefa
                 ,(SELECT desc_projeto FROM DB_CRM_CESUDESK.DBO.projeto WHERE cd_projeto = T.projeto_cd_projeto) as nome_projeto
                 ,(SELECT NOME FROM DB_CRM_REPORT.DBO.tb_crm_login WHERE ID = T.solicitante_cd_usuario) as nome_usuario
                 ,(SELECT desc_tipotarefa FROM DB_CRM_CESUDESK.DBO.tipotarefa WHERE cd_tipotarefa = T.cd_tipotarefa) as           nome_tipoTarefa
-           FROM DB_CRM_CESUDESK.dbo.tarefa T";
+           FROM DB_CRM_CESUDESK.dbo.tarefa T
+          WHERE T.dh_cadastro >='{$_POST['DATA_INI']}'
+            AND (T.dh_fechamento <='{$_POST['DATA_FIM']}' OR T.dh_fechamento is null )";
 
 $result = sqlsrv_prepare($conn, $query);
 sqlsrv_execute($result);

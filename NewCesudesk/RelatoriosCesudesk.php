@@ -154,7 +154,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 				<h2>Relatórios Personalizados</h2>
 			</div>
 			<div class="col-md-10">
-			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaTratarChamadosEdita.php" enctype="multipart/form-data">
+			 <form role="form" name="FormCha" method="post" id="formulario" action="">
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
@@ -165,20 +165,28 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 							<div class="tab-pane fade in active" id="tab1">
 								<h4>Relatório Personalizado 1</h4>
 								<div class="form-group">
-								       <label>Download</label>
-								        <a href="RelatorioGeralChamados.php"><button type="button" class="btn btn-primary">Relatório Geral Chamados</button></a>
-									    <a></input></a><br><br>
-
+								       <label>Download </label>
+									    <input type="button" onClick="mudaAction('RelatorioGeralChamados.php')" value="Relatório Geral Chamados"><br><br>
 									    <label>Download</label>
-								        <a href="RelatorioGeralChamadosTriados.php"><button type="button" class="btn btn-primary">Relatório Geral Chamados com Triagem</button></a>
-									    <a></input></a><br><br>
+									    <input type="button" onClick="mudaAction('RelatorioGeralChamadosTriados.php')" value="Relatório Geral Chamados com Triagem"><br><br>
 								</div>
+
+								<h4>Parâmetros</h4><br>
+								<div class="form-group">
+								       <label>Data Início </label>
+								       <input name="DATA_INI" id="dataentrega" class="form-control" type="date" placeholder="Data da Entrega">
+								        <br><br>
+								        <label>Data Fim</label>
+								        <input name="DATA_FIM" id="dataentrega" class="form-control" type="date" placeholder="Data da Entrega">
+								        <br><br>
+								</div>
+
 							</div>
 							<div class="tab-pane fade" id="tab2">
 								<h4>Encerramento</h4><br>
 								<div class="form-group">
 								       <label>Relatório 2</label>
-								        <a href="ValidaEncerraChamado.php?COD_CHAMADO=<?php echo $COD_CHAMADO; ?>"><button type="button" class="btn btn-primary">Download Relatório 2</button></a>
+								        <a href=""><button type="button" class="btn btn-primary">Download Relatório 2</button></a>
 									    <a></input></a><br><br>
 								</div>
 							</div>
@@ -200,77 +208,15 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 	<script src="js/custom.js"></script>
 
 	<script language="javascript" type="text/javascript">
-		var aux =2 ; //Variavel indice para anexos
 
-		window.onload = function ()
-		{
-	       var chart1 = document.getElementById("line-chart").getContext("2d");
-	       window.myLine = new Chart(chart1).Line(lineChartData, {
-	       responsive: true,
-	       scaleLineColor: "rgba(0,0,0,.2)",
-	       scaleGridLineColor: "rgba(0,0,0,.05)",
-	       scaleFontColor: "#c5c7cc"
-	       });
-        };
-        
+		function mudaAction(pagina){
+             document.getElementById("formulario").action = pagina; //Setting form action to "success.php" page
+             document.getElementById("formulario").submit(); // Submitting form
+        }
+
 	</script>
 
 
- <script
-  src="http://code.jquery.com/jquery-2.2.4.min.js"
-  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-  crossorigin="anonymous"></script>
-
-<script>
-
-function submitChat() {
-	if(form1.msg.value == '') {
-		alert("Campo Mensagem Obrigatório");
-		return;
-	}
-	var idLogin = <?php echo $ID_USUARIO ;?> ;
-	var msg = form1.msg.value; 
-	var codChamado = <?php echo $COD_CHAMADO ;?> ;
-	var xmlhttp = new XMLHttpRequest();
-	
-	xmlhttp.onreadystatechange = function() {
-		if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			document.getElementById('chatlogs').innerHTML = xmlhttp.responseText;
-		}
-	}
-	
-	xmlhttp.open('GET','ChamadoChatInsert.php?idLogin='+idLogin+'&msg='+msg+'&codChamado='+codChamado,true);
-	xmlhttp.send();
-
-}
-
-    $(document).ready(function(e){
-    	$.ajaxSetup({
-    		cache: false
-    	});
-    	setInterval( function(){ $('#chatlogs').load('ChamadoChatLogs.php'); }, 2000 );
-    });
-
-
-        $('#CriarAnexo').click(function(){
-        	$('.addJS').append("<div id='JSid'> <input type='file' name='anexo["+aux+"]'> <p class='help-block'>Selecione um arquivo para anexar ao chamado.</p> </div>");
-        	aux++;
-
-        });
-
-        $('#RemoverAnexo').click(function(){
-        	$("#JSid").remove();
-
-        });
-
-        $("#textareaMSG").keyup(function(event) {
-            if (event.keyCode === 13) {
-                $("#SubChat").click();
-                document.getElementById("textareaMSG").value = "";
-            }
-        });
-
-</script>
 
 
 </body>
