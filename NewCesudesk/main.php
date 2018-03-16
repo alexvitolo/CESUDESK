@@ -74,7 +74,17 @@ if ( ($_SESSION['ACESSO'] <> 1) or ($_SESSION['ACESSO'] =="" ) ) {  // Visão do
                                     AND solicitante_cd_usuario = {$USUARIO}) as COUNT_CHAMADO
                         ,(SELECT COUNT(1)
                           			FROM  [DB_CRM_CESUDESK].[dbo].[tarefa]
-                          		   WHERE solicitante_cd_usuario = {$USUARIO} ) as TOTAL_CHAMADO";
+                          		   WHERE solicitante_cd_usuario = {$USUARIO} ) as TOTAL_CHAMADO
+                        ,(SELECT TOP 1 DT_SISTEMA
+                                FROM [DB_CRM_REPORT].[dbo].[tb_loggeduser]
+                               WHERE USUARIO = (SELECT USUARIO FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] WHERE ID = {$USUARIO})
+                            ORDER BY 1 DESC ) as ULTIMO_ACESSO
+                        ,(SELECT avg(DATEDIFF(HOUR,T.dh_cadastro,T.dh_fechamento))
+                           FROM (SELECT TOP 20 dh_cadastro,dh_fechamento 
+                                       FROM [DB_CRM_CESUDESK].[dbo].[tarefa] 
+                                      WHERE dh_fechamento is not null
+                                        AND solicitante_cd_usuario = {$USUARIO}
+                                   ORDER BY 1 desc) as T ) as TEMPO_MEDIO ";
 
    $result_squilaIndicador= sqlsrv_prepare($conn, $squilaIndicador);
    sqlsrv_execute($result_squilaIndicador);
@@ -108,7 +118,15 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
                                     ) as COUNT_CHAMADO
                         ,(SELECT COUNT(1)
                           			FROM  [DB_CRM_CESUDESK].[dbo].[tarefa]
-                          		    ) as TOTAL_CHAMADO";
+                          		    ) as TOTAL_CHAMADO
+                        ,(SELECT TOP 1 DT_SISTEMA
+                                FROM [DB_CRM_REPORT].[dbo].[tb_loggeduser]
+                               WHERE USUARIO = (SELECT USUARIO FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] WHERE ID = {$USUARIO})
+                            ORDER BY 1 DESC ) as ULTIMO_ACESSO
+                        ,(SELECT avg(DATEDIFF(HOUR,T.dh_cadastro,T.dh_fechamento))
+                           FROM (SELECT TOP 20 dh_cadastro,dh_fechamento 
+                                       FROM [DB_CRM_CESUDESK].[dbo].[tarefa] 
+                                      WHERE dh_fechamento is not null order by 1 desc) as T ) as TEMPO_MEDIO";
 
    $result_squilaIndicador= sqlsrv_prepare($conn, $squilaIndicador);
    sqlsrv_execute($result_squilaIndicador);
@@ -274,16 +292,16 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
 					<div class="panel panel-blue panel-widget border-right">
 						<div class="row no-padding"><em class="fa fa-xl fa-comments color-orange"></em>
-							<div class="large">--</div>
-							<div class="text-muted">Tempo Médio Chamado</div>
+							<div class="large"><?php echo $VetorIndicador['TEMPO_MEDIO']; ?></div>
+							<div class="text-muted">Tempo Médio Chamado (Horas)</div>
 						</div>
 					</div>
 				</div>
 				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
 					<div class="panel panel-orange panel-widget border-right">
 						<div class="row no-padding"><em class="fa fa-xl fa-users color-teal"></em>
-							<div class="large">15</div>
-							<div class="text-muted">Acessos</div>
+							<div style="font-size: 36px"><?php echo date_format($VetorIndicador['ULTIMO_ACESSO'], "d-m-Y H:m"); ?></div>
+							<div class="text-muted">Último Acesso</div>
 						</div>
 					</div>
 				</div>
@@ -415,7 +433,7 @@ var lineChartData = {
 				pointStrokeColor : "#fff",
 				pointHighlightFill : "#fff",
 				pointHighlightStroke : "rgba(48, 164, 255, 1)",
-				data : [<?php echo $VetorGrafico['FIM1'].','.$VetorGrafico['FIM2'].','.$VetorGrafico['FIM3']; ?>]
+				data : [<?php echo $VetorGrafico['FIM1'].','.$VetorGrafico['FIM3'].','.$VetorGrafico['FIM2']; ?>]
 			}
 		]
 
