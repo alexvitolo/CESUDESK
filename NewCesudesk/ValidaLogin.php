@@ -88,7 +88,7 @@ sqlsrv_execute($result_Usuario);
                               VALUES
                                     ('{$_SESSION['USUARIO']}'
                                     ,{$_SESSION['ACESSO']}
-                                    ,'GCO - Gestão de Controle Operacional'
+                                    ,'NewCesudesk'
                                     )  ";
 
                   $result_InsertLoggedUser = sqlsrv_query($conn, $insertLoggedUser); 
