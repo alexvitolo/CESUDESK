@@ -14,7 +14,7 @@ echo "<meta HTTP-EQUIV='refresh' CONTENT='320; URL=..\NewCesudesk\Main.php'>";
 
 $USUARIO = $_SESSION['IDLOGIN'];
 
-$squilaResumo = "SELECT TOP 1 CASE 
+$squilaResumo = "SELECT TOP 5 CASE 
 		                WHEN M.id_usuario ={$USUARIO} THEN 'S' 
 		                ELSE 'N' 
 		                END POSSUI_COMENT
@@ -37,7 +37,7 @@ $squilaResumo = "SELECT TOP 1 CASE
                    AND T.tp_statustarefa in ('Aberta', 'Andamento')
 			       AND M.dt_insert is not null
 			       AND 'N' = CASE 
-		                     WHEN M.id_usuario =22 THEN 'S' 
+		                     WHEN M.id_usuario ={$USUARIO} THEN 'S' 
 		                     ELSE 'N' 
 		                     END
 			       ORDER BY M.dt_insert desc";
