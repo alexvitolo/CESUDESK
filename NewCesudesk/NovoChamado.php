@@ -222,7 +222,7 @@ sqlsrv_execute($result_TipoTarefa);
 										</select>
 									</div>
 									<div class="form-group">
-										<label>Módulo</label>
+										<label>Solicitação</label>
 										<select name="MODULO" class="form-control">
 											<?php while ($row = sqlsrv_fetch_array($result_Modulo)){ ?>
 											   <option value="<?php echo $row['cd_modulo']; ?>"><?php echo $row['desc_modulo'] ;?></option>
