@@ -67,7 +67,7 @@ sqlsrv_execute($result);
                          <th>titulo</th>
                          <th>tp_statustarefa</th>
                          <th>nome_modulo</th>
-                         <th>nome_projeto</th>
+                         <th>processo_seletivo</th>
                          <th>nome_usuario</th>
                          <th>nome_tipoTarefa</th>
                          <th>nome_chamado</th>

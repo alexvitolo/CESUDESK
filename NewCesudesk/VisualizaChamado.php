@@ -233,7 +233,7 @@ sqlsrv_execute($result_squilaAnexo);
 										</select>
 									</div>
 									<div class="form-group">
-										<label>Módulo</label>
+										<label>Solicitação</label>
 										<select name="" class="form-control" readonly>
 											<option><?php echo $vetorSQLVisu['desc_modulo']; ?></option>
 										</select>
