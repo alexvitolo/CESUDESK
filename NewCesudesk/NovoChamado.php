@@ -9,6 +9,13 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
    echo  '<script type="text/javascript"> window.location.href = "http://d42150:8080/login"  </script>'; 
 }
 
+ if ( ! isset ($_GET['COD_MODULO'])){
+    $sqlCondicao = "";
+
+ }else{
+  $sqlCondicao = $_GET['COD_MODULO'];
+ }
+
 
 
 $squilaProjeto = "SELECT cd_projeto
@@ -24,15 +31,21 @@ sqlsrv_execute($result_Projeto);
 $squilaModulo = "SELECT cd_modulo
                         ,desc_modulo
                     FROM DB_CRM_CESUDESK.dbo.modulo
+                   WHERE bo_ativo = 0
                 ORDER by desc_modulo";
 
 $result_Modulo = sqlsrv_prepare($conn, $squilaModulo);
 sqlsrv_execute($result_Modulo);
 
 
-$squilaTipoTarefa = "SELECT cd_tipotarefa
-                       ,desc_tipotarefa
-                   FROM DB_CRM_CESUDESK.dbo.tipotarefa
+$squilaTipoTarefa = "SELECT TT.cd_tipotarefa
+                           ,TT.desc_tipotarefa
+                           ,M.cd_modulo
+                           ,M.desc_modulo
+                   FROM DB_CRM_CESUDESK.dbo.tipotarefa TT
+             INNER JOIN DB_CRM_CESUDESK.dbo.modulo M ON M.cd_modulo = TT.cd_modulo
+                  WHERE TT.bo_ativo = 0
+                    AND M.cd_modulo = {$sqlCondicao}
                ORDER by desc_tipotarefa";
 
 $result_TipoTarefa = sqlsrv_prepare($conn, $squilaTipoTarefa);
@@ -185,12 +198,51 @@ sqlsrv_execute($result_TipoTarefa);
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
-							<li class="active" id="litab1"><a href="#tab1" data-toggle="tab">Dados Iniciais</a></li>
-							<li id="litab2"><a href="#tab2" data-toggle="tab">Dados da Solicitação</a></li>
+							<li class="active" id="litab1"><a href="#tab1" data-toggle="tab">Dados da Solicitação</a></li>
+							<li id="litab2"><a href="#tab2" data-toggle="tab">Dados Iniciais</a></li>
 							<li id="litab3"><a href="#tab3" data-toggle="tab">Anexos</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="tab1">
+
+									<h4>Dados da Solicitação</h4>
+									<div class="form-group">
+										<label>Projeto</label>
+										<select name="PROJETO" class="form-control">
+											 <?php while ($row = sqlsrv_fetch_array($result_Projeto)){ ?>
+											   <option value="<?php echo $row['cd_projeto']; ?>"><?php echo $row['desc_projeto'] ;?></option>
+											<?php } ?>
+										</select>
+									</div>
+									<div class="form-group">
+										<label>Solicitação</label>
+										<select required name="MODULO" class="form-control" id="MODULO">
+											<option>Escolha um Módulo</option>
+											<?php while ($row = sqlsrv_fetch_array($result_Modulo)){ ?>
+											   <option <?php if ($row['cd_modulo'] == $sqlCondicao){ echo 'selected';} ; ?> value="<?php echo $row['cd_modulo']; ?>"><?php echo $row['desc_modulo'] ;?></option>
+											<?php } ?>
+										</select>
+									</div>
+									<div class="form-group">
+										<label>Tipo de Tarefa</label>
+										<select required <?php if($sqlCondicao <> ""){ echo "autofocus";}; ?> name="TIPO_TAREFA" class="form-control" id="TIPO_TAREFA">
+											<?php while ($row = sqlsrv_fetch_array($result_TipoTarefa)){ ?>
+											   <option <?php if ($row['cd_tipotarefa'] == $sqlCondicao){ echo 'selected';} ; ?> value="<?php echo $row['cd_tipotarefa']; ?>"><?php echo $row['desc_tipotarefa'] ;?></option>
+											<?php } ?>
+										</select>
+									</div>
+									<div class="form-group">
+									    <label>Título (Resumo da Solicitação)</label>
+									    <input name="resumoSoli" class="form-control" placeholder="Digite o título do chamado">
+								    </div>
+								    <div class="form-group">
+									    <label>Descrição</label>
+									    <textarea name="descSoli" class="form-control" rows="3"></textarea>
+								    </div>
+							</div>
+
+							<div class="tab-pane fade" id="tab2">
+
 								<h4>Dados Iniciais</h4>
 								<div class="form-group">
 									<label>Data de Cadastro</label>
@@ -209,42 +261,7 @@ sqlsrv_execute($result_TipoTarefa);
 											<option>3</option>
 										</select>
 									</div>
-							</div>
-
-							<div class="tab-pane fade" id="tab2">
-								<h4>Dados da Solicitação</h4>
-									<div class="form-group">
-										<label>Projeto</label>
-										<select name="PROJETO" class="form-control">
-											 <?php while ($row = sqlsrv_fetch_array($result_Projeto)){ ?>
-											   <option value="<?php echo $row['cd_projeto']; ?>"><?php echo $row['desc_projeto'] ;?></option>
-											<?php } ?>
-										</select>
-									</div>
-									<div class="form-group">
-										<label>Solicitação</label>
-										<select name="MODULO" class="form-control">
-											<?php while ($row = sqlsrv_fetch_array($result_Modulo)){ ?>
-											   <option value="<?php echo $row['cd_modulo']; ?>"><?php echo $row['desc_modulo'] ;?></option>
-											<?php } ?>
-										</select>
-									</div>
-									<div class="form-group">
-										<label>Tipo de Tarefa</label>
-										<select name="TIPO_TAREFA" class="form-control">
-											<?php while ($row = sqlsrv_fetch_array($result_TipoTarefa)){ ?>
-											   <option value="<?php echo $row['cd_tipotarefa']; ?>"><?php echo $row['desc_tipotarefa'] ;?></option>
-											<?php } ?>
-										</select>
-									</div>
-									<div class="form-group">
-									    <label>Título (Resumo da Solicitação)</label>
-									    <input name="resumoSoli" class="form-control" placeholder="Digite o título do chamado">
-								    </div>
-								    <div class="form-group">
-									    <label>Descrição</label>
-									    <textarea name="descSoli" class="form-control" rows="3"></textarea>
-								    </div>
+		
 							</div>
 							<div class="tab-pane fade" id="tab3">
 								<h4>Anexos</h4>
@@ -269,12 +286,10 @@ sqlsrv_execute($result_TipoTarefa);
 	
 	<script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<script src="js/chart.min.js"></script>
-	<script src="js/chart-data.js"></script>
-	<script src="js/easypiechart.js"></script>
-	<script src="js/easypiechart-data.js"></script>
+
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/custom.js"></script>
+    <script type="text/javascript" src="js/jquery-1.10.1.js"></script>
 
 	<script language="javascript" type="text/javascript">
 		var aux =2 ; //Variavel indice para anexos
@@ -293,10 +308,10 @@ sqlsrv_execute($result_TipoTarefa);
        {           
            if (FormCha.DATA_ENTREGA.value == "") {
            	alert('Preencha o campo "Data de Entrega"');
-           	document.getElementById("tab1").className = "tab-pane fade in active";
-           	document.getElementById("litab1").className = "active";
-   			document.getElementById("tab2").className = "tab-pane fade";
-   			document.getElementById("litab2").className = "";
+           	document.getElementById("tab2").className = "tab-pane fade in active";
+           	document.getElementById("litab2").className = "active";
+   			document.getElementById("tab1").className = "tab-pane fade";
+   			document.getElementById("litab1").className = "";
    			document.getElementById("tab3").className = "tab-pane fade";
    			document.getElementById("litab3").className = "";
            	FormCha.DATA_ENTREGA.focus();
@@ -305,10 +320,10 @@ sqlsrv_execute($result_TipoTarefa);
 
            if (FormCha.resumoSoli.value == "") {
            	alert('Preencha o campo "Resumo Solicitação"');
-           	document.getElementById("tab2").className = "tab-pane fade in active";
-           	document.getElementById("litab2").className = "active";
-   			document.getElementById("tab1").className = "tab-pane fade";
-   			document.getElementById("litab1").className = "";
+           	document.getElementById("tab1").className = "tab-pane fade in active";
+           	document.getElementById("litab1").className = "active";
+   			document.getElementById("tab2").className = "tab-pane fade";
+   			document.getElementById("litab2").className = "";
    			document.getElementById("tab3").className = "tab-pane fade";
    			document.getElementById("litab3").className = "";
            	FormCha.resumoSoli.focus();
@@ -317,10 +332,10 @@ sqlsrv_execute($result_TipoTarefa);
 
            if (FormCha.descSoli.value == "") {
            	alert('Preencha o campo "Descrição"');
-           	document.getElementById("tab2").className = "tab-pane fade in active";
-           	document.getElementById("litab2").className = "active";
-   			document.getElementById("tab1").className = "tab-pane fade";
-   			document.getElementById("litab1").className = "";
+           	document.getElementById("tab1").className = "tab-pane fade in active";
+           	document.getElementById("litab1").className = "active";
+   			document.getElementById("tab2").className = "tab-pane fade";
+   			document.getElementById("litab2").className = "";
    			document.getElementById("tab3").className = "tab-pane fade";
    			document.getElementById("litab3").className = "";
            	FormCha.descSoli.focus();
@@ -339,6 +354,16 @@ sqlsrv_execute($result_TipoTarefa);
         	$("#JSid").remove();
 
         });
+
+         
+
+		    $('#MODULO').change(function () {
+		        var MODULO = $(this).val();
+                window.location.href = "NovoChamado.php?COD_MODULO="+MODULO;
+
+             });
+         
+
 	
 	
 	</script>
