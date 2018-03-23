@@ -238,7 +238,7 @@ $vetorSQLDesc = sqlsrv_fetch_array($result_squilaDesc);
             
             if($(mainParent).find('input.cb-value').is(':checked')) {
                 $(mainParent).addClass('active');
-                $('input:checkbox').prop("checked", true);
+
             } else {
                 $(mainParent).removeClass('active');
                 $('input:checkbox').prop("checked", false);
@@ -253,7 +253,7 @@ function getValueUsingClass(){
 	var chkArray = [];
 	
 	/* look for all checkboes that have a class 'chk' attached to it and check if it was checked */
-	$(".cb-value:not(:checked)").each(function() {
+	$(".cb-value:checked").each(function() {
 		chkArray.push($(this).val());
  
 	});
