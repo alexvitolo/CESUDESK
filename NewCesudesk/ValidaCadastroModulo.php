@@ -18,10 +18,12 @@ $DESC_MODULO   = str_replace("'", '"', $DESC_MODULO);
 
 $insertModulo = " INSERT INTO [DB_CRM_CESUDESK].[dbo].[modulo]
                               (desc_modulo
-                              ,inf_complementar)
+                              ,inf_complementar
+                              ,bo_ativo)
                       VALUES
                              ('{$INF_COMPL}'
-                             ,'{$DESC_MODULO}')";
+                             ,'{$DESC_MODULO}'
+                             ,0)";
 
                    
  $result_insert = sqlsrv_query($conn, $insertModulo);

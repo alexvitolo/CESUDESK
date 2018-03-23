@@ -8,15 +8,17 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 }
 
 
+$MODULO   = $_POST ["MODULO"];
 $DESC_TAREFA   = $_POST ["DESC_TAREFA"];
 
 $DESC_TAREFA = str_replace("'", '"', $DESC_TAREFA);
 
 
+
 $insertTipoTarefa = " INSERT INTO [DB_CRM_CESUDESK].[dbo].[tipotarefa]
-                                  (desc_tipotarefa)
+                                  (desc_tipotarefa,bo_ativo,cd_modulo)
                           VALUES
-                                 ('{$DESC_TAREFA}')";
+                                 ('{$DESC_TAREFA}',0,{$MODULO})";
 
                    
  $result_insert = sqlsrv_query($conn, $insertTipoTarefa);
