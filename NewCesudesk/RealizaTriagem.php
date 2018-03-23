@@ -201,7 +201,7 @@ $vetorSQLDesc = sqlsrv_fetch_array($result_squilaDesc);
                                                   <tr>
                                                       <td>
                                                           <div class="toggle-btn <?php if($row['POSSUI_CHAMADO'] == "S"){ echo "active";}  ; ?>">
-                                                             <input type="checkbox" name ="CheckboxID[]" class="cb-value" value="<?php echo $row['ID']; ?>" />
+                                                             <input type="checkbox" onclick="getValueUsingClass()" name ="CheckboxID[]" class="cb-value" value="<?php echo $row['ID']; ?>" />
                                                              <span class="round-btn"></span>
                                                           </div>
                                                       </td>
@@ -219,6 +219,7 @@ $vetorSQLDesc = sqlsrv_fetch_array($result_squilaDesc);
 				</div><!--/.panel-->
 			   <button type="submit" class="btn btn-primary">Realizar Triagem</button>
 			   <button type="" class="btn btn-default">Cancelar</button>
+			   <input type="hidden" id="RemoveTriagem" name="RemoveTriagem" />
 			   </form><br><br>
 			</div><!--/.col-->
 		</div><!--/.row-->
@@ -226,13 +227,10 @@ $vetorSQLDesc = sqlsrv_fetch_array($result_squilaDesc);
 	
 	<script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-	<script src="js/chart.min.js"></script>
-	<script src="js/chart-data.js"></script>
-	<script src="js/easypiechart.js"></script>
-	<script src="js/easypiechart-data.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/custom.js"></script>
 	<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+	<script src="js/jquery-1.10.1.js"></script>
 
 	<script>
 		$('.cb-value').click(function() {
@@ -240,11 +238,40 @@ $vetorSQLDesc = sqlsrv_fetch_array($result_squilaDesc);
             
             if($(mainParent).find('input.cb-value').is(':checked')) {
                 $(mainParent).addClass('active');
+                $('input:checkbox').prop("checked", true);
             } else {
                 $(mainParent).removeClass('active');
+                $('input:checkbox').prop("checked", false);
             }
 
          });
+
+
+
+function getValueUsingClass(){
+	/* declare an checkbox array */
+	var chkArray = [];
+	
+	/* look for all checkboes that have a class 'chk' attached to it and check if it was checked */
+	$(".cb-value:not(:checked)").each(function() {
+		chkArray.push($(this).val());
+ 
+	});
+	
+	/* we join the array separated by the comma */
+	var selected;
+	var IDREMOVETRIAGEM = document.getElementById('RemoveTriagem');
+
+	selected = chkArray.join(',');
+	
+	if(selected.length > 0){
+        IDREMOVETRIAGEM.value = selected;
+    }
+
+}
+
+
+
 	</script>
 
 </body>
