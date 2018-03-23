@@ -16,8 +16,9 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 $squilaModulo = "SELECT cd_modulo
                         ,desc_modulo
                         ,inf_complementar
+                        ,CASE WHEN bo_ativo = 0 THEN 'ATIVO' ELSE 'INATIVO' END AS ativo
                    FROM [DB_CRM_CESUDESK].[dbo].[modulo]
-               ORDER BY 1 desc";
+               ORDER BY ativo,cd_modulo asc";
 
 $result_squilaModulo = sqlsrv_prepare($conn, $squilaModulo);
 sqlsrv_execute($result_squilaModulo);
@@ -164,6 +165,7 @@ sqlsrv_execute($result_squilaModulo);
                                   <th><i class=""></i> Módulo </th>
                                   <th><i class=""></i> Descrição </th>
                                   <th><i class=""></i> Inf. Complementar </th>
+                                  <th><i class=""></i> Status </th>
                               </tr>
                               </thead>
                               <tbody>
@@ -172,6 +174,7 @@ sqlsrv_execute($result_squilaModulo);
                                   <td><?php echo $row['cd_modulo']; ?></a></td>
                                   <td><?php echo $row['desc_modulo']; ?></a></td>
                                   <td><?php echo $row['inf_complementar']; ?></a></td>
+                                  <td><?php echo $row['ativo']; ?></a></td>
                               </tr>
                               <?php 
                                      }

@@ -15,6 +15,19 @@ if ($_SESSION['ACESSO'] <> 1 )  {
  echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
 }
 
+
+
+$squilaModulo= "SELECT desc_modulo
+					   ,cd_modulo
+                  FROM [DB_CRM_CESUDESK].[dbo].[modulo]
+                 WHERE bo_ativo = 0
+              ORDER BY desc_modulo asc";
+
+$result_squilaModulo = sqlsrv_prepare($conn, $squilaModulo);
+sqlsrv_execute($result_squilaModulo);
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -154,6 +167,16 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 									<label>Descrição da Tarefa</label>
 									<input name="DESC_TAREFA" class="form-control" placeholder=""  required>
 								</div>
+
+								<div class="form-group">
+										<label>Módulo Correspondente</label>
+										<select required name="MODULO" class="form-control" id="MODULO">
+											<?php while ($row = sqlsrv_fetch_array($result_squilaModulo)){ ?>
+											   <option value="<?php echo $row['cd_modulo']; ?>"><?php echo $row['desc_modulo'] ;?></option>
+											<?php } ?>
+										</select>
+									</div>
+
 							</div>
 						</div>
 				</div><!--/.panel-->

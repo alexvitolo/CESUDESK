@@ -13,10 +13,12 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 }
 
 
-$squilaTipoTarefa= "SELECT cd_tipotarefa
-                        ,desc_tipotarefa
-                   FROM [DB_CRM_CESUDESK].[dbo].[tipotarefa]
-                  ORDER BY 1 desc";
+$squilaTipoTarefa= "SELECT T.cd_tipotarefa
+                        ,T.desc_tipotarefa
+                        ,CASE WHEN T.bo_ativo = 0 THEN 'ATIVO' ELSE 'INATIVO' END AS ativo
+                        ,(SELECT M.desc_modulo FROM [DB_CRM_CESUDESK].[dbo].[modulo] M WHERE M.cd_modulo = T.cd_modulo) as nome_modulo
+                   FROM [DB_CRM_CESUDESK].[dbo].[tipotarefa] T
+                  ORDER BY ativo,cd_tipotarefa asc";
 
 $result_squilaTipoTarefa = sqlsrv_prepare($conn, $squilaTipoTarefa);
 sqlsrv_execute($result_squilaTipoTarefa);
@@ -162,6 +164,8 @@ sqlsrv_execute($result_squilaTipoTarefa);
                               <tr>
                                   <th><i class=""></i> Cod Tipo Tarefa </th>
                                   <th><i class=""></i> Descrição </th>
+                                  <th><i class=""></i> Nome Módulo </th>
+                                  <th><i class=""></i> Status </th>
                               </tr>
                               </thead>
                               <tbody>
@@ -170,6 +174,8 @@ sqlsrv_execute($result_squilaTipoTarefa);
                               		   ?>
                                   <td><?php echo $row['cd_tipotarefa']; ?></a></td>
                                   <td><?php echo $row['desc_tipotarefa']; ?></a></td>
+                                  <td><?php echo $row['nome_modulo']; ?></a></td>
+                                  <td><?php echo $row['ativo']; ?></a></td>
                               </tr>
                               <?php 
                                      }
