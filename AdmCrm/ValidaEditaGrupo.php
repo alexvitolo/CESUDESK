@@ -16,24 +16,18 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
 
 
 
-
+$ID_GRUPO = $_POST["ID_GRUPO"];
 
 $DESCRI = $_POST["DESCRI"];
 $regiao = $_POST["regiao"];
 $unidade = $_POST["unidade"];
 
 
-$insertSquila = " INSERT INTO tb_crm_grupo
-                              (DESCRICAO
-                              ,ID_REGIAO
-                              ,ID_UNIDADE
-                               )
-                        
-                       VALUES
-                        ('{$DESCRI}'
-                        ,'{$regiao}'
-                        ,{$unidade}
-                        )";
+$insertSquila = " UPDATE [DB_CRM_REPORT].[dbo].[tb_crm_grupo]
+                     SET DESCRICAO = '{$DESCRI}' ,
+                         ID_REGIAO = '{$regiao}' ,
+                         ID_UNIDADE = {$unidade}
+                     WHERE ID_GRUPO = {$ID_GRUPO} ";
 
                    
  $result_insert = sqlsrv_query($conn, $insertSquila);
@@ -45,6 +39,6 @@ $insertSquila = " INSERT INTO tb_crm_grupo
       else {
             sqlsrv_free_stmt($result_insert);
             sqlsrv_close($conn);
-            echo  '<script type="text/javascript">alert("Grupo cadastrado !");</script>';
+            echo  '<script type="text/javascript">alert("Grupo Atualizado !");</script>';
             echo  '<script type="text/javascript"> window.location.href = "grupo.php" </script>';
         }

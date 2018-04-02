@@ -26,6 +26,7 @@ $squilaGrupo = "SELECT tg.ID_GRUPO
                       ,tg.DESCRICAO as DESCRICAO_GRUPO
                       ,tr.DESCRICAO as DESCRICAO_REGIAO
                       ,tg.DT_SISTEMA
+                      ,(SELECT DESCRICAO FROM DB_CRM_REPORT.dbo.tb_crm_unidade WHERE ID_UNIDADE = tg.ID_UNIDADE) as NOME_UNIDADE
                  FROM tb_crm_grupo tg
             LEFT JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
              ORDER BY DESCRICAO_GRUPO, DESCRICAO_REGIAO";
@@ -212,7 +213,7 @@ sqlsrv_execute($result_squilagrupo);
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="grupo.php">
+                        <form name="Form" method="post" id="formulario" action="editaGrupo.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Grupos </h4>
                             <hr>
@@ -223,6 +224,7 @@ sqlsrv_execute($result_squilagrupo);
                                   <th><i class="fa fa-bullhorn"></i> ID Grupo </th>
                                   <th><i class="fa fa-bullhorn"></i> Grupo </th>
                                   <th><i class="fa fa-bullhorn"></i> Região </th>
+                                  <th><i class="fa fa-bullhorn"></i> Unidade </th>
                               </tr>
                               </thead>
                               <tbody>
@@ -233,9 +235,10 @@ sqlsrv_execute($result_squilagrupo);
                                   <td><?php echo $row['ID_GRUPO']; ?></a></td>
                                   <td><?php echo $row['DESCRICAO_GRUPO']; ?></td>
                                   <td><?php echo $row['DESCRICAO_REGIAO']; ?></td>
+                                  <td><?php echo $row['NOME_UNIDADE']; ?></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_COLABORADOR'] ?>"  name="ID_COLABORADOR"><i class="fa fa-pencil"></i></button>
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_GRUPO'] ?>"  name="ID_GRUPO"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 

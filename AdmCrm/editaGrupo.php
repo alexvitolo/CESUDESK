@@ -22,6 +22,29 @@ if ($_SESSION['ACESSO'] <> 1 )  {
  echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
 }
 
+
+$ID_GRUPO = $_POST['ID_GRUPO'];
+
+
+$sqlGrupo= "SELECT G.ID_GRUPO
+                  ,G.DESCRICAO
+                  ,G.ID_REGIAO
+                  ,(SELECT DESCRICAO 
+                      FROM DB_CRM_REPORT.dbo.tb_crm_regiao 
+                     WHERE ID_REGIAO = G.ID_REGIAO) as NOME_REGIAO
+                  ,G.ID_UNIDADE
+                  ,(SELECT DESCRICAO 
+                      FROM DB_CRM_REPORT.dbo.tb_crm_unidade 
+                     WHERE ID_UNIDADE = G.ID_UNIDADE) as NOME_UNIDADE
+             FROM DB_CRM_REPORT.dbo.tb_crm_grupo G
+            WHERE ID_GRUPO = {$ID_GRUPO} ";
+
+$result_Grupo = sqlsrv_prepare($conn, $sqlGrupo);
+sqlsrv_execute($result_Grupo);
+
+$vetor_grupo = sqlsrv_fetch_array($result_Grupo);
+
+
 $sqlRegiao = "SELECT tr.ID_REGIAO
                     ,tr.DESCRICAO 
                   FROM tb_crm_regiao tr
@@ -165,13 +188,13 @@ sqlsrv_execute($result_Unidade);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Cadastro de Grupos</h3>
+            <h3><i class="fa fa-right"></i> Edição de Grupos</h3>
 
             <!-- criar formulario -->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="ValidaCadastroGrupo.php">
+                         <form name="Form" method="post" id="formulario" action="ValidaEditaGrupo.php">
 <!-- DADOS PESSOAIS-->
                          <fieldset>
                           <legend> Dados do grupo </legend>
@@ -181,13 +204,14 @@ sqlsrv_execute($result_Unidade);
                              <label style="margin-left: 15px" for="nome">Descrição: </label>
                             </td>
                             <td align="left">
-                             <input type="text" name="DESCRI">
+                             <input type="text" name="DESCRI" value="<?php echo $vetor_grupo['DESCRICAO']; ?>">
                             </td>
                              <td style="width:80px";>
                              <label style="margin-left: 15px">Região :</label>
                             </td>
                             <td align="left">
                              <select name="regiao">
+                                    <option value="<?php echo $vetor_grupo['ID_REGIAO']; ?> "> <?php echo $vetor_grupo['NOME_REGIAO']; ?> </option>    
                                          <?php while ($row = sqlsrv_fetch_array($result_Regiao)){ ?>
                                             <option value=<?php echo $row['ID_REGIAO']?> > <?php echo $row['DESCRICAO'] ?> </option>
                                          <?php }
@@ -202,6 +226,7 @@ sqlsrv_execute($result_Unidade);
                             </td>
                             <td align="left"><br>
                              <select name="unidade">
+                                   <option value="<?php echo $vetor_grupo['ID_UNIDADE']; ?> "> <?php echo $vetor_grupo['NOME_UNIDADE']; ?> </option>    
                                          <?php while ($row = sqlsrv_fetch_array($result_Unidade)){ ?>
                                             <option value=<?php echo $row['ID_UNIDADE']?> > <?php echo $row['DESCRICAO'] ?> </option>
                                          <?php }
@@ -216,7 +241,7 @@ sqlsrv_execute($result_Unidade);
                          
                          <br/>
 
-                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
+                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value="<?php echo $vetor_grupo['ID_GRUPO']; ?>" name="ID_GRUPO" >Confirmar</button> 
                          <a href="grupo.php"><input type="button" value="Cancelar"></a>
                       </form>
                       </div><!-- /content-panel -->
