@@ -29,7 +29,7 @@ sqlsrv_execute($result_squilaChamado);
 
 
 
-$squilaResumo = "SELECT TOP 1 CASE 
+$squilaResumo = "SELECT TOP 5 CASE 
 		                WHEN M.id_usuario ={$ID_LOGIN} THEN 'S' 
 		                ELSE 'N' 
 		                END POSSUI_COMENT
@@ -53,8 +53,17 @@ $squilaResumo = "SELECT TOP 1 CASE
 $result_squilaResumo= sqlsrv_prepare($conn, $squilaResumo);
 sqlsrv_execute($result_squilaResumo);
 
-$VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
+$VetorResumo['cd_tarefa'] = '';
+$VetorResumo['POSSUI_COMENT'] = 'S';
 
+while($row = sqlsrv_fetch_array($result_squilaResumo)) {
+	$VetorResumo['POSSUI_COMENT'] = 'N';
+	$VetorResumo['cd_tarefa'] .= $row['cd_tarefa'];
+	$VetorResumo['cd_tarefa'] .=' ,';
+
+}
+
+$VetorResumo['cd_tarefa'] =substr($VetorResumo['cd_tarefa'], 0, -1);
 
 
 
@@ -198,12 +207,10 @@ $VetorResumo = sqlsrv_fetch_array($result_squilaResumo);
 		</div><!--/.row-->
 
 
-		<?php if ($VetorResumo['POSSUI_COMENT'] == 'N'){ ?>
 		    <div class="alert"><span class="fa-icon fa fa-exclamation-triangle"> </span>
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                 Você possui Comentários Novos ! Chamado : <?php echo $VetorResumo['cd_tarefa']; ?>
             </div>
-         <?php } ?>
 
 		
 		<div class="row">
