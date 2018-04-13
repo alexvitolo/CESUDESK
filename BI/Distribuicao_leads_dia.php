@@ -1,5 +1,8 @@
 <?php include '..\BI\connectionTALSIMA.php';  
 
+ini_set('max_execution_time', 90);
+
+
 if (array_key_exists('TAMANHO', $_GET)){
 	$tamanho = $_GET['TAMANHO'];
 }else{
