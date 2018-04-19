@@ -247,14 +247,26 @@ $VetorResumo['cd_tarefa'] =substr($VetorResumo['cd_tarefa'], 0, -1);
                                     }else{
                                       $corStatus = "label label-success  label-mini";
                                     } 
+
+
+
+                                    $COD_AUX ="/".$row['cd_tarefa']."/";
+
+                                    if(preg_match($COD_AUX, $VetorResumo['cd_tarefa'])) {
+                                        $CorStatus2 = 'bgcolor="#b3ffb3"';
+                                    }else{
+                                    	$CorStatus2 = '';
+                                    }
+
+
                                     ?>                               
-                                  <td><?php echo $row['cd_tarefa']; ?></a></td>
-                                  <td><?php echo $row['titulo']; ?></a></td>
-                                  <td><?php echo $row['prioridade']; ?></a></td>
-                                  <td><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statustarefa']; ?></a></td></span>
+                                  <td <?php echo $CorStatus2 ; ?> ><?php echo $row['cd_tarefa']; ?></a></td>
+                                  <td <?php echo $CorStatus2 ; ?> ><?php echo $row['titulo']; ?></a></td>
+                                  <td <?php echo $CorStatus2 ; ?> ><?php echo $row['prioridade']; ?></a></td>
+                                  <td <?php echo $CorStatus2 ; ?> ><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td>
+                                  <td <?php echo $CorStatus2 ; ?> ><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statustarefa']; ?></a></td></span>
                       
-                                  <td>
+                                  <td <?php echo $CorStatus2 ; ?> >
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                       <button style="margin-left: 25px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
                                   </td>
