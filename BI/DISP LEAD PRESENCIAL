@@ -1,0 +1,170 @@
+USE [tlMain]
+GO
+
+/****** Object:  StoredProcedure [dbo].[P_UNICESUMAR_DISTR_LEAD_PRESENCIAL]    Script Date: 19/04/2018 14:25:36 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[P_UNICESUMAR_DISTR_LEAD_PRESENCIAL] AS 
+BEGIN
+	DECLARE @MESSAGE_FINALSTATE NVARCHAR(MAX)
+
+	DECLARE @USERDISTRIB INT
+	DECLARE @LeadPresencial INT
+
+	DECLARE @tlPropString NVARCHAR(MAX) 
+	DECLARE @nRetVal NVARCHAR(MAX) 
+	DECLARE @tErrorString NVARCHAR(MAX) 
+	DECLARE @nEventID INT
+
+	DECLARE @USERS TABLE (QUANTIDADE INT
+						 ,aUserID INT 
+						 ,tNickName NVARCHAR(255))
+	DECLARE @LEADS TABLE (nID INT)
+
+	INSERT INTO @LEADS
+		SELECT l.aID
+		  FROM [tblObjectType20005] l    WITH (NOLOCK)
+	INNER JOIN [tblObjectType20005_3] l3 WITH (NOLOCK) ON l.aID = l3.nID
+	INNER JOIN [tblObjectType20005_2] l2 WITH (NOLOCK) ON l.aID = l2.nID
+	INNER JOIN [tblObjectType5003]    e  WITH (NOLOCK) ON e.aID = l2.[FldNumeric22088]
+	INNER JOIN [tblObjectType5003_1]  e1 WITH (NOLOCK) ON e1.nID = e.aID
+		 WHERE l3.[FldDate23105] IS NULL
+		   AND l.[nTeamID] = 15
+		   AND (l.[nOwnerID] in (0,1) or l.[nOwnerID] is null )
+		   AND l.bdeleted = 0
+		   AND e1.[FldNumeric24627] = 1 -- lead distrib sim
+			ORDER BY l.aID ASC 
+	  
+	  IF (SELECT COUNT(1)
+			FROM @LEADS ) = 0
+	  BEGIN
+		SET @MESSAGE_FINALSTATE = ':SEM LEADS PARA DISTRIBUIÇÃO';
+		GOTO FINALSTATE
+	  END
+
+	INSERT INTO @USERS
+	SELECT ISNULL((SELECT COUNT(1)
+							 --,P.vToValue AS nUserID
+							FROM [tlMain].[dbo].[tbl_20005_NumericAudit] P WITH (NOLOCK)
+							INNER JOIN (SELECT MAX(D.aEventID) aEventID
+											, D.nID
+									FROM [tlMain].[dbo].[tbl_20005_NumericAudit] D WITH (NOLOCK)
+									WHERE D.nColumnID = 4800003
+								GROUP BY D.nID) M ON M.aEventID = P.aEventID AND M.nID = P.nID
+							WHERE P.vToValue NOT IN (0,1,2) 
+							AND P.nColumnID = 4800003
+							AND CONVERT(DATE, P.dChangeTime) = CONVERT(DATE, GETDATE())
+							AND P.vToValue = a.aUserID
+							GROUP BY P.vToValue),0) AS QT
+		,a.aUserID
+		,a.tNickName
+  					FROM tblUser a WITH (NOLOCK)
+			   LEFT JOIN tblObjectType20005 l WITH (NOLOCK) on l.[nOwnerID] = a.aUserID
+			  INNER JOIN tblLoggedInUser b WITH (NOLOCK) on a.aUserID = b.nUserID
+				   WHERE a.nPrimaryTeam = 15
+					 --AND (c.[FldNumeric24367] IS NULL OR c.[FldNumeric24367] = 2)
+				GROUP BY a.aUserID 
+						,a.tNickName
+	IF (SELECT COUNT(1)
+		  FROM @USERS ) = 0
+	BEGIN
+		SET @MESSAGE_FINALSTATE = ': SEM USUÁRIOS LOGADOS PARA DISTRIBUIÇÃO';
+		GOTO FINALSTATE
+	END
+
+
+
+	  DECLARE L_LEAD_PRESENCIAL CURSOR FOR
+	    SELECT nID
+		  FROM @LEADS
+	  
+	  OPEN L_LEAD_PRESENCIAL
+	  FETCH NEXT FROM  L_LEAD_PRESENCIAL INTO @LeadPresencial
+  
+	  WHILE @@FETCH_STATUS = 0
+	  BEGIN
+
+		  SELECT TOP 1 @USERDISTRIB = U.aUserID
+			FROM @USERS U
+		ORDER BY U.QUANTIDADE ASC
+
+		PRINT @LeadPresencial
+		PRINT @USERDISTRIB   
+
+		   /* SET VALUE TO LEAD PRESENCIAL OWNER PROPERTY */
+		 SET @tlPropString = '4800003='
+							+ Cast(@USERDISTRIB AS NVARCHAR ( max ))
+							+ Char(0177)
+		
+
+		EXEC @nRetVal = Sproc_updatepropertydata
+						@tPropertyString = @tlPropString
+						,@nEntityID = @LeadPresencial
+						,@nUserID = 2
+						,@nTeamID = -1
+						,@nEventID = @nEventID output
+						,@nEventType = 82
+						,@nChangeMode = 1
+						,@bReturnRecSet = 0
+						,@bTransact = 1
+						,@nRuleID = 1
+						,@tErrorString = @tErrorString output
+						,@bLight = 0
+						,@nObjType = 3
+						,@bUpdateMandatoryFlag = 0
+
+		IF ( @nRetVal <> 0 AND @tErrorString <> '' )
+		BEGIN 
+			SET @MESSAGE_FINALSTATE = 'NÃO DISTRIBUIU: '+@tErrorString 
+									 +'. Motivo: '+@nRetVal
+
+			PRINT @MESSAGE_FINALSTATE
+			BREAK
+                     
+			END /* ATUALIZAÇÃO RETORNOU ERRO */
+		 ELSE /* ATUALIZAÇÃO FUNCIONOU CORRETAMENTE */
+		 BEGIN
+						
+			INSERT INTO Unicesumar_Lead_Distrib(leadid, iduser, teamid, dh_distrib, ORIGEM)
+									VALUES (@LeadPresencial, @USERDISTRIB, 18, GETDATE(), 'LEAD_PRESENCIAL')
+		
+			UPDATE @USERS
+			   SET QUANTIDADE = QUANTIDADE+1
+			 WHERE aUserID = @USERDISTRIB
+
+			PRINT 'SUCCESS IN UPDATION' 
+					    
+			PRINT 'UPDATE TABELA DE DISTRIBUIÇÃO: '+CONVERT(VARCHAR,@LeadPresencial)
+                                            
+		END 
+
+		FETCH NEXT FROM  L_LEAD_PRESENCIAL INTO @LeadPresencial
+	  END
+
+	  CLOSE L_LEAD_PRESENCIAL
+	  DEALLOCATE L_LEAD_PRESENCIAL
+	  PRINT 'FINAL'
+
+
+	 FINALSTATE:
+	 BEGIN TRY
+		PRINT @MESSAGE_FINALSTATE
+	 END TRY
+	 BEGIN CATCH
+	 	PRINT 'TRY CATCH:'
+		CLOSE L_LEAD_PRESENCIAL
+	    DEALLOCATE L_LEAD_PRESENCIAL
+		PRINT @MESSAGE_FINALSTATE
+		PRINT Error_message()
+		PRINT Cast(Error_line() AS NVARCHAR(max))
+		PRINT Error_procedure()
+	 END CATCH
+
+END
+GO
+
+

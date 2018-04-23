@@ -144,6 +144,9 @@ sqlsrv_execute($result_squilaAnexo);
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
+					<li><a class="" href="ChamadosEncerrados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Encerrados
+					</a></li>
 				</ul>
 			</li>
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
@@ -192,7 +195,7 @@ sqlsrv_execute($result_squilaAnexo);
 				<h2>Gestão Chamado</h2>
 			</div>
 			<div class="col-md-10">
-			 <form role="form" name="FormCha" method="post" id="formulario" action="">
+			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaTratarChamadosEdita.php" enctype="multipart/form-data">
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
@@ -260,6 +263,16 @@ sqlsrv_execute($result_squilaAnexo);
 								       <label>Carregar Anexo</label>
 									    <a href="ChamadoDownload.php?COD_CHAMADO=<?php echo $row['cd_tarefa']; ?>&ANEXO_ID=<?php echo $row['anexos_id']; ?>"><input type="button" value="<?php echo $row['NomeArq']; ?>" ></input></a><br><br>
                                    <?php } ?>
+
+                                   <h4>Adicionar Novo Anexo</h4>
+								        <div class="form-group">
+								        	<label>Carregar Anexo</label>
+								        	<input type="file" name="anexo[1]">
+								        	<p class="help-block">Selecione um arquivo para anexar ao chamado.</p><br>
+								        	<div class="addJS"></div>
+								        </div>
+								        <input type="hidden" name="COD_CHAMADO" value="<?php echo $COD_CHAMADO; ?>">
+
 								</div>
 							</div>
 		    </form>
@@ -283,6 +296,7 @@ sqlsrv_execute($result_squilaAnexo);
 							</div>
 						</div>
 					</div>
+					<button type="submit" class="btn btn-primary">Atualizar ANEXO</button>
 				</div><!--/.panel-->
 			   <br><br>
 			</div><!--/.col-->

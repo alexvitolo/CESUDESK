@@ -215,6 +215,9 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
+					<li><a class="" href="ChamadosEncerrados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Encerrados
+					</a></li>
 				</ul>
 			</li>
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
@@ -243,6 +246,9 @@ if ( $_SESSION['ACESSO'] == 1) { // visão ADM, serumo total de chamados abertos
 				<ul class="children collapse" id="sub-item-2">
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
+					</a></li>
+					<li><a class="" href="ChamadosEncerrados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Encerrados
 					</a></li>
                          <li><a class="" href="TodosChamadosQualidade.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
