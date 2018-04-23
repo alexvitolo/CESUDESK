@@ -93,6 +93,9 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
+					<li><a class="" href="ChamadosEncerrados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Encerrados
+					</a></li>
 				</ul>
 			</li>
 			<li class="parent active"><a data-toggle="collapse" href="#sub-item-3">

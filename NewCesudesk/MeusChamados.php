@@ -146,6 +146,9 @@ $VetorResumo['cd_tarefa'] =substr($VetorResumo['cd_tarefa'], 0, -1);
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
 					</a></li>
+					<li><a class="" href="ChamadosEncerrados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Encerrados
+					</a></li>
 				</ul>
 			</li>
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-3">
@@ -174,6 +177,9 @@ $VetorResumo['cd_tarefa'] =substr($VetorResumo['cd_tarefa'], 0, -1);
 				<ul class="children collapse" id="sub-item-2">
 					<li><a class="" href="TratarChamados.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tratar Chamados
+					</a></li>
+					<li><a class="" href="ChamadosEncerrados.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Encerrados
 					</a></li>
 					<li><a class="" href="TodosChamadosQualidade.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Chamados Equipe
@@ -206,11 +212,12 @@ $VetorResumo['cd_tarefa'] =substr($VetorResumo['cd_tarefa'], 0, -1);
 			</div>
 		</div><!--/.row-->
 
-
+       <?php if ($VetorResumo['POSSUI_COMENT'] == 'N'){ ?>
 		    <div class="alert"><span class="fa-icon fa fa-exclamation-triangle"> </span>
                 <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
                 Você possui Comentários Novos ! Chamado : <?php echo $VetorResumo['cd_tarefa']; ?>
             </div>
+       <?php } ?>
 
 		
 		<div class="row">
@@ -231,7 +238,7 @@ $VetorResumo['cd_tarefa'] =substr($VetorResumo['cd_tarefa'], 0, -1);
                                   <th><i class=""></i> Código Chamado </th>
                                   <th><i class=""></i> Título </th>
                                   <th><i class=""></i> Prioridade </th>
-                                  <th><i class=""></i> Data Entrega </th>
+                                  <th style="width:110px"><i class=""></i> Data Entrega </th>
                                   <th><i class=""></i> Status </th>
                                   <th><i class=""></i> Visualizar </th>
 
