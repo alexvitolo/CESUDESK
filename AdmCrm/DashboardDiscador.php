@@ -1,4 +1,5 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+
 session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
@@ -17,24 +18,6 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
 
 
 
-if ($_SESSION['ACESSO'] <> 1 )  {
- // Ação a ser executada: mata o script e manda uma mensagem
- echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
-}
-
-$squilaLogin = "SELECT tlog.ID
-                      ,tlog.NOME
-                      ,tlog.USUARIO
-                      ,tlog.ACESSO_ADM
-                      ,tlog.BO_ATIVO
-                 FROM tb_crm_login tlog
-           INNER JOIN tb_crm_colaborador tc on tc.LOGIN_REDE = tlog.USUARIO
-             ORDER BY tlog.NOME ";
-
-$result_squilaLogin = sqlsrv_prepare($conn, $squilaLogin);
-sqlsrv_execute($result_squilaLogin);
-
-
 ?>
 
 <!DOCTYPE html>
@@ -51,14 +34,18 @@ sqlsrv_execute($result_squilaLogin);
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link rel="shortcut icon" href="icone.ico" >
-     <link rel="stylesheet" href="..\AdmCrm\general.css">
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-        
+    <link rel="stylesheet" type="text/css" href="assets/css/zabuto_calendar.css">
+    <link rel="stylesheet" type="text/css" href="assets/js/gritter/css/jquery.gritter.css" />
+    <link rel="stylesheet" type="text/css" href="assets/lineicons/style.css">    
+    
     <!-- Custom styles for this template -->
     <link href="assets/css/style.css" rel="stylesheet">
     <link href="assets/css/style-responsive.css" rel="stylesheet">
 
+    <script src="assets/js/chart-master/Chart.js"></script>
+    
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -82,12 +69,7 @@ sqlsrv_execute($result_squilaLogin);
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
-                <ul class="nav top-menu">
-                    <!-- settings start -->
-                    <!-- settings end -->
-                    <!-- inbox dropdown start-->
-                    <!-- inbox dropdown end -->
-                </ul>
+                
                 <!--  notification end -->
             </div>
             <div class="top-menu">
@@ -102,23 +84,23 @@ sqlsrv_execute($result_squilaLogin);
       MAIN SIDEBAR MENU
       *********************************************************************************************************************************************************** -->
       <!--sidebar start-->
-     <aside>
-          <div id="sidebar"  class="nav-collapse">
+      <aside>
+          <div id="sidebar"  class="nav-collapse ">
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
-                  <p class="centered"><a href=""><img src="assets/img/ui-sam.gif" class="img-circle" width="60"></a></p>
+                  <p class="centered"><a href=""><img src="assets/img/ui-sam.gif" class="img-circle" width="120"></a></p>
                   <h5 class="centered">Analytics EAD</h5>
                     
                   <li class="sub-menu"">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
                           <span>Home</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.php">Resumo</a></li>
                           <li class=""><a  href="DashboardQualidade.php">Dasboard Qualidade</a></li>
-                          <li class=""><a  href="DashboardDiscador.php">Dasboard Discador</a></li>
+                          <li class="active"><a  href="DashboardDiscador.php">Dasboard Discador</a></li>
                           <li class=""><a  href="DashboardMicroGestao.php">Dasboard Micro Gestão</a></li>
                       </ul>
                   </li>
@@ -171,15 +153,15 @@ sqlsrv_execute($result_squilaLogin);
                   
                    
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
-                      <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                   <li class="sub-menu">
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
-                      </a> <?php } ?>
+                      </a> 
                       <ul class="sub">
-                          <li class="active"><a  href="usuarioLogin.php">Usuários GCO</a></li>
+                          <li><a  href="usuarioLogin.php">Usuários GCO</a></li>
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
-                          <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
+                         <li class=""><a  href="dimensionamento.php">Dimensionamento</a></li>
                           <li class=""><a  href="colaboradores.php">Colaboradores</a></li>
                           <li class=""><a  href="cargo.php">Cargo</a></li>
                           <li class=""><a  href="grupo.php">Grupo</a></li>
@@ -195,7 +177,7 @@ sqlsrv_execute($result_squilaLogin);
                       <a class="" href="../MOBIRISE/INDEX.html" >
                           <i class="fa fa-cog fa-spin"></i>
                           <span>BETA DEV</span> 
-                      </a> <?php } ?>
+                      </a> <?php } ?><?php } ?>
 
               </ul>
               <!-- sidebar menu end-->
@@ -209,69 +191,26 @@ sqlsrv_execute($result_squilaLogin);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Usuários Login </h3>
+            <h3><i class="fa fa-right"></i> Dashboard Discador</h3>
+                <hr>
 
-            <!-- criar formulario -->
-              <div class="row mt">
-                  <div class="col-md-12">
-                      <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="editaUsuarioLogin.php">
-                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Login </h4>
-                            <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                            <a href="cadastroUsuarioLogin.php"><input style="float:right; margin-right: 50px" type="button" value="Novo Usuário" ></input></a>
-                              <thead>
-                              <tr>
-                                  <th><i class="fa fa-bullhorn"></i> ID </th>
-                                  <th><i class="fa fa-bullhorn"></i> Nome </th>
-                                  <th><i class="fa fa-bullhorn"></i> Usuário </th>
-                                  <th><i class="fa fa-bullhorn"></i> Acesso ADM </th>
-                                  <th><i class="fa fa-bullhorn"></i> Ativo </th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squilaLogin)) { 
-                                            if ($row['BO_ATIVO'] == "S") {
-                                              $corStatus = "label label-success label-mini";
-                                            }elseif ($row['BO_ATIVO'] == "N") {
-                                              $corStatus = "label label-danger label-mini";
-                                            }
-
-                                    ?>
-                            
-                                  <td><?php echo $row['ID']; ?></a></td>
-                                  <td><?php echo $row['NOME']; ?></td>
-                                  <td><?php echo $row['USUARIO']; ?></td>
-                                  <td><?php if($row['ACESSO_ADM'] == null) { echo 'SUPERVISOR';} elseif($row['ACESSO_ADM'] == 1){ echo 'ADM' ;} elseif($row['ACESSO_ADM'] == 2){echo 'QUALIDADE' ;} ?> </td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php if ($row['BO_ATIVO'] == "S"){ echo 'ATIVO' ;} else{echo 'DESLIGADO';} ?></td>
-                                  <td>
-                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID'] ?>"  name="ID"><i class="fa fa-pencil"></i></button>
-                                  </td>
-                              </tr>
-
-                              <?php 
-                                    }
-                              ?>
-                              
-                              </tbody>
-                          </table>
-                        </form>
-                      </div><!-- /content-panel -->
-                  </div><!-- /col-md-12 -->
-              </div><!-- /row -->
-
-    </section>
-      </section><!-- /MAIN CONTENT -->
+                   <iframe width="1100" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiNDAzMmUwZmItZDQxZC00Mjk3LTg4ZDctNjNhZWI3Y2I0Zjg4IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"  frameborder="0" allowFullScreen="true"></iframe>
+                  
+                  
+      <!-- **********************************************************************************************************************************************************
+      RIGHT SIDEBAR CONTENT      menu lateral direito
+      *********************************************************************************************************************************************************** -->                  
+              
+              </div>
+          </section>
+      </section>
 
       <!--main content end-->
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
               2017 - ANALYTICS EAD
-              <a href="" class="go-top">
+              <a href="index.php#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
           </div>
@@ -281,61 +220,59 @@ sqlsrv_execute($result_squilaLogin);
 
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/jquery-1.8.3.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script class="include" type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
     <script src="assets/js/jquery.scrollTo.min.js"></script>
+    <script src="assets/js/jquery.sparkline.js"></script>
 
 
     <!--common script for all pages-->
     <script src="assets/js/common-scripts.js"></script>
+    
+    <script type="text/javascript" src="assets/js/gritter/js/jquery.gritter.js"></script>
+    <script type="text/javascript" src="assets/js/gritter-conf.js"></script>
 
     <!--script for this page-->
+    <script src="assets/js/sparkline-chart.js"></script>    
+  <script src="assets/js/zabuto_calendar.js"></script>  
+  
+  
+  <script type="application/javascript">
+        $(document).ready(function () {
+            $("#date-popover").popover({html: true, trigger: "manual"});
+            $("#date-popover").hide();
+            $("#date-popover").click(function (e) {
+                $(this).hide();
+            });
+        
+            $("#my-calendar").zabuto_calendar({
+                action: function () {
+                    return myDateFunction(this.id, false);
+                },
+                action_nav: function () {
+                    return myNavFunction(this.id);
+                },
+                ajax: {
+                    url: "show_data.php?action=1",
+                    modal: true
+                },
+                legend: [
+                    {type: "text", label: "Special event", badge: "00"},
+                    {type: "block", label: "Regular event", }
+                ]
+            });
+        });
+        
+        
+        function myNavFunction(id) {
+            $("#date-popover").hide();
+            var nav = $("#" + id).data("navigation");
+            var to = $("#" + id).data("to");
+            console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+        }
+    </script>
+  
 
   </body>
 </html>
-
-
-
-<script type="text/javascript">
-(function(document) {
-  'use strict';
-
-  var LightTableFilter = (function(Arr) {
-
-    var _input;
-
-    function _onInputEvent(e) {
-      _input = e.target;
-      var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
-      Arr.forEach.call(tables, function(table) {
-        Arr.forEach.call(table.tBodies, function(tbody) {
-          Arr.forEach.call(tbody.rows, _filter);
-        });
-      });
-    }
-
-    function _filter(row) {
-      var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
-      row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
-    }
-
-    return {
-      init: function() {
-        var inputs = document.getElementsByClassName('light-table-filter');
-        Arr.forEach.call(inputs, function(input) {
-          input.oninput = _onInputEvent;
-        });
-      }
-    };
-  })(Array.prototype);
-
-  document.addEventListener('readystatechange', function() {
-    if (document.readyState === 'complete') {
-      LightTableFilter.init();
-    }
-  });
-
-   })(document);
-        
-
-</script>

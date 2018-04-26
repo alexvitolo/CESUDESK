@@ -93,11 +93,13 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
                   <li class="sub-menu"">
                       <a class="active" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Head Count</span>
+                          <span>Home</span>
                       </a>
                       <ul class ="sub">
                           <li class="active"><a  href="index.php">Resumo</a></li>
                           <li class=""><a  href="DashboardQualidade.php">Dasboard Qualidade</a></li>
+                          <li class=""><a  href="DashboardDiscador.php">Dasboard Discador</a></li>
+                          <li class=""><a  href="DashboardMicroGestao.php">Dasboard Micro Gestão</a></li>
                       </ul>
                   </li>
 
