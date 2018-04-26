@@ -114,7 +114,7 @@ sqlsrv_execute($result_squilaFDS);
                   <li class="sub-menu"">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
-                          <span>Head Count</span>
+                          <span>Home</span>
                       </a>
                       <ul class ="sub">
                           <li class=""><a  href="index.php">Resumo</a></li>
