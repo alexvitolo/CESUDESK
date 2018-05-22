@@ -14,6 +14,7 @@ BEGIN
 
 	DECLARE @USERDISTRIB INT
 	DECLARE @LeadPresencial INT
+	DECLARE @Unidade INT
 
 	DECLARE @tlPropString NVARCHAR(MAX) 
 	DECLARE @nRetVal NVARCHAR(MAX) 
@@ -22,11 +23,14 @@ BEGIN
 
 	DECLARE @USERS TABLE (QUANTIDADE INT
 						 ,aUserID INT 
-						 ,tNickName NVARCHAR(255))
-	DECLARE @LEADS TABLE (nID INT)
+						 ,tNickName NVARCHAR(255)
+						 ,UNIDADE INT)
+	DECLARE @LEADS TABLE (nID INT
+						  ,UNIDADE INT)
 
 	INSERT INTO @LEADS
 		SELECT l.aID
+		      ,l2.[FldNumeric22077]
 		  FROM [tblObjectType20005] l    WITH (NOLOCK)
 	INNER JOIN [tblObjectType20005_3] l3 WITH (NOLOCK) ON l.aID = l3.nID
 	INNER JOIN [tblObjectType20005_2] l2 WITH (NOLOCK) ON l.aID = l2.nID
@@ -37,7 +41,10 @@ BEGIN
 		   AND (l.[nOwnerID] in (0,1) or l.[nOwnerID] is null )
 		   AND l.bdeleted = 0
 		   AND e1.[FldNumeric24627] = 1 -- lead distrib sim
-			ORDER BY l.aID ASC 
+		   AND l2.[FldNumeric21994] = 1 --base presencial
+		   AND l3.[FldString21979] like '%prospect%' --Situação Candidato Vestibular
+		   AND l2.[FldNumeric22077] IS NOT NULL
+			ORDER BY l.aID,l2.[FldNumeric22077] ASC 
 	  
 	  IF (SELECT COUNT(1)
 			FROM @LEADS ) = 0
@@ -47,7 +54,7 @@ BEGIN
 	  END
 
 	INSERT INTO @USERS
-	SELECT ISNULL((SELECT COUNT(1)
+	SELECT ISNULL((SELECT count(1)
 							 --,P.vToValue AS nUserID
 							FROM [tlMain].[dbo].[tbl_20005_NumericAudit] P WITH (NOLOCK)
 							INNER JOIN (SELECT MAX(D.aEventID) aEventID
@@ -55,20 +62,31 @@ BEGIN
 									FROM [tlMain].[dbo].[tbl_20005_NumericAudit] D WITH (NOLOCK)
 									WHERE D.nColumnID = 4800003
 								GROUP BY D.nID) M ON M.aEventID = P.aEventID AND M.nID = P.nID
+
+								INNER JOIN (SELECT nID,[FldNumeric22077]
+									FROM [tlMain].[dbo].[tblObjectType20005_2] WITH (NOLOCK)
+									) E ON E.nID = P.nID AND E.FldNumeric22077 = tb.nIndex
+
 							WHERE P.vToValue NOT IN (0,1,2) 
 							AND P.nColumnID = 4800003
 							AND CONVERT(DATE, P.dChangeTime) = CONVERT(DATE, GETDATE())
 							AND P.vToValue = a.aUserID
-							GROUP BY P.vToValue),0) AS QT
+							GROUP BY P.vToValue,E.FldNumeric22077),0) AS QT
 		,a.aUserID
 		,a.tNickName
+		,tb.nIndex as UnidadeLead
   					FROM tblUser a WITH (NOLOCK)
 			   LEFT JOIN tblObjectType20005 l WITH (NOLOCK) on l.[nOwnerID] = a.aUserID
+			   LEFT JOIN tblObjectType20005_2 l2 WITH (NOLOCK) on l2.nid = l.aid
 			  INNER JOIN tblLoggedInUser b WITH (NOLOCK) on a.aUserID = b.nUserID
+			  INNER JOIN tblUserAccess ta WITH (NOLOCK) on ta.nUserID = a.aUserID
+			  INNER JOIN tblTeam t WITH (NOLOCK) on t.aTeamID = ta.nTeamID
+			  INNER JOIN (SELECT nIndex,tDisplayName  FROM TBLENUM WHERE NCONSTRAINTID =10364) tb ON tb.tDisplayName = t.tName
 				   WHERE a.nPrimaryTeam = 15
-					 --AND (c.[FldNumeric24367] IS NULL OR c.[FldNumeric24367] = 2)
+				     AND a.nLeadDistributionStatus = 1
 				GROUP BY a.aUserID 
 						,a.tNickName
+						,tb.nIndex
 	IF (SELECT COUNT(1)
 		  FROM @USERS ) = 0
 	BEGIN
@@ -79,17 +97,18 @@ BEGIN
 
 
 	  DECLARE L_LEAD_PRESENCIAL CURSOR FOR
-	    SELECT nID
+	    SELECT nID,UNIDADE
 		  FROM @LEADS
 	  
 	  OPEN L_LEAD_PRESENCIAL
-	  FETCH NEXT FROM  L_LEAD_PRESENCIAL INTO @LeadPresencial
+	  FETCH NEXT FROM  L_LEAD_PRESENCIAL INTO @LeadPresencial, @Unidade
   
 	  WHILE @@FETCH_STATUS = 0
 	  BEGIN
 
 		  SELECT TOP 1 @USERDISTRIB = U.aUserID
 			FROM @USERS U
+		   WHERE U.UNIDADE = @Unidade
 		ORDER BY U.QUANTIDADE ASC
 
 		PRINT @LeadPresencial
