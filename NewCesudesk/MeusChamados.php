@@ -20,6 +20,7 @@ $squilaChamado = "SELECT TOP 120 cd_tarefa
                                 ,projeto_cd_projeto
                                 ,solicitante_cd_usuario
                                 ,cd_tipotarefa
+                                ,(SELECT ISNULL(CONCAT(SUBSTRING(C.Nome,0,charindex(' ',C.Nome,1)),' '),'') FROM DB_CRM_CESUDESK.dbo.tarefa_triagem A INNER JOIN DB_CRM_CESUDESK.dbo.triagem B ON B.idtriagem = A.triagens_idtriagem AND A.tarefa_cd_tarefa = cd_tarefa INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_login] C ON c.ID = B.cd_usuario FOR XML PATH('') )as responsavel
                           FROM DB_CRM_CESUDESK.dbo.tarefa
                          WHERE solicitante_cd_usuario = {$ID_LOGIN}
                       ORDER BY tp_statustarefa,dh_entrega_prev desc";
@@ -240,6 +241,7 @@ $VetorResumo['cd_tarefa'] =substr($VetorResumo['cd_tarefa'], 0, -1);
                                   <th><i class=""></i> Prioridade </th>
                                   <th style="width:110px"><i class=""></i> Data Entrega </th>
                                   <th><i class=""></i> Status </th>
+                                  <th style="width:150px"><i class=""></i> Responsável </th>
                                   <th><i class=""></i> Visualizar </th>
 
                               </tr>
@@ -272,6 +274,7 @@ $VetorResumo['cd_tarefa'] =substr($VetorResumo['cd_tarefa'], 0, -1);
                                   <td <?php echo $CorStatus2 ; ?> ><?php echo $row['prioridade']; ?></a></td>
                                   <td <?php echo $CorStatus2 ; ?> ><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td>
                                   <td <?php echo $CorStatus2 ; ?> ><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statustarefa']; ?></a></td></span>
+                                  <td <?php echo $CorStatus2 ; ?> ><?php echo $row['responsavel']; ?></a></td>
                       
                                   <td <?php echo $CorStatus2 ; ?> >
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
