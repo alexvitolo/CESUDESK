@@ -126,6 +126,7 @@ sqlsrv_execute($result_squilaTipoConhecimento);
                           <li class=""><a  href="DashboardQualidade.php">Dasboard Qualidade</a></li>
                           <li class=""><a  href="DashboardDiscador.php">Dasboard Discador</a></li>
                           <li class=""><a  href="DashboardMicroGestao.php">Dasboard Micro Gestão</a></li>
+                          <li class=""><a  href="DashboardTrocaHorario.php">Dasboard Troca Horário</a></li>
                       </ul>
                   </li>
 

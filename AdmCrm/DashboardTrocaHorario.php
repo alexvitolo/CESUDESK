@@ -1,4 +1,5 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
+
 session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
@@ -13,36 +14,6 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
  }
  
  $_SESSION['TEMPOSESSION'] = date('H:i:s');
-
-
-
-
-if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
- // Ação a ser executada: mata o script e manda uma mensagem
- echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
-}
-
-
-$NUM_ALT = $_GET["NUM_ALT"];
-
-
-if   ( ereg('[^0-6]',$NUM_ALT )) {
- echo  '<script type="text/javascript">alert("Valor Inválido !");</script>';
- echo  '<script type="text/javascript"> window.location.href = "questoesConhecimento.php"  </script>';
- exit;
-}
-
-$aux = 0;
-
-
-$squilaConhecimento = "SELECT tcon.ID_CONHECIMENTO
-                         ,tcon.BO_STATUS
-                         ,tcon.DESCRICAO
-                    FROM tb_ava_conhecimento tcon
-                   WHERE tcon.BO_STATUS = 'S' ";
-
-$result_squilaConhecimento = sqlsrv_prepare($conn, $squilaConhecimento);
-sqlsrv_execute($result_squilaConhecimento);
 
 
 
@@ -65,11 +36,16 @@ sqlsrv_execute($result_squilaConhecimento);
     <link rel="shortcut icon" href="icone.ico" >
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-        
+    <link rel="stylesheet" type="text/css" href="assets/css/zabuto_calendar.css">
+    <link rel="stylesheet" type="text/css" href="assets/js/gritter/css/jquery.gritter.css" />
+    <link rel="stylesheet" type="text/css" href="assets/lineicons/style.css">    
+    
     <!-- Custom styles for this template -->
     <link href="assets/css/style.css" rel="stylesheet">
     <link href="assets/css/style-responsive.css" rel="stylesheet">
 
+    <script src="assets/js/chart-master/Chart.js"></script>
+    
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -93,12 +69,7 @@ sqlsrv_execute($result_squilaConhecimento);
             <!--logo end-->
             <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
-                <ul class="nav top-menu">
-                    <!-- settings start -->
-                    <!-- settings end -->
-                    <!-- inbox dropdown start-->
-                    <!-- inbox dropdown end -->
-                </ul>
+                
                 <!--  notification end -->
             </div>
             <div class="top-menu">
@@ -118,11 +89,11 @@ sqlsrv_execute($result_squilaConhecimento);
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
-                  <p class="centered"><a href=""><img src="assets/img/ui-sam.gif" class="img-circle" width="60"></a></p>
+                  <p class="centered"><a href=""><img src="assets/img/ui-sam.gif" class="img-circle" width="120"></a></p>
                   <h5 class="centered">Analytics EAD</h5>
                     
                   <li class="sub-menu"">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-dashboard"></i>
                           <span>Home</span>
                       </a>
@@ -131,7 +102,7 @@ sqlsrv_execute($result_squilaConhecimento);
                           <li class=""><a  href="DashboardQualidade.php">Dasboard Qualidade</a></li>
                           <li class=""><a  href="DashboardDiscador.php">Dasboard Discador</a></li>
                           <li class=""><a  href="DashboardMicroGestao.php">Dasboard Micro Gestão</a></li>
-                          <li class=""><a  href="DashboardTrocaHorario.php">Dasboard Troca Horário</a></li>
+                          <li class="active"><a  href="DashboardTrocaHorario.php">Dasboard Troca Horário</a></li>
                       </ul>
                   </li>
 
@@ -167,13 +138,13 @@ sqlsrv_execute($result_squilaConhecimento);
 
                <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                   <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-file-text"></i>
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
                           <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
-                          <li class="active"><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
+                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                           <li class=""><a  href="testeConhecimentoCadastrado.php">Conhecimento Realizados</a></li>
                       </ul>
@@ -183,11 +154,11 @@ sqlsrv_execute($result_squilaConhecimento);
                   
                    
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
-                      <li class="sub-menu">
+                   <li class="sub-menu">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
-                      </a> <?php } ?>
+                      </a> 
                       <ul class="sub">
                           <li><a  href="usuarioLogin.php">Usuários GCO</a></li>
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
@@ -207,7 +178,7 @@ sqlsrv_execute($result_squilaConhecimento);
                       <a class="" href="../MOBIRISE/INDEX.html" >
                           <i class="fa fa-cog fa-spin"></i>
                           <span>BETA DEV</span> 
-                      </a> <?php } ?>
+                      </a> <?php } ?><?php } ?>
 
               </ul>
               <!-- sidebar menu end-->
@@ -221,113 +192,26 @@ sqlsrv_execute($result_squilaConhecimento);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Cadastro Nova Questão</h3>
+            <h3><i class="fa fa-right"></i> Dashboard Trocas de Horário</h3>
+                <hr>
 
-            <!-- criar formulario -->
-              <div class="row mt">
-                  <div class="col-md-12">
-                      <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="ValidaCadastroQuestoesConheci.php" onSubmit="return enviardados();" >
-<!-- DADOS PESSOAIS-->
-                         <fieldset>
-                          <legend> Dados Questão </legend>
-                          <table cellspacing="10" style="vertical-align: middle">
-                           <tr>
-                            <td style="width:110px";>
-                             <label style="margin-left: 15px" >Tipo Conhecimento: </label>
-                            </td>
-                            <td align="left">
-                             <select name="ID_CONHECIMENTO">
-                                            <option value="null">Escolha um Tipo</option>
-                                           <?php while ($row = sqlsrv_fetch_array($result_squilaConhecimento)){ ?>
-                                            <option value=<?php echo $row['ID_CONHECIMENTO']?> > <?php echo $row['DESCRICAO'] ?> </option>
-                                         <?php }
-                                         ?>
-                             </select>
-                            </td>
-                          </tr>
-
-                          <tr>
-                            <td style="width:110px";><br>
-                             <label style="margin-left: 15px" >Status: </label>
-                            </td>
-                            <td align="left"><br>
-                             <select name="BO_STATUS"> 
-                                 <option value="S">ATIVO</option>
-                                 <option value="N">INATIVO</option> 
-                            </select>
-                            </td>
-                           </tr>
-
-                           <tr>
-                            <td style="width:110px";><br>
-                             <label style="margin-left: 15px" >Dificuldade: </label>
-                            </td>
-                            <td align="left"><br>
-                             <select name="DIFICULDADE"> 
-                                 <option value="1">Fácil</option>
-                                 <option value="2">Médio</option>
-                                 <option value="3">Difícil</option>  
-                            </select>
-                            </td>
-                           </tr>
-
-                           <tr>
-                            <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >Descriçao da Questão: </label>
-                            </td>
-                             <td align="left"><br><br>
-                              <textarea name="DESC_QUESTAO" value="" cols="120" rows="8" > TEXTO </textarea>
-                             </td>
-                           </tr>
-
-                          </table>
-                         </fieldset>
-
-                          <br><br>
-                          <fieldset>
-                          <legend> Alternativas Questão </legend>
-                            <table cellspacing="10" style="vertical-align: middle">
-
-                        <?php for ($aux = 1; $aux <= $NUM_ALT; $aux++ ) {  ?>
-                               <tr>
-                            <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >Alternativa <?php echo $aux ;?> </label>
-                            </td>
-                             <td align="left"><br><br>
-                              <textarea name="<?php echo ('ALTERNATIVA'. $aux) ?>" value="" cols="120" rows="8" > TEXTO </textarea>
-                             </td>
-                              <td style="width:110px";><br><br>
-                             <label style="margin-left: 15px" >VERDADEIRO ? </label>
-                            </td>
-                             <td align="left"><br><br>
-                               <input type="checkbox" name="<?php echo ('RESP_ALTERNATIVA'. $aux) ?>" unchecked data-toggle="switch"  value="on">
-                             </td>
-                           </tr>
-                        <?php  } ?>
-
-                            </table>
-                         </fieldset>
-                         
-                         <br>
-
-                          <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="" >Confirmar</button> 
-                           <input type="hidden" name="NUM_ALT" value="<?php echo $NUM_ALT ?>"> 
-                         <a href="tipoTesteConhecimento.php"><input type="button" value="Cancelar"></a>
-                      </form>
-                      </div><!-- /content-panel -->
-                  </div><!-- /col-md-12 -->
-              </div><!-- /row -->
-
-    </section>
-      </section><!-- /MAIN CONTENT -->
+                   <iframe width="1100" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiNmY0YzZkOWEtNGMwZi00MmQ4LWFjZDAtZmI5YmRhNWEyYzYzIiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"  frameborder="0" allowFullScreen="true"></iframe>
+                  
+                  
+      <!-- **********************************************************************************************************************************************************
+      RIGHT SIDEBAR CONTENT      menu lateral direito
+      *********************************************************************************************************************************************************** -->                  
+              
+              </div>
+          </section>
+      </section>
 
       <!--main content end-->
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
               2017 - ANALYTICS EAD
-              <a href="" class="go-top">
+              <a href="index.php#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
           </div>
@@ -337,101 +221,59 @@ sqlsrv_execute($result_squilaConhecimento);
 
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/jquery-1.8.3.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script class="include" type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
     <script src="assets/js/jquery.scrollTo.min.js"></script>
+    <script src="assets/js/jquery.sparkline.js"></script>
 
 
     <!--common script for all pages-->
     <script src="assets/js/common-scripts.js"></script>
+    
+    <script type="text/javascript" src="assets/js/gritter/js/jquery.gritter.js"></script>
+    <script type="text/javascript" src="assets/js/gritter-conf.js"></script>
 
     <!--script for this page-->
-
-      <!--custom switch checkbox-->
-  <script src="assets/js/bootstrap-switch-new-on-off.js"></script>
+    <script src="assets/js/sparkline-chart.js"></script>    
+  <script src="assets/js/zabuto_calendar.js"></script>  
   
-  <!--custom tagsinput-->
-  <script src="assets/js/jquery.tagsinput.js"></script>
   
-
-  <script src="assets/js/form-component.js"></script>   
-
-
+  <script type="application/javascript">
+        $(document).ready(function () {
+            $("#date-popover").popover({html: true, trigger: "manual"});
+            $("#date-popover").hide();
+            $("#date-popover").click(function (e) {
+                $(this).hide();
+            });
+        
+            $("#my-calendar").zabuto_calendar({
+                action: function () {
+                    return myDateFunction(this.id, false);
+                },
+                action_nav: function () {
+                    return myNavFunction(this.id);
+                },
+                ajax: {
+                    url: "show_data.php?action=1",
+                    modal: true
+                },
+                legend: [
+                    {type: "text", label: "Special event", badge: "00"},
+                    {type: "block", label: "Regular event", }
+                ]
+            });
+        });
+        
+        
+        function myNavFunction(id) {
+            $("#date-popover").hide();
+            var nav = $("#" + id).data("navigation");
+            var to = $("#" + id).data("to");
+            console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
+        }
+    </script>
+  
 
   </body>
 </html>
-
-
-
-<script type="text/javascript">
-
-function enviardados(){
- 
-
-if (document.Form.ID_CONHECIMENTO.value == 'null')
-{
-alert( "Preencha o campo CONHECIMENTO!" );
-document.Form.ID_CONHECIMENTO.focus();
-return false;
-}
-
-return true;
-}
-
-
-(function(document) {
-  'use strict';
-
-  var LightTableFilter = (function(Arr) {
-
-    var _input;
-
-    function _onInputEvent(e) {
-      _input = e.target;
-      var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
-      Arr.forEach.call(tables, function(table) {
-        Arr.forEach.call(table.tBodies, function(tbody) {
-          Arr.forEach.call(tbody.rows, _filter);
-        });
-      });
-    }
-
-    function _filter(row) {
-      var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
-      row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
-    }
-
-    return {
-      init: function() {
-        var inputs = document.getElementsByClassName('light-table-filter');
-        Arr.forEach.call(inputs, function(input) {
-          input.oninput = _onInputEvent;
-        });
-      }
-    };
-  })(Array.prototype);
-
-  document.addEventListener('readystatechange', function() {
-    if (document.readyState === 'complete') {
-      LightTableFilter.init();
-    }
-  });
-
-   })(document);
-        
-
-
-    function getConfirmation(){
-       // var retVal = confirm("Do you want to continue ?");
-       if(  confirm(" Deseja Confirmar? ") == true ){
-          return true;
-       }
-       else{
-          return false;
-       }
-    }
-        
-
-
-
-</script>
