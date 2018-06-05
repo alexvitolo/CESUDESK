@@ -27,6 +27,9 @@ $squilaChamado = "SELECT T.cd_tarefa
                         ,T.solicitante_cd_usuario
                         ,T.cd_tipotarefa
                         ,(SELECT USUARIO FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] WHERE ID = T.solicitante_cd_usuario) as NM_SOLICITA
+                        ,(SELECT ISNULL(CONCAT(SUBSTRING(C.Nome,0,charindex(' ',C.Nome,1)),' '),'') 
+                            FROM DB_CRM_CESUDESK.dbo.tarefa_triagem A 
+                      INNER JOIN DB_CRM_CESUDESK.dbo.triagem B ON B.idtriagem = A.triagens_idtriagem AND A.tarefa_cd_tarefa = cd_tarefa INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_login] C ON c.ID = B.cd_usuario FOR XML PATH('') )as responsavel
                   FROM DB_CRM_CESUDESK.dbo.tarefa T
                  WHERE T.tp_statustarefa in ('Andamento','Aberta')
               ORDER BY T.tp_statustarefa,T.dh_entrega_prev asc";
@@ -181,6 +184,7 @@ sqlsrv_execute($result_squilaChamado);
                                   <th><i class=""></i> Prioridade </th>
                                   <th style="width:110px"><i class=""></i> Data Entrega </th>
                                   <th><i class=""></i> Status </th>
+                                  <th><i class=""></i> Responsável </th>
                                   <th><i class=""></i> Direcionar Triagem </th>
 
                               </tr>
@@ -211,7 +215,7 @@ sqlsrv_execute($result_squilaChamado);
                                   <td <?php echo $CorStatus ; ?>  style="text-align:center"><?php echo $row['prioridade']; ?></a></td>
                                   <td <?php echo $CorStatus ; ?> ><?php echo date_format($row['dh_entrega_prev'],'d-m-Y'); ?></a></td>
                                   <td <?php echo $CorStatus ; ?> ><span class="<?php echo $corStatus ?>"><?php echo $row['tp_statustarefa']; ?></a></td></span>
-                      
+                                  <td <?php echo $CorStatus ; ?> ><?php echo $row['responsavel']; ?></a></td>                      
                                   <td <?php echo $CorStatus ; ?> >
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                       <button style="margin-left: 50px" class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['cd_tarefa'] ?>"  name="cd_tarefa"><i class="fa fa-pencil"></i></button>
