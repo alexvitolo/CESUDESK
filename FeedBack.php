@@ -21,7 +21,8 @@ $squilaPesquisa = "SELECT tc.ID_MATRICULA,
                        tc.LOGIN_REDE,
                        tc.PASS_FEEDBACK,
                        (SELECT DESCRICAO FROM tb_crm_grupo WHERE ID_GRUPO = tp.ID_GRUPO) as NOME_GRUPO,
-                       (SELECT NOME FROM tb_crm_processo WHERE ID = tp.ID_PROCESSO) as NOME_PROCESSO
+                       (SELECT NOME FROM tb_crm_processo WHERE ID = tp.ID_PROCESSO) as NOME_PROCESSO,
+                       tp.NOTA_FINAL
                   FROM tb_crm_colaborador tc
              LEFT JOIN tb_qld_pesquisa tp ON tp.ID_COLABORADOR = tc.ID_COLABORADOR
                  WHERE tp.ID_PESQUISA = {$ID_PESQUISA} ";
@@ -124,6 +125,7 @@ sqlsrv_execute($result_squilaPesquisa);
                                   <th><i class=""></i> Processo </th>
                                   <th><i class=""></i> Grupo </th>
                                   <th><i class=""></i> Nome Supervisor </th>
+                                  <th><i class=""></i> Nota Final </th>
                               </tr>
                               </thead>
                               <tbody>
@@ -136,6 +138,7 @@ sqlsrv_execute($result_squilaPesquisa);
                                   <td><?php echo $row['NOME_PROCESSO'] ?></a></td>
                                   <td><?php echo $row['NOME_GRUPO'] ?></a></td>
                                   <td><?php echo $row['NOME_SUP'] ?></a></td>
+                                  <td><?php echo $row['NOTA_FINAL'] ?></a></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                   </td>
