@@ -72,11 +72,11 @@ sqlsrv_execute($result_squila);
 
 
 
-$squilaProcessoSelect = "SELECT ID
+$squilaProcessoSelect = "SELECT TOP 6 ID
                        ,NOME
                        ,MODALIDADE
                        ,ATIVO
-                FROM tb_crm_processo WHERE MODALIDADE <> 'Presencial' ORDER BY DATA_INICIO DESC";
+                FROM tb_crm_processo WHERE NOME not like '4%' ORDER BY DATA_INICIO DESC";
 
 $result_squilaProcessoSelect = sqlsrv_prepare($conn, $squilaProcessoSelect);
 sqlsrv_execute($result_squilaProcessoSelect);

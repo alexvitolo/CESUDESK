@@ -46,17 +46,35 @@ $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
 
 
-
+//EAD
 
 $squilaSomaPesos = "SELECT SUM(tq.peso) as SOMA
                               ,tc.DESCRICAO
                       FROM tb_qld_questoes tq
                 INNER JOIN tb_crm_grupo tc ON tc.ID_GRUPO = tq.ID_GRUPO
+                INNER JOIN tb_crm_unidade tu ON tu.ID_UNIDADE = tc.ID_UNIDADE AND tu.ID_UNIDADE = 1
                      WHERE BO_QUESTAO_ATIVA ='S'
                   GROUP BY tc.DESCRICAO";
 
 $result_SomaPesos = sqlsrv_prepare($conn, $squilaSomaPesos);
 sqlsrv_execute($result_SomaPesos);
+
+
+
+//PRESENCIAL
+
+$squilaSomaPesos2 = "SELECT SUM(tq.peso) as SOMA
+                              ,CONCAT(tc.DESCRICAO,' - ',tq.TIPO_LIGACAO) as DESCRICAO
+                      FROM tb_qld_questoes tq
+                INNER JOIN tb_crm_grupo tc ON tc.ID_GRUPO = tq.ID_GRUPO
+                INNER JOIN tb_crm_unidade tu ON tu.ID_UNIDADE = tc.ID_UNIDADE AND tu.ID_UNIDADE = 2
+                     WHERE BO_QUESTAO_ATIVA ='S'
+                  GROUP BY tc.DESCRICAO
+                          ,tq.TIPO_LIGACAO";
+
+$result_SomaPesos2 = sqlsrv_prepare($conn, $squilaSomaPesos2);
+sqlsrv_execute($result_SomaPesos2);
+
 
 
 
@@ -243,15 +261,32 @@ sqlsrv_execute($result_SomaPesos);
                       <div class="content-panel">
 
                       <fieldset>
-                          <legend>  Somatória de Pesos  </legend> 
+                          <legend>  Somatória de Pesos - EAD </legend> 
                           <table cellspacing="10" style="vertical-align: middle">
                     <?php while ($row = sqlsrv_fetch_array($result_SomaPesos)){ ?>
                            <tr>
-                           <td style="width:180px";>
+                           <td style="width:250px";>
                              <label style="margin-left: 15px" for="nome"> <?php echo $row['DESCRICAO'] ?> </label>
                            <hr> </td>
                             <td style="width:140px";>
                             <label style="margin-left: 15px" > <?php echo $row['SOMA'] ?></label>
+                            <hr></td>
+                             </tr>
+                     <?php } ?>
+                          </table>
+                         </fieldset><br><br>
+                        <br>
+
+                        <fieldset>
+                          <legend>  Somatória de Pesos - PRESENCIAL </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                    <?php while ($row2 = sqlsrv_fetch_array($result_SomaPesos2)){ ?>
+                           <tr>
+                           <td style="width:250px";>
+                             <label style="margin-left: 15px" for="nome"> <?php echo $row2['DESCRICAO'] ?> </label>
+                           <hr> </td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" > <?php echo $row2['SOMA'] ?></label>
                             <hr></td>
                              </tr>
                      <?php } ?>

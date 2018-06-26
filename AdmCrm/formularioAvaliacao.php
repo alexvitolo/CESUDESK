@@ -18,6 +18,23 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
 
 
 
+
+$ID_MATRICULA_AVALIADOR = $_SESSION['MATRICULA'];
+
+
+
+  $sqlValidaPresencial ="SELECT tg.ID_UNIDADE
+                        FROM tb_crm_colaborador tc
+                  INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO 
+                       WHERE ID_MATRICULA = {$ID_MATRICULA_AVALIADOR} ";
+
+          $stmtValidaPresencial = sqlsrv_prepare($conn, $sqlValidaPresencial);
+          $resultValida = sqlsrv_execute($stmtValidaPresencial);
+          $resultadoSQLPre = sqlsrv_fetch_array($stmtValidaPresencial);
+
+
+
+
 ?>
 
 
@@ -217,7 +234,25 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
                             <td>
                              <a style="margin-left: 80px" href="monitoriaJaRealizada.php" target="_blank"><input style="margin-left: 55px" type="button" value="Avaliações Já Realizadas" ></input></a>
                             </td>
-                            </tr>
+                            </tr><br>
+
+                      <?php if ($resultadoSQLPre['ID_UNIDADE'] == 2 ) { ?>
+
+                         <tr>
+                           <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome">Ligação: </label>
+                            </td>
+                            <td align="left"><br>
+                                        <select name="LIGACAO" style="float:left">
+                                           <option value="" > Selecione uma Opção </option> 
+                                           <option value="ATIVO">ATIVO</option>
+                                           <option value="RECEPTIVO">RECEPTIVO</option> 
+                                        </select>          
+                            </td>
+                           </tr>
+
+                         <?php } ?>
+
 
                           </table>
                          </fieldset>

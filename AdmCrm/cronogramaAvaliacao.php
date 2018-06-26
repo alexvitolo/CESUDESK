@@ -32,10 +32,23 @@ $squilaDicas = "SELECT tcron.ID_AVALIACAO
                       ,tcar.DESCRICAO
                       ,tcron.BO_STATUS
                 FROM tb_qld_cronograma_avaliacao tcron
-          INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tcron.ID_CARGO";
+          INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tcron.ID_CARGO and tcar.ID_CARGO in (4,15)";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
+
+
+$squilaDicas2 = "SELECT tcron.ID_AVALIACAO
+                      ,tcron.NUMERO
+                      ,tcron.ID_CARGO
+                      ,tcar.DESCRICAO
+                      ,tcron.BO_STATUS
+                FROM tb_qld_cronograma_avaliacao tcron
+          INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tcron.ID_CARGO and tcar.ID_CARGO in (34,35)";
+
+$result_squila2 = sqlsrv_prepare($conn, $squilaDicas2);
+sqlsrv_execute($result_squila2);
+
 
 
 
@@ -225,7 +238,7 @@ sqlsrv_execute($result_squila);
 
                         <form name="Form" method="post" id="formulario" action="editaCronogramaAvaliacao.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Avaliações </h4>
+                            <h4><i class="fa fa-right"></i> Avaliações Monitoria - EAD </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
                               <thead>
@@ -267,6 +280,59 @@ sqlsrv_execute($result_squila);
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
+
+
+              <div class="row mt">
+                  <div class="col-md-12">
+                      <div class="content-panel">
+
+
+                        <form name="Form" method="post" id="formulario" action="editaCronogramaAvaliacao.php">
+                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
+                            <h4><i class="fa fa-right"></i> Avaliações Monitoria - Presencial </h4>
+                            <hr>
+                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
+                              <thead>
+                              <tr>
+                                  <th><i class=""></i> ID Avaliação </th>
+                                  <th><i class=""></i> Numero </th>
+                                  <th><i class=""></i> Cargo </th>
+                                  <th><i class=""></i> Status </th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <?php  while($row2 = sqlsrv_fetch_array($result_squila2)) { 
+
+                                    if ($row2['BO_STATUS'] == "S") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif ($row2['BO_STATUS'] == "N")  {
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
+              
+                                    ?>
+                                  <td style="width: 100px"><?php echo $row2['ID_AVALIACAO'] ?></a></td>
+                                  <td><?php echo $row2['NUMERO'] ?></td>
+                                  <td><?php echo $row2['DESCRICAO'] ?></a></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row2['BO_STATUS'] ?></span></td>
+                                  <td>
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row2['ID_AVALIACAO'] ?>"  name="ID_AVALIACAO"><i class="fa fa-pencil"></i></button>
+                                  </td>
+                              </tr>
+
+                              <?php 
+                                    }
+                              ?>
+                              
+                              </tbody>
+                          </table>
+                        </form>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
+              </div><!-- /row -->
+
+
 
     </section>
       </section><!-- /MAIN CONTENT -->

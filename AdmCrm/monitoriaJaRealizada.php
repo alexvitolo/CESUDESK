@@ -30,7 +30,11 @@ $sqlProcessoAtual = "  SELECT ID
                              ,DATA_FIM
                              
                         FROM tb_crm_processo
-                       WHERE MODALIDADE = 'Graduação'
+                       WHERE MODALIDADE = (SELECT CASE WHEN TU.ID_UNIDADE = 1 THEN 'Graduação' ELSE 'Presencial' END MODAL
+                                                   FROM tb_crm_colaborador TC
+                                             INNER JOIN tb_crm_grupo TG ON TG.ID_GRUPO = TC.ID_GRUPO
+                                             INNER JOIN tb_crm_unidade TU ON TU.ID_UNIDADE = TG.ID_UNIDADE
+                                                  WHERE TC.ID_COLABORADOR = {$ID_QUEM_APLICOU})
                          AND ATIVO = 1
                  ";
 
