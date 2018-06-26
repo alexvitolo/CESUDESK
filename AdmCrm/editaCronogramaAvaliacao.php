@@ -55,7 +55,7 @@ $squilaCargoAvaliacao = "SELECT
                               tcron.ID_CARGO
                              ,tcar.DESCRICAO
                 FROM tb_qld_cronograma_avaliacao tcron
-                INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tcron.ID_CARGO
+                LEFT JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tcron.ID_CARGO
                 GROUP BY  tcar.DESCRICAO, tcron.ID_CARGO";
 
 $result_squilaCargoAvaliacao = sqlsrv_prepare($conn, $squilaCargoAvaliacao);

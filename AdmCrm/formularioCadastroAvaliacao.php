@@ -13,6 +13,8 @@ $ID_MATRICULA_AVALIADOR = $_SESSION['MATRICULA'];
 
 $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];  // será passado para proxima pág por hidden
 
+$LIGACAO = $_POST['LIGACAO'];
+
 
   $sqlValida ="SELECT tc.ID_MATRICULA
                                 ,tc.ID_COLABORADOR
@@ -62,9 +64,31 @@ sqlsrv_execute($result_squilaAvaliacao);
 
 
 
+if ( ($LIGACAO == 'ATIVO') or ($LIGACAO == 'RECEPTIVO') ) {
+
+    $squilaQuestao = "SELECT ID_QUESTAO
+                               ,tc.ID_MATRICULA
+                               ,tq.ID_QUESTAO
+                               ,tq.DESCRICAO
+                               ,tq.PESO
+                               ,tq.DESC_OBSERVACAO
+                               ,tq.BO_FALHA_CRITICA
+                               ,tq.BO_PARCIAL
+                               ,CASE WHEN tc.ID_GRUPO in (24,26,27,28,29,30) THEN 24 ELSE tc.ID_GRUPO END GRUPO_COLABORADOR
+                          FROM tb_qld_questoes tq 
+                    INNER JOIN tb_crm_colaborador tc ON CASE 
+                                                        WHEN tc.ID_GRUPO IN (24,26,27,28,29,30) THEN 24 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
+                         WHERE tq.BO_FALHA_CRITICA = 'N'
+                           AND tq.BO_QUESTAO_ATIVA = 'S'
+                           AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'
+                           AND (tc.STATUS_COLABORADOR ='ATIVO' OR tc.STATUS_COLABORADOR = 'FERIAS') 
+                           AND tq.TIPO_LIGACAO = '{$LIGACAO}' ";
+
+    $result_squilaQuestao = sqlsrv_prepare($conn, $squilaQuestao);
+    sqlsrv_execute($result_squilaQuestao);
 
 
-$squilaQuestao = "SELECT ID_QUESTAO
+    $squilaQuestaoCritico = "SELECT ID_QUESTAO
                            ,tc.ID_MATRICULA
                            ,tq.ID_QUESTAO
                            ,tq.DESCRICAO
@@ -72,31 +96,60 @@ $squilaQuestao = "SELECT ID_QUESTAO
                            ,tq.DESC_OBSERVACAO
                            ,tq.BO_FALHA_CRITICA
                            ,tq.BO_PARCIAL
-                           ,CASE WHEN tc.ID_GRUPO in (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END GRUPO_COLABORADOR
+                           ,CASE WHEN tc.ID_GRUPO in (24,26,27,28,29,30) THEN 24 ELSE tc.ID_GRUPO END GRUPO_COLABORADOR
                       FROM tb_qld_questoes tq 
                 INNER JOIN tb_crm_colaborador tc ON CASE 
-                                                    WHEN tc.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
-                     WHERE tq.BO_FALHA_CRITICA = 'N'
-                       AND tq.BO_QUESTAO_ATIVA = 'S'
+                                                    WHEN tc.ID_GRUPO IN (24,26,27,28,29,30) THEN 24 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
+                     WHERE BO_FALHA_CRITICA = 'S'
                        AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'
-                       AND (tc.STATUS_COLABORADOR ='ATIVO' OR tc.STATUS_COLABORADOR = 'FERIAS') ";
+                       AND (tc.STATUS_COLABORADOR ='ATIVO' OR tc.STATUS_COLABORADOR = 'FERIAS') 
+                       AND tq.TIPO_LIGACAO = '{$LIGACAO}'";
 
-$result_squilaQuestao = sqlsrv_prepare($conn, $squilaQuestao);
-sqlsrv_execute($result_squilaQuestao);
-
-
-
-$squilaObjetoTalisma = "SELECT ID_OBJETO_TALISMA
-                              ,DESCRICAO
-                              ,TABELA_TALISMA
-                          FROM tb_qld_objeto_talisma";
-
-$result_squilaObjetoTalisma = sqlsrv_prepare($conn, $squilaObjetoTalisma);
-sqlsrv_execute($result_squilaObjetoTalisma);
+$result_squilaQuestaoCritico = sqlsrv_prepare($conn, $squilaQuestaoCritico);
+sqlsrv_execute($result_squilaQuestaoCritico);
 
 
+$squilaResultLigacao = "SELECT trs.ID_RESULT_LIG
+                               ,tg.DESCRICAO
+                               ,trs.DESCRICAO AS DESC_RESUL_LIGACAO
+                          FROM tb_qld_resultado_ligacao trs
+                    INNER JOIN tb_crm_grupo tg ON (CASE WHEN tg.ID_GRUPO IN (24,26,27,28,29,30) THEN 24 ELSE tg.ID_GRUPO END) = trs.ID_GRUPO
+                    INNER JOIN tb_crm_colaborador tc ON tc.ID_GRUPO = tg.ID_GRUPO
+                         WHERE tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'  ";
 
-$squilaQuestaoCritico = "SELECT ID_QUESTAO
+$result_squilaResultLigacao = sqlsrv_prepare($conn, $squilaResultLigacao);
+sqlsrv_execute($result_squilaResultLigacao);
+
+
+
+
+
+}
+
+else{
+
+
+    $squilaQuestao = "SELECT ID_QUESTAO
+                               ,tc.ID_MATRICULA
+                               ,tq.ID_QUESTAO
+                               ,tq.DESCRICAO
+                               ,tq.PESO
+                               ,tq.DESC_OBSERVACAO
+                               ,tq.BO_FALHA_CRITICA
+                               ,tq.BO_PARCIAL
+                               ,CASE WHEN tc.ID_GRUPO in (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END GRUPO_COLABORADOR
+                          FROM tb_qld_questoes tq 
+                    INNER JOIN tb_crm_colaborador tc ON CASE 
+                                                        WHEN tc.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
+                         WHERE tq.BO_FALHA_CRITICA = 'N'
+                           AND tq.BO_QUESTAO_ATIVA = 'S'
+                           AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'
+                           AND (tc.STATUS_COLABORADOR ='ATIVO' OR tc.STATUS_COLABORADOR = 'FERIAS') ";
+
+    $result_squilaQuestao = sqlsrv_prepare($conn, $squilaQuestao);
+    sqlsrv_execute($result_squilaQuestao);
+
+    $squilaQuestaoCritico = "SELECT ID_QUESTAO
                            ,tc.ID_MATRICULA
                            ,tq.ID_QUESTAO
                            ,tq.DESCRICAO
@@ -126,6 +179,23 @@ $squilaResultLigacao = "SELECT trs.ID_RESULT_LIG
 
 $result_squilaResultLigacao = sqlsrv_prepare($conn, $squilaResultLigacao);
 sqlsrv_execute($result_squilaResultLigacao);
+
+
+
+}
+
+
+
+
+$squilaObjetoTalisma = "SELECT ID_OBJETO_TALISMA
+                              ,DESCRICAO
+                              ,TABELA_TALISMA
+                          FROM tb_qld_objeto_talisma";
+
+$result_squilaObjetoTalisma = sqlsrv_prepare($conn, $squilaObjetoTalisma);
+sqlsrv_execute($result_squilaObjetoTalisma);
+
+
 
 
 
