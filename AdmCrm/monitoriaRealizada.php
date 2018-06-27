@@ -271,6 +271,7 @@ sqlsrv_execute($result_squilaProcessoSelect);
                                     <form name="Form" method="get" id="id" action="monitoriaRealizada.php">
                                       <a style="float:left; margin-right: 10px; margin-top: 20px"> PROCESSO </a>
                                         <select onchange="this.form.submit()" name="PROCESSO" style="float:left; margin-right: 20px; margin-top: 20px" >
+                                             <option value="">TODOS</option>
                                            <?php while ($row = sqlsrv_fetch_array($result_squilaProcessoSelect)){ ?>
                                              <option <?php if($row['ID'] == $_GET['PROCESSO'] ) { echo 'selected' ;} ?> value=<?php echo $row['ID']?> > <?php echo $row['NOME'] ?> </option>
                                          <?php }

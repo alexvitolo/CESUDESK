@@ -212,7 +212,7 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
 
                           <a id="example1" href="./example/1_b.jpg"><img alt="example1" src="./example/1_s.jpg" /></a>
 
-                          <a id="various3" href="https://app.powerbi.com/view?r=eyJrIjoiMTA3OTYxOTgtNTY3Ny00NmQ1LWEyNTQtYWM4NGViMmI1MzEzIiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"><img alt="example2" src="./example/2_s.jpg" /></a>
+                          <area id="various3" href="https://app.powerbi.com/view?r=eyJrIjoiMTA3OTYxOTgtNTY3Ny00NmQ1LWEyNTQtYWM4NGViMmI1MzEzIiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"><img alt="example2" src="./example/2_s.jpg" /></area>
 
                           <a id="example3" href="./example/3_b.jpg"><img alt="example3" src="./example/3_s.jpg" /></a>
                           
