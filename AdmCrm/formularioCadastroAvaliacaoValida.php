@@ -31,17 +31,54 @@ $ID_RESULT_LIG = $_POST['ID_RESULT_LIG'];
 $OBSERVACAO_PESQUISA = str_replace("'", '"', $OBSERVACAO_PESQUISA);
 
 
-$squilaProcesso = "SELECT ID
-                         ,NOME
-                         ,MODALIDADE
-                         ,ATIVO
-                    FROM tb_crm_processo
-                   WHERE MODALIDADE = 'Graduação'
-                     AND ATIVO = '1'   ";
 
-$result_squilaProcesso = sqlsrv_prepare($conn, $squilaProcesso);
-sqlsrv_execute($result_squilaProcesso);
- $resultadoSQL = sqlsrv_fetch_array($result_squilaProcesso);
+// verifica se é processo presecial
+
+
+  $sqlValidaPresencial ="SELECT tg.ID_UNIDADE
+                        FROM tb_crm_colaborador tc
+                  INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO 
+                       WHERE ID_MATRICULA = {$ID_MATRICULA_CONSULTOR} ";
+
+          $stmtValidaPresencial = sqlsrv_prepare($conn, $sqlValidaPresencial);
+          $resultValida = sqlsrv_execute($stmtValidaPresencial);
+          $resultadoSQLPre = sqlsrv_fetch_array($stmtValidaPresencial);
+
+ if ($resultadoSQLPre['ID_UNIDADE'] == 2) {
+
+
+    $squilaProcesso = "SELECT ID
+                             ,NOME
+                             ,MODALIDADE
+                             ,ATIVO
+                        FROM tb_crm_processo
+                       WHERE MODALIDADE = 'Presencial'
+                         AND ATIVO = '1'   ";
+
+    $result_squilaProcesso = sqlsrv_prepare($conn, $squilaProcesso);
+    sqlsrv_execute($result_squilaProcesso);
+    $resultadoSQL = sqlsrv_fetch_array($result_squilaProcesso);
+
+
+}else{
+
+
+    $squilaProcesso = "SELECT ID
+                             ,NOME
+                             ,MODALIDADE
+                             ,ATIVO
+                        FROM tb_crm_processo
+                       WHERE MODALIDADE = 'Graduação'
+                         AND ATIVO = '1'   ";
+
+    $result_squilaProcesso = sqlsrv_prepare($conn, $squilaProcesso);
+    sqlsrv_execute($result_squilaProcesso);
+    $resultadoSQL = sqlsrv_fetch_array($result_squilaProcesso);
+
+
+
+}
+
 
 
  $ID_PROCESSO = $resultadoSQL['ID'];

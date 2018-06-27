@@ -70,7 +70,8 @@ $squilaSomaPesos2 = "SELECT SUM(tq.peso) as SOMA
                 INNER JOIN tb_crm_unidade tu ON tu.ID_UNIDADE = tc.ID_UNIDADE AND tu.ID_UNIDADE = 2
                      WHERE BO_QUESTAO_ATIVA ='S'
                   GROUP BY tc.DESCRICAO
-                          ,tq.TIPO_LIGACAO";
+                          ,tq.TIPO_LIGACAO
+                ORDER BY DESCRICAO ";
 
 $result_SomaPesos2 = sqlsrv_prepare($conn, $squilaSomaPesos2);
 sqlsrv_execute($result_SomaPesos2);
