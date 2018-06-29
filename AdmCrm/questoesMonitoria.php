@@ -29,7 +29,7 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 $squilaDicas = "SELECT tq.ID_QUESTAO
                         ,tq.DESCRICAO
                         ,tq.DESC_OBSERVACAO
-                        ,tc.DESCRICAO AS DESC_GRUPO
+                        ,CONCAT(tc.DESCRICAO,' - ',tu.DESCRICAO) AS DESC_GRUPO
                         ,tq.PESO
                         ,tq.BO_FALHA_CRITICA
                         ,tq.BO_PARCIAL
@@ -39,6 +39,7 @@ $squilaDicas = "SELECT tq.ID_QUESTAO
                         FROM tb_qld_questoes tq
                   INNER JOIN tb_crm_grupo tc ON tc.ID_GRUPO = tq.ID_GRUPO
                   INNER JOIN tb_crm_processo tp ON tp.ID = tq.ID_PROCESSO
+                  INNER JOIN tb_crm_unidade tu ON tu.ID_UNIDADE = tc.ID_UNIDADE
                   WHERE tq.BO_QUESTAO_ATIVA = 'S'
                   ORDER BY DESC_GRUPO";
 
@@ -302,7 +303,8 @@ sqlsrv_execute($result_SomaPesos2);
                             <h4><i class="fa fa-right"></i> Tabela de Questôes </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                              <thead>
+                               <a href="UserReport_Export_questoes_monitoria.php"><input style="float:right; margin-right: 50px ;margin-top: 17px" type="button" value="Relatório Geral de Questões" ></input></a><br><br>
+                              <thead><br>
                               <tr>
                                   <th><i class=""></i> Descrição </th>
                                   <th><i class=""></i> Observação </th>
