@@ -15,6 +15,27 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 }
 
 
+
+$sqlCancelaTroca = "SELECT ID_TROCA
+                          ,(SELECT ID_MATRICULA FROM DB_CRM_REPORT.dbo.tb_crm_colaborador WHERE ID_COLABORADOR = tnew.ID_COLABORADOR1) as ID_MATRICULA1
+                          ,(SELECT NOME FROM DB_CRM_REPORT.dbo.tb_crm_colaborador WHERE ID_COLABORADOR = tnew.ID_COLABORADOR1) as ID_COLABORADOR1
+                          ,(SELECT ID_MATRICULA FROM DB_CRM_REPORT.dbo.tb_crm_colaborador WHERE ID_COLABORADOR = tnew.ID_COLABORADOR2) as ID_MATRICULA2
+                          ,(SELECT NOME FROM DB_CRM_REPORT.dbo.tb_crm_colaborador WHERE ID_COLABORADOR = tnew.ID_COLABORADOR2) as ID_COLABORADOR2
+                          ,tnew.ID_HORARIO2
+                          ,tnew.ID_SUPERVISOR2
+                          ,CONVERT(date,tnew.DT_TROCA) as DT_TROCA
+                          ,tnew.TP_STATUS
+                      FROM DB_CRM_REPORT.dbo.tb_crm_trocas_new tnew 
+                     WHERE tnew.TP_STATUS = 'AGUARDANDO_ENVIO' ";
+                    
+
+$result_squila = sqlsrv_prepare($conn, $sqlCancelaTroca);
+sqlsrv_execute($result_squila);
+
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,7 +67,7 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
   <!-- Avatar image in top left corner -->
   <img src="..\PlanilhaTrocas\imagens\Avatar.jpg" style="width:100%">
-  <a href="PaginaIni.php" class="w3-bar-item w3-button w3-padding-large w3-blue">
+  <a href="PaginaIni.php" style="color: white;" class="w3-bar-item w3-button w3-padding-large w3-hover-blue">
     <i class="fa fa-home w3-xxlarge"></i>
     <p>HOME</p>
   </a>
@@ -56,7 +77,7 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
   </a>
 
  <?php if ($_SESSION['ACESSO'] == 1){ ?>
-    <a href="CancelaTroca.php" style="color: white;" class="w3-bar-item w3-button w3-padding-large w3-hover-blue">
+    <a href="CancelaTroca.php" style="color: white;" class="w3-bar-item w3-button w3-padding-large w3-blue">
       <i class="fa faa-flash animated fa-remove w3-xxlarge"></i>
       <p>Cancelar Trocas</p>
     </a>
@@ -88,7 +109,7 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 <div class="w3-padding-large" id="main">
   <!-- Header/Home -->
   <header style="background-color: #EEEEEE;" class="w3-container w3-padding-32 w3-center" id="home">
-    <h1 class="w3-jumbo"><span style="color:black;">Planilha de Trocas</span> </h1>
+    <h1 class="w3-jumbo"><span style="color:black;">Cancelamento de Trocas</span> </h1>
     <p class="w3-text-black">Call Center</p>
   </header>
 
@@ -96,29 +117,47 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
   <div class="w3-content w3-justify w3-text-grey w3-padding-64" id="about">
     <h2 style="color:black;">Troca de Consultores</h2>
     <hr align="left" style="width:315px" class="w3-opacity">
-    <p style="color:black;">Digite o número da matrícula do consultor a ser trocado
-    </p>
 
     <!-- Dentro desta DIV, inserir a Tabela para Visualizar -->
-    <div>
-      <form name="Form" method="post" id="formulario" action="PaginaTroca.php">
-        <div class="box"> 
-          <h1> Planilha de Troca :</h1>
-       
-          <label> 
-            <span>Número Matrícula</span>
-            <input type="text" class="input_text" name="numero_PaginaIni" id="numero" required value="" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
-          </label>
-          <label>
-            <span>Data</span>
-            <!-- é necessário utilizar o echo para utilizar a variavel dentro do valor min html -->
-            <input type="date"  min="<?php echo $dataValida ?>"  class="input_text" name="dateTroca_PaginaIni" id="date" required value=""/>
-            <input type="submit" class="button" value="Enviar" >
-            <br><br>
-          </label>           
-        </div>
-      </form>
-    </div>
+   
+    <!-- Dentro desta DIV, inserir a Tabela para Visualizar -->
+
+
+ <form name="Form" method="post" id="formulario" action="ValidaCancelaTroca.php">
+   <table id="consultor" class="order-table table-wrapper table" style="color:black;">
+    <thead>
+
+        <tr>
+            <th ALIGN=MIDDLE style="width:110px">Matrícula 1</th>
+            <th ALIGN=MIDDLE style="width:200px">Nome Consultor 1</th>
+            <th ALIGN=MIDDLE style="width:110px">Matrícula 2</th>
+            <th ALIGN=MIDDLE style="width:200px">Nome Consultor 2</th>
+            <th ALIGN=MIDDLE style="width:250px">Data Troca</th>
+            <th ALIGN=MIDDLE>Status</th>              
+        </tr>
+    </thead>
+    <tbody>
+      <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
+         ?>
+            <tr>
+                <td ALIGN=MIDDLE><?php echo $row['ID_MATRICULA1']?></td>
+                <td ALIGN=MIDDLE><?php echo ($row['ID_COLABORADOR1'])?></td>
+                <td ALIGN=MIDDLE><?php echo ($row['ID_MATRICULA2'])?></td>
+                <td ALIGN=MIDDLE><?php echo $row['ID_COLABORADOR2']?></td>
+                <td ALIGN=MIDDLE><?php echo date_format($row['DT_TROCA'], "d/m/Y"); ?></td>
+                <td ALIGN=MIDDLE><?php echo $row['TP_STATUS']?></td>
+                <td ALIGN=MIDDLE><button class="btn btn-primary btn-block" onclick=" return getConfirmation();" type="submit" value="<?php echo $row['ID_TROCA']?>"  name="ID_TROCA">Cancelar Troca <i class="fa fa-pencil"></i></button> </a>
+            </tr>
+                  <!--Tabela criada para guardar valores para a proxima pagina-->
+        <?php
+            }
+        ?>
+           
+    </tbody>
+   </table>        
+</form>
+
+</div>
 
 
 
@@ -137,3 +176,23 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 
 </body>
 </html>
+
+
+
+<script type="text/javascript">
+
+      // função criada para retornar falso ou verdadeiro no botão formulário
+      //caso for falso o formulário não dispara ação de entrar em outra pag
+
+    function getConfirmation(){
+       // var retVal = confirm("Do you want to continue ?");
+       if(  confirm(" Deseja realizar cancelar a troca ?") == true ){
+          return true;
+       }
+       else{
+          return false;
+       }
+    }
+        
+
+</script>
