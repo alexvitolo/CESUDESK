@@ -1,21 +1,4 @@
-<?php include '..\CESUDESK\AdmCrm\connectionADM.php'; 
 
-
-
-$squilaDicas = "SELECT tc.ID_MATRICULA,
-                       tc.ID_COLABORADOR,
-                       tc.NOME,
-                       tc.LOGIN_REDE,
-                       tc.PASS_FEEDBACK
-                  FROM tb_crm_colaborador tc
-               ";
-
-$result_squila = sqlsrv_prepare($conn, $squilaDicas);
-sqlsrv_execute($result_squila);
-
-
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -100,7 +83,33 @@ sqlsrv_execute($result_squila);
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Gerar Base Matriculados Lyceum</h4><br>
                                <button style="margin-left: 15px" type="submit" class="btn btn-primary">Gerar Base</button>
-                               <br><br>
+                               
+
+                                <table cellspacing="10" style="vertical-align: middle">
+
+                               <tr>
+                               <td style="width:110px";>
+                               <br>
+                                 <label style="margin-left: 15px" >Data Início RA: </label>
+                                </td>
+                                <td align="left">
+                                <br>
+                                 <input type="date" name="DT_INI" required>
+                                </td>
+                                <td style="width:110px";>
+                                <br>
+                                <label style="margin-left: 15px" >Data Fim RA: </label>
+                               </td>
+                               <td align="left">
+                               <br>
+                                <input type="date" name="DT_FIM" required >
+                            </td>
+                           </tr>
+
+                         </table><br><br>
+
+
+
                         </form>
 
                       </div><!-- /content-panel -->
@@ -138,4 +147,3 @@ sqlsrv_execute($result_squila);
 
   </body>
 </html>
-
