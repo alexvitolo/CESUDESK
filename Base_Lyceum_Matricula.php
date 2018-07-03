@@ -90,7 +90,7 @@
                                <tr>
                                <td style="width:110px";>
                                <br>
-                                 <label style="margin-left: 15px" >Data Início RA: </label>
+                                 <label style="margin-left: 15px" >Data Início Inscrição: </label>
                                 </td>
                                 <td align="left">
                                 <br>
@@ -98,7 +98,7 @@
                                 </td>
                                 <td style="width:110px";>
                                 <br>
-                                <label style="margin-left: 15px" >Data Fim RA: </label>
+                                <label style="margin-left: 15px" >Data Fim Inscrição: </label>
                                </td>
                                <td align="left">
                                <br>
