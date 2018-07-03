@@ -17,8 +17,6 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
 
 
 
-
-
 if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
  // Ação a ser executada: mata o script e manda uma mensagem
  echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
@@ -28,28 +26,81 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 
 
 
-$squilaIDavaliacao = "SELECT ID_AVALIACAO
-                            ,NUMERO
-                            ,ID_CARGO
-                            ,BO_STATUS
-                            ,DT_SISTEMA
-                       FROM tb_qld_cronograma_avaliacao ";
 
-$result_squilaIDavaliacao = sqlsrv_prepare($conn, $squilaIDavaliacao);
-sqlsrv_execute($result_squilaIDavaliacao);
+$ID_MATRICULA_AVALIADOR = $_SESSION['MATRICULA'];
 
 
-$squilaProcesso = "SELECT ID
-                          ,NOME
-                          ,MODALIDADE
-                          ,ATIVO
-                          ,DATA_INICIO
-                          ,DATA_FIM
-                    FROM tb_crm_processo WHERE GETDATE() < DATA_FIM ";
 
-$result_squilaProcesso = sqlsrv_prepare($conn, $squilaProcesso);
-sqlsrv_execute($result_squilaProcesso);
+  $sqlValidaPresencial ="SELECT tg.ID_UNIDADE
+                        FROM tb_crm_colaborador tc
+                  INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO 
+                       WHERE ID_MATRICULA = {$ID_MATRICULA_AVALIADOR} ";
 
+          $stmtValidaPresencial = sqlsrv_prepare($conn, $sqlValidaPresencial);
+          $resultValida = sqlsrv_execute($stmtValidaPresencial);
+          $resultadoSQLPre = sqlsrv_fetch_array($stmtValidaPresencial);
+
+
+
+
+ if ($resultadoSQLPre['ID_UNIDADE'] == 2 ) {
+
+
+
+
+    $squilaIDavaliacao = "SELECT ID_AVALIACAO
+                                ,NUMERO
+                                ,ID_CARGO
+                                ,BO_STATUS
+                                ,DT_SISTEMA
+                           FROM tb_qld_cronograma_avaliacao
+                          WHERE ID_CARGO in (34,35) ";
+
+    $result_squilaIDavaliacao = sqlsrv_prepare($conn, $squilaIDavaliacao);
+    sqlsrv_execute($result_squilaIDavaliacao);
+
+
+    $squilaProcesso = "SELECT ID
+                              ,NOME
+                              ,MODALIDADE
+                              ,ATIVO
+                              ,DATA_INICIO
+                              ,DATA_FIM
+                        FROM tb_crm_processo WHERE GETDATE() < DATA_FIM AND MODALIDADE = 'Presencial' ";
+
+    $result_squilaProcesso = sqlsrv_prepare($conn, $squilaProcesso);
+    sqlsrv_execute($result_squilaProcesso);
+
+
+
+ }else{
+
+
+      $squilaIDavaliacao = "SELECT ID_AVALIACAO
+                                  ,NUMERO
+                                  ,ID_CARGO
+                                  ,BO_STATUS
+                                  ,DT_SISTEMA
+                             FROM tb_qld_cronograma_avaliacao
+                            WHERE ID_CARGO in (4,15) ";
+
+      $result_squilaIDavaliacao = sqlsrv_prepare($conn, $squilaIDavaliacao);
+      sqlsrv_execute($result_squilaIDavaliacao);
+
+
+      $squilaProcesso = "SELECT ID
+                                ,NOME
+                                ,MODALIDADE
+                                ,ATIVO
+                                ,DATA_INICIO
+                                ,DATA_FIM
+                          FROM tb_crm_processo WHERE GETDATE() < DATA_FIM AND MODALIDADE in ('Graduação' , 'Pós-Graduação')";
+
+      $result_squilaProcesso = sqlsrv_prepare($conn, $squilaProcesso);
+      sqlsrv_execute($result_squilaProcesso);
+
+
+ }
 
 
 

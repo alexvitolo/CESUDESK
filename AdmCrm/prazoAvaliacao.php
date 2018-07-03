@@ -37,10 +37,32 @@ $squilaDicas = "SELECT
                        ,tcron.BO_STATUS
                   FROM tb_qld_cronograma_avaliacao_prazo tcron
             INNER JOIN tb_crm_processo tp ON tp.ID = tcron.ID_PROCESSO
-            INNER JOIN tb_qld_cronograma_avaliacao tca ON tca.ID_AVALIACAO = tcron.ID_AVALIACAO";
+            INNER JOIN tb_qld_cronograma_avaliacao tca ON tca.ID_AVALIACAO = tcron.ID_AVALIACAO
+            INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tca.ID_CARGO and tcar.ID_CARGO in (4,15)";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
+
+
+
+$squilaDicas2 = "SELECT 
+                       tcron.ID_AVALIACAO
+                       ,tcron.ID_DT_CRONO
+                       ,tcron.ID_PROCESSO
+                       ,tp.NOME
+                       ,tca.NUMERO
+                       ,tcron.DT_INICIO
+                       ,tcron.DT_FIM
+                       ,tcron.BO_STATUS
+                  FROM tb_qld_cronograma_avaliacao_prazo tcron
+            INNER JOIN tb_crm_processo tp ON tp.ID = tcron.ID_PROCESSO
+            INNER JOIN tb_qld_cronograma_avaliacao tca ON tca.ID_AVALIACAO = tcron.ID_AVALIACAO
+            INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tca.ID_CARGO and tcar.ID_CARGO in (34,35)";
+
+$result_squila2 = sqlsrv_prepare($conn, $squilaDicas2);
+sqlsrv_execute($result_squila2);
+
+
 
 
 
@@ -218,9 +240,9 @@ sqlsrv_execute($result_squila);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Formulários </h3>
+            <h3><i class="fa fa-right"></i> Prazo de Avaliações Monitoria </h3>
 
-            <!-- criar formulario -->
+            <!-- criar formulario EAD-->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
@@ -228,7 +250,7 @@ sqlsrv_execute($result_squila);
 
                         <form name="Form" method="post" id="formulario" action="editaPrazo.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Avaliações </h4>
+                            <h4><i class="fa fa-right"></i> Prazo Avaliações - EAD </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input><a href="cadastroPrazo.php"><input style="float:right; margin-right: 50px" type="button" value="Novo Prazo" ></input></a>
                               <thead>
@@ -274,6 +296,64 @@ sqlsrv_execute($result_squila);
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
+
+
+      <!-- criar formulario PRESENCIAL-->
+              <div class="row mt">
+                  <div class="col-md-12">
+                      <div class="content-panel">
+
+
+                        <form name="Form" method="post" id="formulario" action="editaPrazo.php">
+                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
+                            <h4><i class="fa fa-right"></i> Prazo Avaliações - PRESENCIAL </h4>
+                            <hr>
+                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input><a href="cadastroPrazo.php"><input style="float:right; margin-right: 50px" type="button" value="Novo Prazo" ></input></a>
+                              <thead>
+                              <tr>
+                                  <th><i class=""></i> ID Avaliação </th>
+                                  <th><i class=""></i> Numero da Avaliação </th>
+                                  <th><i class=""></i> Processo </th>
+                                  <th><i class=""></i> Data Início </th>
+                                  <th><i class=""></i> Data Fim </th>
+                                  <th><i class=""></i> Status </th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <?php  while($row2 = sqlsrv_fetch_array($result_squila2)) { 
+
+                                    if ($row2['BO_STATUS'] == "S") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif ($row2['BO_STATUS'] == "N")  {
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
+              
+                                    ?>
+                                  <td style="width: 100px"><?php echo $row2['ID_AVALIACAO'] ?></a></td>
+                                  <td><?php echo $row2['NUMERO'] ?></td>
+                                  <td><?php echo $row2['NOME'] ?></a></td>
+                                  <td><?php echo date_format($row2['DT_INICIO'],"d/m/Y") ?></a></td>
+                                  <td><?php echo date_format($row2['DT_FIM'],"d/m/Y") ?></a></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php echo $row2['BO_STATUS'] ?></span></td>
+                                  <td>
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row2['ID_DT_CRONO'] ?>"  name="ID_DT_CRONO"><i class="fa fa-pencil"></i></button>
+                                  </td>
+                              </tr>
+
+                              <?php 
+                                    }
+                              ?>
+                              
+                              </tbody>
+                          </table>
+                        </form>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
+              </div><!-- /row -->
+
+
 
     </section>
       </section><!-- /MAIN CONTENT -->
