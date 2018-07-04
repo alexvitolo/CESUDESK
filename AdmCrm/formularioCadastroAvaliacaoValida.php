@@ -232,6 +232,64 @@ $updateSquilaPesquisa = " UPDATE tb_qld_pesquisa
 
 
 
+
+
+
+// anexo
+
+
+
+
+foreach( $_FILES['anexo'] as $key => $value ){ 
+  // print_r($key);
+  // print_r($value);
+      
+      foreach( $value as $key2 => $value2 ){ // 
+         
+         if($key == 'name') { 
+                $nomeArq[$key2] = $value2; // Vetor para armazenar nome correto do arquivo (por causa do foreack do tipo file)
+          }
+           
+         if($key == 'tmp_name' and $value2 <> null) {    // vetor com o conteudo do anexo
+               //  print_r($key2);
+               // print_r($value2);
+
+
+              $value2= file_get_contents($value2);
+              $value2 = unpack('H*hex', $value2);
+              $contents = '0x'.$value2['hex'];
+
+              $insertARQ = "INSERT INTO [DB_CRM_REPORT].[dbo].[tb_qld_pesquisa_anexo]
+                                         (anexo
+                                         ,dh_upload
+                                         ,nm_anexo
+                                         ,ID_PESQUISA
+                                         )
+                               VALUES
+                                      (CONVERT (varbinary(max),?,1) 
+                                      ,GETDATE()
+                                      ,'{$nomeArq[$key2]}'
+                                      ,(SELECT TOP 1 ID_PESQUISA FROM [DB_CRM_REPORT].[dbo].[tb_qld_pesquisa] ORDER BY 1 DESC) ) ";  
+
+              $result_insertARQ = sqlsrv_query($conn, $insertARQ ,array($contents));
+      
+
+
+              if (!($result_insertARQ)) {
+                     echo ("Falha na inclusão do anexo, por favor, edite a monitoria");
+                     print_r(sqlsrv_errors());exit;
+              }
+
+
+          }
+      }
+
+
+}
+
+
+
+
  echo  '<script type="text/javascript">alert("Formulário Cadastrado");</script>';
  echo  '<script type="text/javascript"> window.location.href = "formularioAvaliacao.php" </script>';
 ?>

@@ -127,6 +127,22 @@ $result_squilaObjetoTalisma = sqlsrv_prepare($conn, $squilaObjetoTalisma);
 sqlsrv_execute($result_squilaObjetoTalisma);
 
 
+// anexo
+
+
+$squilAnexo = "SELECT A.ID_PESQUISA
+                     ,C.nm_anexo as NomeArq
+                 FROM DB_CRM_REPORT.dbo.tb_qld_pesquisa A
+           INNER JOIN DB_CRM_REPORT.dbo.tb_qld_pesquisa_anexo C on C.ID_PESQUISA = A.ID_PESQUISA
+                WHERE A.ID_PESQUISA = {$ID_PESQUISA} ";
+
+$result_squilaAnexo = sqlsrv_prepare($conn, $squilAnexo);
+sqlsrv_execute($result_squilaAnexo);
+$resultadoSQLAnexo = sqlsrv_fetch_array($result_squilaAnexo);
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -508,6 +524,22 @@ sqlsrv_execute($result_squilaObjetoTalisma);
                             </tr>
                            </table>
                          </fieldset><br><br><br>
+
+
+                 <?php if ($resultadoSQLAnexo['ID_PESQUISA'] <> '') {  ?>
+
+                         <fieldset>
+                          <legend> Anexo Ligação  </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                           
+                           <div class="form-group">
+                              <label style="margin-left: 10px">Carregar Anexo</label>
+                              <a href="MonitoriaAnexoDownload.php?ID_PESQUISA=<?php echo $resultadoSQLAnexo['ID_PESQUISA']; ?>"><input type="button" value="<?php echo $resultadoSQLAnexo['NomeArq']; ?>" ></input></a><br><br>
+                           </div>
+                         </table><br><br>
+
+                <?php } ?>           
+            
             
                         
 
