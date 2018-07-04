@@ -13,7 +13,18 @@ $ID_MATRICULA_AVALIADOR = $_SESSION['MATRICULA'];
 
 $ID_MATRICULA_CONSULTOR = $_POST['ID_MATRICULA_CONSULTOR'];  // será passado para proxima pág por hidden
 
-$LIGACAO = $_POST['LIGACAO'];
+
+if ( ! isset ($_POST['LIGACAO'])){
+
+    $LIGACAO = '';
+
+ }else{
+
+    $LIGACAO = $_POST['LIGACAO'];
+
+  }
+
+
 
 
   $sqlValida ="SELECT tc.ID_MATRICULA
