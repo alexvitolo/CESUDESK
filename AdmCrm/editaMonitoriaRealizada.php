@@ -19,6 +19,8 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 
 $ID_PESQUISA = $_POST['ID_PESQUISA'];
 
+$ID_ULTIMO_PROCESSO = $_POST['ID_ULTIMO_PROCESSO'];
+
 
 $squilaPesquisaQuestoes = "SELECT tp.ID_PESQUISA
                                  ,tp.ID_COLABORADOR
@@ -510,7 +512,8 @@ sqlsrv_execute($result_squilaObjetoTalisma);
                         
 
                          <br/>
-                          <input type="hidden" name="ID_PESQUISA" value="<?php echo $ID_PESQUISA ?>"> 
+                          <input type="hidden" name="ID_PESQUISA" value="<?php echo $ID_PESQUISA ?>">
+                          <input type="hidden" name="ID_ULTIMO_PROCESSO" value="<?php echo $ID_ULTIMO_PROCESSO ?>">
                           <td><button class="button" onclick=" return getConfirmation();" type="submit" value=""  name="">Confirmar</button> 
                          <a href="monitoriaRealizada.php"><input type="button" value="Cancelar"></a>
                       </form>

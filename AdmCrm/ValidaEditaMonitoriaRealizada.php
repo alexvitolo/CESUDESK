@@ -29,6 +29,9 @@ $RAMAL_PA = $_POST['RAMAL_PA'];
 $DATA_ATENDIMENTO = $_POST['DATA_ATENDIMENTO'];
 
 
+$ID_ULTIMO_PROCESSO = $_POST['ID_ULTIMO_PROCESSO'];
+
+
 
 //correção string BD
 
@@ -134,9 +137,9 @@ $updateSquilaPesquisa = " UPDATE tb_qld_pesquisa
              print_r(sqlsrv_errors());
       }   
       else {
-            sqlsrv_free_stmt($result_updatePesquisa);
-             echo  '<script type="text/javascript">alert("Pesquisa Atualizada");</script>';
-             echo  '<script type="text/javascript"> window.location.href = "monitoriaRealizada.php" </script>';
+          sqlsrv_free_stmt($result_updatePesquisa);
+          echo  '<script type="text/javascript">alert("Pesquisa Atualizada");</script>';
+          echo  '<script type="text/javascript"> window.location.href = "monitoriaRealizada.php?PROCESSO='. $ID_ULTIMO_PROCESSO .'"</script>';
         }
 
 ?>
