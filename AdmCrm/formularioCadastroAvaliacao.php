@@ -393,7 +393,7 @@ sqlsrv_execute($result_squilaObjetoTalisma);
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="formularioCadastroAvaliacaoValida.php" onSubmit="return enviardados();">
+                         <form name="Form" method="post" id="formulario" action="formularioCadastroAvaliacaoValida.php" onSubmit="return enviardados();" enctype="multipart/form-data">
 
 
                          <fieldset>
@@ -597,6 +597,21 @@ sqlsrv_execute($result_squilaObjetoTalisma);
                             </tr>
                            </table>
                          </fieldset><br><br><br>
+
+
+
+
+
+                         <fieldset>
+                          <legend> Anexo Ligação (opcional) </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                           
+                           <div class="form-group">
+                              <label style="margin-left: 10px">Carregar Anexo</label>
+                              <input style="margin-left: 10px" type="file" name="anexo[1]">
+                              <p style="margin-left: 10px" class="help-block">Selecione um arquivo para anexar ao chamado.</p>
+                           </div>
+                         </table><br><br>
             
                         
 
