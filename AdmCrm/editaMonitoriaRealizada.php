@@ -325,7 +325,7 @@ $resultadoSQLAnexo = sqlsrv_fetch_array($result_squilaAnexo);
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
-                         <form name="Form" method="post" id="formulario" action="ValidaEditaMonitoriaRealizada.php">
+                         <form name="Form" method="post" id="formulario" action="ValidaEditaMonitoriaRealizada.php" enctype="multipart/form-data">
 
 
                          <fieldset>
@@ -536,7 +536,18 @@ $resultadoSQLAnexo = sqlsrv_fetch_array($result_squilaAnexo);
                               <label style="margin-left: 10px">Carregar Anexo</label>
                               <a href="MonitoriaAnexoDownload.php?ID_PESQUISA=<?php echo $resultadoSQLAnexo['ID_PESQUISA']; ?>"><input type="button" value="<?php echo $resultadoSQLAnexo['NomeArq']; ?>" ></input></a><br><br>
                            </div>
+                         </table><br>
+
+
+
+                         <div class="form-group">
+                              <label style="margin-left: 10px">Substituir Novo Anexo</label>
+                              <input style="margin-left: 10px" type="file" name="anexo[1]">
+                              <p style="margin-left: 10px" class="help-block">Selecione um arquivo para anexar a monitoria.</p>
+                           </div>
                          </table><br><br>
+            
+                        
 
                 <?php } ?>           
             
