@@ -262,6 +262,22 @@ if ($_SESSION['ACESSO'] <> 1 )  {
                             </td>
                            </tr>
 
+
+                           <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome">Recebe Triagem ? </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="RECEBE_TRIAGEM">
+                                    <option value=N>Não</option>
+                                    <option value=S>Sim</option> 
+
+                             </select>
+                            </td>
+                           </tr>
+
+
+
                           </table>
                          </fieldset>
                          

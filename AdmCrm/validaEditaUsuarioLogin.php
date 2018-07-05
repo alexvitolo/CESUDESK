@@ -26,6 +26,7 @@ $USUARIO = $_POST['USUARIO'];
 $SENHA = $_POST['SENHA']; 
 $ACESSO_ADM = $_POST['ACESSO_ADM'];
 $ATIVO = $_POST['ATIVO'];
+$RECEBE_TRIAGEM = $_POST['RECEBE_TRIAGEM'];
 
 // CONDIÇÃO PARA VALIDAR SE O ACESSO É NULO
 
@@ -45,7 +46,8 @@ $ATIVO = $_POST['ATIVO'];
                                    ,SENHA_USUARIO = '{$SENHA}'
                                    ,ACESSO_ADM = ".$ACESSO_ADM."
                                    ,BO_ATIVO = '{$ATIVO}'
-                              WHERE ID = {$ID} ";
+                                   ,RECEBE_TRIAGEM = '{$RECEBE_TRIAGEM}'
+                             WHERE ID = {$ID} ";
 
       $result_UpdateSquilaUsuario = sqlsrv_query($conn, $UpdateSquilaUsuario); 
  

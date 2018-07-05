@@ -31,6 +31,7 @@ $sqlLoginEdita = "SELECT  tl.ID
                          ,tl.SENHA_USUARIO
                          ,tl.ACESSO_ADM
                          ,tl.BO_ATIVO
+                         ,tl.RECEBE_TRIAGEM
                     FROM tb_crm_login tl
                    WHERE tl.ID = {$ID} ";
 
@@ -280,6 +281,24 @@ $vetorSQLLogin = sqlsrv_fetch_array($result_LoginEdita);
                              </select>
                             </td>
                            </tr>
+
+
+                            <tr>
+                            <td style="width:110px";><br>
+                             <label style="margin-left: 15px" for="nome">Recebe Triagem ? </label>
+                            </td>
+                            <td align="left"><br>
+                             <select name="RECEBE_TRIAGEM">
+                                    <option value="<?php echo $vetorSQLLogin['RECEBE_TRIAGEM'] ; ?>"><?php if($vetorSQLLogin['RECEBE_TRIAGEM'] == "S"){ echo 'SIM';}elseif ($vetorSQLLogin['RECEBE_TRIAGEM'] == "N"){echo 'NÃO' ;} {
+                                      # code...
+                                    } ; ?></option> 
+                                    <option value="S">SIM</option>
+                                    <option value="N">NÃO</option> 
+                             </select>
+                            </td>
+                           </tr>
+
+
 
                           </table>
                          </fieldset>
