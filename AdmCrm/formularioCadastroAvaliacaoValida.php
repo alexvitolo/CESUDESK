@@ -238,7 +238,7 @@ $updateSquilaPesquisa = " UPDATE tb_qld_pesquisa
 // anexo
 
 
-
+if ($_FILES['anexo']['size'] <> 0) {
 
 foreach( $_FILES['anexo'] as $key => $value ){ 
   // print_r($key);
@@ -287,7 +287,7 @@ foreach( $_FILES['anexo'] as $key => $value ){
 
 }
 
-
+}
 
 
  echo  '<script type="text/javascript">alert("Formulário Cadastrado");</script>';

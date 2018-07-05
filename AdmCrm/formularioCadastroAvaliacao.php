@@ -609,7 +609,7 @@ sqlsrv_execute($result_squilaObjetoTalisma);
                            <div class="form-group">
                               <label style="margin-left: 10px">Carregar Anexo</label>
                               <input style="margin-left: 10px" type="file" name="anexo[1]">
-                              <p style="margin-left: 10px" class="help-block">Selecione um arquivo para anexar ao chamado.</p>
+                              <p style="margin-left: 10px" class="help-block">Selecione um arquivo para anexar a monitoria.</p>
                            </div>
                          </table><br><br>
             
