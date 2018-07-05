@@ -25,6 +25,7 @@ $USUARIO = $_POST['USUARIO'];
 $SENHA = $_POST['SENHA']; 
 $ACESSO_ADM = $_POST['ACESSO_ADM'];
 $ACESSO_GCO = $_POST['ACESSO_GCO'];
+$RECEBE_TRIAGEM = $_POST['RECEBE_TRIAGEM'];
 
 
 
@@ -37,6 +38,7 @@ $ACESSO_GCO = $_POST['ACESSO_GCO'];
                                         ,SENHA_USUARIO
                                         ,ACESSO_ADM
                                         ,ACESSO_GCO
+                                        ,RECEBE_TRIAGEM
                                         ,BO_ATIVO)
                                   VALUES
                                         ('{$NOME}'
@@ -44,6 +46,7 @@ $ACESSO_GCO = $_POST['ACESSO_GCO'];
                                         ,'{$SENHA}'
                                         ,{$ACESSO_ADM}
                                         ,'{$ACESSO_GCO}'
+                                        ,'{$RECEBE_TRIAGEM}'
                                         ,'S' )  ";
 
       $result_InsertSquilaUsuario = sqlsrv_query($conn, $insertSquilaUsuario);
