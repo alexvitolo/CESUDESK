@@ -129,11 +129,24 @@ sqlsrv_execute($result_squilaSubMotivo);
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                            <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
-                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
+                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li>
                           
                       </ul>
                   </li>
+
+                   <li class="sub-menu">
+                      <a class="" href="javascript:;">
+                          <i class="fa fa-book"></i>
+                          <span>Monitoria</span>
+                      </a>
+                      <ul class="sub">
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
+                          <li class=""><a  href="AnexosMonitorias.php"> Anexos Monitorias </a></li>
+                          
+                      </ul>
+                  </li>
+
+
 
                   <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                       <li class="sub-menu">

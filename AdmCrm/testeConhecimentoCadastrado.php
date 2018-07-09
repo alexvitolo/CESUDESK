@@ -173,11 +173,24 @@ sqlsrv_execute($result_squilaTodosProcessos);
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                            <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
-                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class=""><a  href="formularioAvaliacao.php"> Formulário Monitoria </a>
+                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li>
                           
                       </ul>
                   </li>
+
+                   <li class="sub-menu">
+                      <a class="" href="javascript:;">
+                          <i class="fa fa-book"></i>
+                          <span>Monitoria</span>
+                      </a>
+                      <ul class="sub">
+                          <li class=""><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
+                          <li class=""><a  href="AnexosMonitorias.php"> Anexos Monitorias </a></li>
+                          
+                      </ul>
+                  </li>
+
+
 
                   <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                       <li class="sub-menu">
@@ -263,8 +276,8 @@ sqlsrv_execute($result_squilaTodosProcessos);
                                          ?>
                                         </select>
                                          <a style="float:right; margin-right: 10px; margin-top: 22px"> PROCESSO </a>
-                                    </form>
-                        <form name="Form" method="post" id="formulario" action="editaTesteTesteConhecimento.php">
+                          </form>
+                      <form name="Form" method="post" id="formulario" action="editaTesteTesteConhecimento.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Teste Conhecimento </h4>
                             <hr>

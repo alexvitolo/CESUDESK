@@ -125,7 +125,7 @@ $ID_MATRICULA_AVALIADOR = $_SESSION['MATRICULA'];
                   </li>
 
                   <li class="sub-menu">
-                      <a class="active" href="javascript:;">
+                      <a class="" href="javascript:;">
                           <i class="fa fa-th"></i>
                           <span>Schedule</span>
                       </a>
@@ -134,11 +134,23 @@ $ID_MATRICULA_AVALIADOR = $_SESSION['MATRICULA'];
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
-                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li> 
-                          <li class="active"><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
+                          <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li>
                           
                       </ul>
                   </li>
+
+                   <li class="sub-menu">
+                      <a class="active" href="javascript:;">
+                          <i class="fa fa-book"></i>
+                          <span>Monitoria</span>
+                      </a>
+                      <ul class="sub">
+                          <li class="active"><a  href="formularioAvaliacao.php"> Formulário de Avaliação </a></li>
+                          <li class=""><a  href="AnexosMonitorias.php"> Anexos Monitorias </a></li>
+                          
+                      </ul>
+                  </li>
+
 
                   <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                       <li class="sub-menu">
@@ -233,6 +245,9 @@ $ID_MATRICULA_AVALIADOR = $_SESSION['MATRICULA'];
                             </td>
                             <td>
                              <a style="margin-left: 80px" href="monitoriaJaRealizada.php" target="_blank"><input style="margin-left: 55px" type="button" value="Avaliações Já Realizadas" ></input></a>
+                            </td>
+                            <td>
+                             <a style="margin-left: 50px" href="UserReport_Export_relatorio_monitorias_sup.php" target="_blank"><input style="margin-left: 25px" type="button" value="Relatório Geral Monitorias - Equipe" ></input></a>
                             </td>
                             </tr><br>
 
