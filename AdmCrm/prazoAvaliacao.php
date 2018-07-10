@@ -35,10 +35,12 @@ $squilaDicas = "SELECT
                        ,tcron.DT_INICIO
                        ,tcron.DT_FIM
                        ,tcron.BO_STATUS
+                       ,tcar.DESCRICAO
                   FROM tb_qld_cronograma_avaliacao_prazo tcron
             INNER JOIN tb_crm_processo tp ON tp.ID = tcron.ID_PROCESSO
             INNER JOIN tb_qld_cronograma_avaliacao tca ON tca.ID_AVALIACAO = tcron.ID_AVALIACAO
-            INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tca.ID_CARGO and tcar.ID_CARGO in (4,15)";
+            INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tca.ID_CARGO and tcar.ID_CARGO in (4,15)
+              ORDER BY tcron.BO_STATUS DESC, tcar.DESCRICAO, tcron.DT_INICIO ";
 
 $result_squila = sqlsrv_prepare($conn, $squilaDicas);
 sqlsrv_execute($result_squila);
@@ -54,10 +56,12 @@ $squilaDicas2 = "SELECT
                        ,tcron.DT_INICIO
                        ,tcron.DT_FIM
                        ,tcron.BO_STATUS
+                       ,tcar.DESCRICAO
                   FROM tb_qld_cronograma_avaliacao_prazo tcron
             INNER JOIN tb_crm_processo tp ON tp.ID = tcron.ID_PROCESSO
             INNER JOIN tb_qld_cronograma_avaliacao tca ON tca.ID_AVALIACAO = tcron.ID_AVALIACAO
-            INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tca.ID_CARGO and tcar.ID_CARGO in (34,35)";
+            INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tca.ID_CARGO and tcar.ID_CARGO in (34,35)
+              ORDER BY tcron.BO_STATUS DESC, tcar.DESCRICAO, tcron.DT_INICIO ";
 
 $result_squila2 = sqlsrv_prepare($conn, $squilaDicas2);
 sqlsrv_execute($result_squila2);
@@ -269,8 +273,9 @@ sqlsrv_execute($result_squila2);
                               <thead>
                               <tr>
                                   <th><i class=""></i> ID Avaliação </th>
-                                  <th><i class=""></i> Numero da Avaliação </th>
+                                  <th style="text-align: center"><i class=""></i> Numero da Avaliação </th>
                                   <th><i class=""></i> Processo </th>
+                                  <th><i class=""></i> Quem Aplica? </th>
                                   <th><i class=""></i> Data Início </th>
                                   <th><i class=""></i> Data Fim </th>
                                   <th><i class=""></i> Status </th>
@@ -288,8 +293,9 @@ sqlsrv_execute($result_squila2);
               
                                     ?>
                                   <td style="width: 100px"><?php echo $row['ID_AVALIACAO'] ?></a></td>
-                                  <td><?php echo $row['NUMERO'] ?></td>
+                                  <td style="text-align: center"><?php echo $row['NUMERO'] ?></td>
                                   <td><?php echo $row['NOME'] ?></a></td>
+                                  <td><?php echo $row['DESCRICAO'] ?></a></td>
                                   <td><?php echo date_format($row['DT_INICIO'],"d/m/Y") ?></a></td>
                                   <td><?php echo date_format($row['DT_FIM'],"d/m/Y") ?></a></td>
                                   <td><span class="<?php echo $corStatus ?>"><?php echo $row['BO_STATUS'] ?></span></td>
@@ -325,8 +331,9 @@ sqlsrv_execute($result_squila2);
                               <thead>
                               <tr>
                                   <th><i class=""></i> ID Avaliação </th>
-                                  <th><i class=""></i> Numero da Avaliação </th>
+                                  <th style="text-align: center"><i class=""></i> Numero da Avaliação </th>
                                   <th><i class=""></i> Processo </th>
+                                   <th><i class=""></i> Quem Aplica? </th>
                                   <th><i class=""></i> Data Início </th>
                                   <th><i class=""></i> Data Fim </th>
                                   <th><i class=""></i> Status </th>
@@ -344,8 +351,9 @@ sqlsrv_execute($result_squila2);
               
                                     ?>
                                   <td style="width: 100px"><?php echo $row2['ID_AVALIACAO'] ?></a></td>
-                                  <td><?php echo $row2['NUMERO'] ?></td>
+                                  <td style="text-align: center"><?php echo $row2['NUMERO'] ?></td>
                                   <td><?php echo $row2['NOME'] ?></a></td>
+                                  <td><?php echo $row2['DESCRICAO'] ?></a></td>
                                   <td><?php echo date_format($row2['DT_INICIO'],"d/m/Y") ?></a></td>
                                   <td><?php echo date_format($row2['DT_FIM'],"d/m/Y") ?></a></td>
                                   <td><span class="<?php echo $corStatus ?>"><?php echo $row2['BO_STATUS'] ?></span></td>
