@@ -49,11 +49,12 @@ $ID_GRUPO = sqlsrv_fetch_array($result_squilaGrupos);
 
 
 
-$squilaTodosGrupos = "SELECT DISTINCT CASE WHEN ID_GRUPO in (1,2,3,4,5) THEN 1
-                                              WHEN ID_GRUPO in (24,26,27,28,29,30) THEN 24 
-                                              ELSE ID_GRUPO END  as ID_GRUPO
-                                         ,DESCRICAO
-                           FROM DB_CRM_REPORT.dbo.tb_crm_grupo";
+$squilaTodosGrupos = "SELECT DISTINCT CASE WHEN tc.ID_GRUPO in (1,2,3,4,5) THEN 1
+                                              WHEN tc.ID_GRUPO in (24,26,27,28,29,30) THEN 24 
+                                              ELSE tc.ID_GRUPO END  as ID_GRUPO
+                                         ,tc.DESCRICAO
+                           FROM DB_CRM_REPORT.dbo.tb_crm_grupo tc
+                     INNER JOIN DB_CRM_REPORT.dbo.tb_qld_questoes tq ON tc.ID_GRUPO = tq.ID_GRUPO";
 
 $result_squilaTodosGrupos = sqlsrv_prepare($conn, $squilaTodosGrupos);
 sqlsrv_execute($result_squilaTodosGrupos);
@@ -67,7 +68,7 @@ sqlsrv_execute($result_squilaTodosGrupos);
 $squilaDicas = "SELECT tq.ID_QUESTAO
                         ,tq.DESCRICAO
                         ,tq.DESC_OBSERVACAO
-                        ,CONCAT(tc.DESCRICAO,' - ',tu.DESCRICAO) AS DESC_GRUPO
+                        ,CONCAT(tc.DESCRICAO,' - ',tu.DESCRICAO,' ',tq.TIPO_LIGACAO) AS DESC_GRUPO
                         ,tq.PESO
                         ,tq.BO_FALHA_CRITICA
                         ,tq.BO_PARCIAL
