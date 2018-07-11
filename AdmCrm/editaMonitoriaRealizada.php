@@ -548,7 +548,21 @@ $resultadoSQLAnexo = sqlsrv_fetch_array($result_squilaAnexo);
             
                         
 
-                <?php } ?>           
+                <?php }else{ ?>      
+
+
+                         <fieldset>
+                          <legend> Anexo Ligação (opcional) </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                           
+                           <div class="form-group">
+                              <label style="margin-left: 10px">Carregar Anexo</label>
+                              <input style="margin-left: 10px" type="file" name="anexo[1]">
+                              <p style="margin-left: 10px" class="help-block">Selecione um arquivo para anexar a monitoria.</p>
+                           </div>
+                         </table><br><br>
+
+                <?php } ?>     
             
             
                         
