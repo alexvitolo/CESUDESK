@@ -185,7 +185,7 @@ foreach( $_FILES['anexo'] as $key => $value ){
                                       (CONVERT (varbinary(max),?,1) 
                                       ,GETDATE()
                                       ,'{$nomeArq[$key2]}'
-                                      ,(SELECT TOP 1 ID_PESQUISA FROM [DB_CRM_REPORT].[dbo].[tb_qld_pesquisa] ORDER BY 1 DESC) ) ";  
+                                      ,{$ID_PESQUISA} ) ";  
 
               $result_insertARQ = sqlsrv_query($conn, $insertARQ ,array($contents));
       
