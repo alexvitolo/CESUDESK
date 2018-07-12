@@ -22,7 +22,7 @@ $squilaProjeto = "SELECT cd_projeto
                         ,desc_projeto
                     FROM DB_CRM_CESUDESK.dbo.projeto
                    WHERE tp_statusprojeto ='Andamento' 
-                   ORDER by 1 DESC";
+                   ORDER by 2 ASC";
 
 $result_Projeto = sqlsrv_prepare($conn, $squilaProjeto);
 sqlsrv_execute($result_Projeto);
