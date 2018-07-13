@@ -90,7 +90,7 @@ sqlsrv_execute($result_squilaChamado);
 			
 			<?php  if ($_SESSION['ACESSO'] == 1){ ?>
 
-				<li class="active"><a href="indicadoresCRM.php"><em class="fa fa-bar-chart">&nbsp;</em>Indicadores</a></li>
+				<li class=""><a href="indicadoresCRM.php"><em class="fa fa-bar-chart">&nbsp;</em>Indicadores</a></li>
 
 			<?php } ?>
 

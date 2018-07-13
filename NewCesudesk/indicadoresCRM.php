@@ -533,7 +533,7 @@ var gaugeOptions = {
     // the value axis
     yAxis: {
         stops: [
-            [0.1, '#55BF3B'], // green
+            [0.1, '#00ff33'], // green
             [0.5, '#DDDF0D'], // yellow
             [0.7, '#DF5353'], // red 
             [0.9, '#050303'] // black
