@@ -80,6 +80,13 @@ sqlsrv_execute($result_squilaModulo);
 		<!-- </form> -->
 		<ul class="nav menu">
 			<li class=""><a href="main.php"><em class="fa fa-dashboard">&nbsp;</em>Resumo</a></li>
+			
+			<?php  if ($_SESSION['ACESSO'] == 1){ ?>
+
+				<li class="active"><a href="indicadoresCRM.php"><em class="fa fa-bar-chart">&nbsp;</em>Indicadores</a></li>
+
+			<?php } ?>
+
 			<li class="parent"><a data-toggle="collapse" href="#sub-item-1">
 				<em class="fa fa-navicon">&nbsp;</em> Chamados <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"><em class="fa fa-plus"></em></span>
 				</a>
