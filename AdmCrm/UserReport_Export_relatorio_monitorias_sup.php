@@ -36,6 +36,7 @@ $query = "     SELECT tp.ID_PESQUISA
                       ,tc.ID_MATRICULA as MATRICULA_CONSULTOR
                       ,tp.ID_COLABORADOR_APLICA
                       ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tp.ID_COLABORADOR_APLICA) as NOME_QUEM_APLICOU
+                      ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tc.ID_COLABORADOR_GESTOR) as NOME_SUP
                       ,tp.ID_PROCESSO
                       ,tpro.NOME as NOME_PROCESSO
                       ,tcron.NUMERO as NUMERO_AVALIACAO
@@ -82,6 +83,7 @@ $query = "     SELECT tp.ID_PESQUISA
                       ,tc.ID_MATRICULA as MATRICULA_CONSULTOR
                       ,tp.ID_COLABORADOR_APLICA
                       ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tp.ID_COLABORADOR_APLICA) as NOME_QUEM_APLICOU
+                      ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tc.ID_COLABORADOR_GESTOR) as NOME_SUP
                       ,tp.ID_PROCESSO
                       ,tpro.NOME as NOME_PROCESSO
                       ,tcron.NUMERO as NUMERO_AVALIACAO
@@ -149,6 +151,7 @@ $TITULO = sqlsrv_fetch_array($result2);
                     <tr>  
                          <th>Nome Consultor</th>
                          <th>Matricula Consultor</th>
+                         <th>Nome Supervisor</th>
                          <th>Nome do Grupo</th>
                          <th>Itens Pontuados</th>
                          <th>Itens Criticos Contuados</th>
@@ -174,6 +177,7 @@ $TITULO = sqlsrv_fetch_array($result2);
     <tr>  
                          <td>'.$row["NOME_CONSULTOR"].'</td>
                          <td>'.$row["MATRICULA_CONSULTOR"].'</td> 
+                         <td>'.$row["NOME_SUP"].'</td> 
                          <td>'.$row["NOME_GRUPO"].'</td> 
                          <td>'.$row["ITENS_PONTUADOS"].'</td>
                          <td>'.$row["ITENS_PONTUADOS_CRITICO"].'</td>
