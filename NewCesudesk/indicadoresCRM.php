@@ -184,6 +184,29 @@ $mediaSMS = round($mediaSMS,0);
 // exit;
 
 
+// alerta email media horas
+
+$squilaEMAILMediaHoras = "SELECT ISNULL(cast(cast(avg(cast(CAST(getdate()-dtDateOfInsertion as datetime) as float)) as datetime) as time),'00:00:00') AvgTime
+                            FROM tblOutgoingOBMs  
+                           WHERE bCrash = 0 and nErrorCode = 0 ";
+
+$result_squilaEMAILMediaHoras = sqlsrv_prepare($conn2, $squilaEMAILMediaHoras);
+sqlsrv_execute($result_squilaEMAILMediaHoras);
+
+$EMAILMediaHoras = sqlsrv_fetch_array($result_squilaEMAILMediaHoras);
+
+foreach ($EMAILMediaHoras as $key => $value) {
+	foreach ($value as $key2 => $value2) {
+		if ($key2 == 'date') {
+			$horaEmailAlert = $value2;
+		}
+	}
+}
+
+$horaEmailAlert = strtotime($horaEmailAlert);
+$horaEmailAlert = date('G.i', $horaEmailAlert);
+
+
 
 
 ?>
@@ -353,6 +376,28 @@ $mediaSMS = round($mediaSMS,0);
 							<div id="container-server1" style="width: 300px; height: 200px; float: left; margin: 20px"></div>
                             <div id="container-server2" style="width: 300px; height: 200px; float: left; margin: 20px"></div>
                             <div id="container-server3" style="width: 300px; height: 200px; float: left; margin: 20px"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->
+
+
+				<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Email - Tempo Médio Espera Outgoing
+						<ul class="pull-right panel-settings panel-button-tab-right">
+							<li class="dropdown"><a class="pull-right dropdown-toggle" data-toggle="dropdown" href="#">
+								<em class="fa fa-cogs"></em>
+							</a>
+							</li>
+						</ul>
+						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span></div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<div id="container" style="min-width: 310px; max-width: 400px; height: 300px; margin: 0 auto"></div>
 						</div>
 					</div>
 				</div>
@@ -667,6 +712,107 @@ var chartServer3 = Highcharts.chart('container-server3', Highcharts.merge(gaugeO
 
 
 
+var MEDIA  = <?php echo $horaEmailAlert ; ?>;
+
+Highcharts.chart('container', {
+
+    chart: {
+        type: 'gauge',
+        plotBackgroundColor: null,
+        plotBackgroundImage: null,
+        plotBorderWidth: 0,
+        plotShadow: false
+    },
+
+    title: {
+        text: 'Tempo Médio Horas - Ultimos 5 dias'
+    },
+
+    pane: {
+        startAngle: -150,
+        endAngle: 150,
+        background: [{
+            backgroundColor: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [
+                    [0, '#FFF'],
+                    [1, '#333']
+                ]
+            },
+            borderWidth: 0,
+            outerRadius: '109%'
+        }, {
+            backgroundColor: {
+                linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+                stops: [
+                    [0, '#333'],
+                    [1, '#FFF']
+                ]
+            },
+            borderWidth: 1,
+            outerRadius: '107%'
+        }, {
+            // default background
+        }, {
+            backgroundColor: '#DDD',
+            borderWidth: 0,
+            outerRadius: '105%',
+            innerRadius: '103%'
+        }]
+    },
+
+    // the value axis
+    yAxis: {
+        min: 0,
+        max: 8,
+
+        minorTickInterval: 'auto',
+        minorTickWidth: 1,
+        minorTickLength: 10,
+        minorTickPosition: 'inside',
+        minorTickColor: '#666',
+
+        tickPixelInterval: 22,
+        tickWidth: 2,
+        tickPosition: 'inside',
+        tickLength: 1,
+        tickColor: '#666',
+        labels: {
+            step: 2,
+            rotation: 'auto'
+        },
+        title: {
+            text: 'HORAS'
+        },
+        plotBands: [{
+            from: 0,
+            to: 2,
+            color: '#55BF3B' // green
+        }, {
+            from: 2,
+            to: 5,
+            color: '#DDDF0D' // yellow
+        }, {
+            from: 5,
+            to: 6,
+            color: '#DF5353' // red
+        }, {
+            from: 6,
+            to: 8,
+            color: '#000000 ' // black
+        }]
+    },
+
+    series: [{
+        name: 'Horas',
+        data: [MEDIA],
+        tooltip: {
+            valueSuffix: ' h'
+        }
+    }]
+
+},
+);
 
 
 
