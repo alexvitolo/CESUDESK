@@ -36,6 +36,7 @@ $query = "     SELECT tp.ID_PESQUISA
                       ,tc.ID_MATRICULA as MATRICULA_CONSULTOR
                       ,tp.ID_COLABORADOR_APLICA
                       ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tp.ID_COLABORADOR_APLICA) as NOME_QUEM_APLICOU
+                      ,(SELECT DESCRICAO FROM tb_crm_cargo tcar2 INNER JOIN tb_crm_colaborador tco2 ON tco2.ID_CARGO = tcar2.ID_CARGO WHERE tco2.ID_COLABORADOR = tp.ID_COLABORADOR_APLICA) as CARGO_QUEM_APLICOU
                       ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tc.ID_COLABORADOR_GESTOR) as NOME_SUP
                       ,tp.ID_PROCESSO
                       ,tpro.NOME as NOME_PROCESSO
@@ -83,6 +84,7 @@ $query = "     SELECT tp.ID_PESQUISA
                       ,tc.ID_MATRICULA as MATRICULA_CONSULTOR
                       ,tp.ID_COLABORADOR_APLICA
                       ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tp.ID_COLABORADOR_APLICA) as NOME_QUEM_APLICOU
+                      ,(SELECT DESCRICAO FROM tb_crm_cargo tcar2 INNER JOIN tb_crm_colaborador tco2 ON tco2.ID_CARGO = tcar2.ID_CARGO WHERE tco2.ID_COLABORADOR = tp.ID_COLABORADOR_APLICA) as CARGO_QUEM_APLICOU
                       ,(SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tc.ID_COLABORADOR_GESTOR) as NOME_SUP
                       ,tp.ID_PROCESSO
                       ,tpro.NOME as NOME_PROCESSO
@@ -153,6 +155,8 @@ $TITULO = sqlsrv_fetch_array($result2);
                          <th>Matricula Consultor</th>
                          <th>Nome Supervisor</th>
                          <th>Nome do Grupo</th>
+                         <th>Numero da Avaliacao</th>
+                         <th>Quem Aplicou</th>
                          <th>Itens Pontuados</th>
                          <th>Itens Criticos Contuados</th>
                          <th>Nota Final</th>
@@ -179,6 +183,8 @@ $TITULO = sqlsrv_fetch_array($result2);
                          <td>'.$row["MATRICULA_CONSULTOR"].'</td> 
                          <td>'.$row["NOME_SUP"].'</td> 
                          <td>'.$row["NOME_GRUPO"].'</td> 
+                         <td>'.$row["NUMERO_AVALIACAO"].'</td> 
+                         <td>'.$row["CARGO_QUEM_APLICOU"].'</td> 
                          <td>'.$row["ITENS_PONTUADOS"].'</td>
                          <td>'.$row["ITENS_PONTUADOS_CRITICO"].'</td>
                          <td style="background-color:'.$COR_STATUS.';">'.$row["NOTA_FINAL"].'</td>
