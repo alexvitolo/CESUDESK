@@ -92,7 +92,7 @@ while ($row = sqlsrv_fetch_array($result_squilaEMAIL)){
          }   
    ;
 
-$aux2 = 0;
+$aux2 = 1;
 $mediaSMS2 = 0;
 $somaSMS2 = 0;
 
