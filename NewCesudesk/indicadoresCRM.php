@@ -645,14 +645,14 @@ var chartServer1 = Highcharts.chart('container-server1', Highcharts.merge(gaugeO
 var USED2  = <?php echo $Server_EMAL_USED[2] ; ?>;
 var LIMIT2 = <?php echo $Server_EMAL_LIMIT[2] ; ?>;
 var NAME2  = <?php echo $Server_EMAIL_NAME[2] ; ?>;
-var INDC  = <?php echo $Server_EMAIL_INDICA[2] ; ?>;
+var INDC2  = <?php echo $Server_EMAIL_INDICA[2] ; ?>;
 
 var chartServer2 = Highcharts.chart('container-server2', Highcharts.merge(gaugeOptions, {
     yAxis: {
         min: 0,
         max: LIMIT2,
         title: {
-            text: 'Servidor '+NAME+ ' ('+INDC+'%)'
+            text: 'Servidor '+NAME2+ ' ('+INDC2+'%)'
         }
     },
 
@@ -680,14 +680,14 @@ var chartServer2 = Highcharts.chart('container-server2', Highcharts.merge(gaugeO
 var USED3  = <?php echo $Server_EMAL_USED[3] ; ?>;
 var LIMIT3 = <?php echo $Server_EMAL_LIMIT[3] ; ?>;
 var NAME3  = <?php echo $Server_EMAIL_NAME[3] ; ?>;
-var INDC  = <?php echo $Server_EMAIL_INDICA[3] ; ?>;
+var INDC3  = <?php echo $Server_EMAIL_INDICA[3] ; ?>;
 
 var chartServer3 = Highcharts.chart('container-server3', Highcharts.merge(gaugeOptions, {
     yAxis: {
         min: 0,
         max: LIMIT3,
         title: {
-            text: 'Servidor '+NAME+ ' ('+INDC+'%)'
+            text: 'Servidor '+NAME3+ ' ('+INDC3+'%)'
         }
     },
 
