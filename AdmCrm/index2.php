@@ -153,6 +153,7 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação Monitoria</a></li>
                           <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação Monitoria</a></li>
+                          <li class=""><a  href="ColaboradorSenhaFeedBack.php">Col. Senha FeedBack</a></li>
                       </ul>
                   </li>
 

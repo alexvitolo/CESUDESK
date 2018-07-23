@@ -1,6 +1,6 @@
 <?php include '..\AdmCrm\connectionADM.php'; 
-session_start();
 
+session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
     // Ação a ser executada: mata o script e manda uma mensagem
@@ -18,6 +18,7 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
 
 
 
+
 if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
  // Ação a ser executada: mata o script e manda uma mensagem
  echo  '<script type="text/javascript"> window.location.href = "index.php"  </script>';
@@ -25,32 +26,46 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 
 
 
-$squilaQuestoes = "SELECT tq.ID_QUESTAO
-                                  ,tcon.ID_CONHECIMENTO
-                                  ,tcon.DESCRICAO as DESC_CONHE
-                                  ,tq.DESCRICAO as DESC_QUESTAO
-                                  ,tq.BO_ATIVO
-                                  ,tq.DIFICULDADE
-                            FROM tb_ava_questoes_conhecimento tq
-                      INNER JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
-                           WHERE tcon.BO_STATUS = 'S'";
+$squilaDicas = "SELECT tc.ID_MATRICULA,
+                       tc.NOME,
+                       tc.LOGIN_REDE,
+                       (SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tc.ID_COLABORADOR_GESTOR) as NOMEGESTOR
+                  FROM tb_crm_colaborador tc
+      INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
+       LEFT JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
+      INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tc.ID_CARGO 
+      INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
+           WHERE tcar.BO_GESTOR = 'N'
+             AND tcar.ID_CARGO NOT IN ('1','2','3','4','5')
+             AND tc.STATUS_COLABORADOR = 'ATIVO'
+             AND tc.PASS_FEEDBACK IS NULL
+        ORDER BY STATUS_COLABORADOR, NOME";
 
-$result_squilaQuestoes = sqlsrv_prepare($conn, $squilaQuestoes);
-sqlsrv_execute($result_squilaQuestoes);
+$result_squila = sqlsrv_prepare($conn, $squilaDicas);
+sqlsrv_execute($result_squila);
 
 
-$squilaSomaQuestoes = "SELECT DISTINCT
-                     tcon.DESCRICAO 
-                    ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 1 AND BO_ATIVO ='S') as DIFICULDADE_EAZY
-                    ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 2 AND BO_ATIVO ='S') as DIFICULDADE_MEDIUN
-                    ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 3 AND BO_ATIVO ='S') as DIFICULDADE_HARD
-                    ,(SELECT COUNT(ID_QUESTAO) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND BO_ATIVO ='S') as SOMA
-            FROM tb_ava_questoes_conhecimento tq
-      RIGHT JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
-           WHERE tcon.BO_STATUS = 'S'";
 
-$result_SomaQuestoes = sqlsrv_prepare($conn, $squilaSomaQuestoes);
-sqlsrv_execute($result_SomaQuestoes);
+$squilaDicas2 = "SELECT tc.ID_MATRICULA,
+                       tc.NOME,
+                       tc.LOGIN_REDE,
+                       (SELECT NOME FROM tb_crm_colaborador WHERE ID_COLABORADOR = tc.ID_COLABORADOR_GESTOR) as NOMEGESTOR,
+                       tc.PASS_FEEDBACK
+                  FROM tb_crm_colaborador tc
+      INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
+       LEFT JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
+      INNER JOIN tb_crm_cargo tcar ON tcar.ID_CARGO = tc.ID_CARGO 
+      INNER JOIN tb_crm_horario th ON th.ID_HORARIO = tc.ID_HORARIO
+           WHERE tcar.BO_GESTOR = 'N'
+             AND tcar.ID_CARGO NOT IN ('1','2','3','4','5')
+             AND tc.STATUS_COLABORADOR = 'ATIVO'
+             AND tc.PASS_FEEDBACK IS NOT NULL 
+        ORDER BY STATUS_COLABORADOR, NOME";
+
+$result_squila2 = sqlsrv_prepare($conn, $squilaDicas2);
+sqlsrv_execute($result_squila2);
+
+
 
 
 
@@ -71,7 +86,6 @@ sqlsrv_execute($result_SomaQuestoes);
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link rel="shortcut icon" href="icone.ico" >
-     <link rel="stylesheet" href="..\AdmCrm\general.css">
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         
@@ -153,7 +167,7 @@ sqlsrv_execute($result_SomaQuestoes);
                           <li class=""><a  href="listaColaboradores.php">Lista Colaboradores</a></li>
                           <li class=""><a  href="escalaPausa.php"> Escala de pausa </a></li>
                           <li class=""><a  href="escalaFinalSemana.php"> Escala Final de Semana </a></li>
-                           <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
+                          <li class=""><a  href="dadosGestores.php"> Dados Gestores </a></li>
                           <li class=""><a  href="cadastroColaborador.php"> Sugestão Novo Colaborador </a></li>
                           
                       </ul>
@@ -175,7 +189,7 @@ sqlsrv_execute($result_SomaQuestoes);
 
                   <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                       <li class="sub-menu">
-                      <a class="" href="javascript:;" >
+                      <a class="active" href="javascript:;" >
                           <i class="fa fa-signal"></i>
                           <span>Qualidade</span> 
                       </a> <?php } ?>
@@ -183,34 +197,32 @@ sqlsrv_execute($result_SomaQuestoes);
                           <li class=""><a  href="questoesMonitoria.php">Questões Monitoria</a></li>
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação Monitoria</a></li>
-                           <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação Monitoria</a></li>
-                          <li class=""><a  href="ColaboradorSenhaFeedBack.php">Col. Senha FeedBack</a></li>
+                          <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação Monitoria</a></li>
+                          <li class="active"><a  href="ColaboradorSenhaFeedBack.php">Col. Senha FeedBack</a></li>
                       </ul>
                   </li>
 
-               <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
+                  <?php if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) { ?>
                   <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
+                      <a class="" href="javascript:;" >
                           <i class="fa fa-file-text"></i>
                           <span>Avaliações</span>
                       </a> <?php } ?>
                       <ul class="sub">
                           <li class=""><a  href="tipoTesteConhecimento.php">Tipo Conhecimento</a></li>
-                          <li class="active"><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
+                          <li class=""><a  href="questoesConhecimento.php">Questões Conhecimento</a></li>
                           <li class=""><a  href="testeconhecimento.php">Teste Conhecimento</a></li>
                           <li class=""><a  href="testeConhecimentoCadastrado.php">Conhecimento Realizados</a></li>
                       </ul>
                   </li>
-
-
+                                     
                   
-                   
                    <?php if ($_SESSION['ACESSO'] == 1){ ?>
                       <li class="sub-menu">
                       <a class="" href="javascript:;" >
                           <i class="fa fa-desktop"></i>
                           <span>General</span> 
-                      </a> <?php } ?>
+                      </a> 
                       <ul class="sub">
                           <li><a  href="usuarioLogin.php">Usuários GCO</a></li>
                           <li><a  href="listaHorarios.php">Lista Pausas</a></li>
@@ -231,6 +243,7 @@ sqlsrv_execute($result_SomaQuestoes);
                           <i class="fa fa-cog fa-spin"></i>
                           <span>BETA DEV</span> 
                       </a> <?php } ?>
+               <?php } ?>
 
               </ul>
               <!-- sidebar menu end-->
@@ -244,112 +257,106 @@ sqlsrv_execute($result_SomaQuestoes);
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper">
-            <h3><i class="fa fa-right"></i> Lista de Questões Teste Conhecimento </h3>
+            <h3><i class="fa fa-right"></i> Colaborador Senha FeedBack </h3>
 
-            <!-- criar formulario -->
+            <!-- criar formulario EAD-->
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
 
-                        <legend>  Resumo de Questões  </legend> 
-                          <table cellspacing="10" style="vertical-align: middle">
-                    <?php while ($row = sqlsrv_fetch_array($result_SomaQuestoes)){ 
 
-                         if ($row['DIFICULDADE_EAZY'] >= 3 & $row['DIFICULDADE_MEDIUN'] >= 3 & $row['DIFICULDADE_HARD'] >= 4 ) {
-                                      $corStatusQues = "label label-success label-mini";
-                                      $resStatusQues = "OK";
-                                    }else{
-                                      $corStatusQues = "label label-danger  label-mini";
-                                      $resStatusQues = "INCOMPLETO";
-                                    }
-
-                      ?>
-                           <tr>
-                           <td style="width:300px";>
-                             <label style="margin-left: 15px" for="nome"> <?php echo $row['DESCRICAO'] ?> </label>
-                           <hr> </td>
-                            <td style="width:140px";>
-                            <label style="margin-left: 15px" > Questões Ativas = <?php echo $row['SOMA'] ?></label>
-                            <hr></td>
-                            <td style="width:140px";>
-                            <label style="margin-left: 15px" > Fácil = <?php echo $row['DIFICULDADE_EAZY'] ?></label>
-                            <hr></td>
-                            <td style="width:140px";>
-                            <label style="margin-left: 15px" > Médio = <?php echo $row['DIFICULDADE_MEDIUN'] ?></label>
-                            <hr></td>
-                            <td style="width:140px";>
-                            <label style="margin-left: 15px" > Difícil = <?php echo $row['DIFICULDADE_HARD'] ?></label>
-                            <hr></td>
-                            <td style="width:140px";>
-                            <label style="margin-left: 15px" ><span class="<?php echo $corStatusQues ?>"> Situação <?php echo $resStatusQues ?></label>
-                            <hr></td>
-                             </tr>
-                     <?php } ?>
-                          </table>
-                         </fieldset><br><br>
-                        <br>
-
-
-                        <form name="Form" method="post" id="formulario" action="editaQuestoesConhecimento.php">
+                        <form name="Form" method="get" id="formulario" action="../../CESUDESK/Altera_Senha_FeedBack.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Questões </h4>
+                            <h4><i class="fa fa-right"></i> Colaboradores Sem Senha Cadastrada </h4>
                             <hr>
-                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
-                           <a href="#" id="myHref"><input style="float:right; margin-right: 50px" type="button" value="Nova Questão" ></input></a>
-                           <a href="UserReport_Export_banco_questoes.php" ><input style="float:right; margin-right: 50px" type="button" value="Banco de Questões" ></input></a>
+                                <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input></input>
                               <thead>
                               <tr>
-                                  <th><i class="fa fa"></i> ID Questão </th>
-                                  <th><i class="fa fa"></i> Tipo Conhecimento </th>
-                                  <th><i class="fa fa"></i> Questão </th>
-                                  <th><i class="fa fa"></i> Dificuldade </th>
-                                  <th><i class="fa fa"></i> Status </th>
-
+                                  <th><i class=""></i> ID Matrícula </th>
+                                  <th style="text-align: center"><i class=""></i> Nome </th>
+                                  <th><i class=""></i> Login Rede </th>
+                                  <th><i class=""></i> Nome Gestor </th>
+                                  <th><i class=""></i> Senha FeedBack </th>
+                                  <th><i class=""></i> Gerar Senha </th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squilaQuestoes)) { 
-                                    
-
-                                    if ($row['BO_ATIVO'] == "S") {
-                                      $corStatus = "label label-success label-mini";
-                                    }elseif ($row['BO_ATIVO'] == "N"){
-                                      $corStatus = "label label-danger  label-mini";
-                                    }
-
-                                     if ($row['DIFICULDADE'] == "1") {
-                                      $corStatus2 = "label label-success label-mini";
-                                    }elseif ($row['DIFICULDADE'] == "2"){
-                                      $corStatus2 = "label label-warning  label-mini";
-                                    }elseif ($row['DIFICULDADE'] == "3"){
-                                      $corStatus2 = "label label-danger  label-mini";
-                                    }
-
-
-                                 ?>
-
-                                  <td><?php echo $row['ID_QUESTAO']; ?></a></td>
-                                  <td><?php echo $row['DESC_CONHE']; ?></td>
-                                  <td><?php echo $row['DESC_QUESTAO']; ?></td>
-                                  <td><span class="<?php echo $corStatus2 ?>"><?php if($row['DIFICULDADE'] == '1') { echo "Fácil" ;} elseif($row['DIFICULDADE'] == '2') { echo "Médio" ;} else { echo "Difícil" ;} ?></td>
-                                  <td><span class="<?php echo $corStatus ?>"><?php if($row['BO_ATIVO'] == 'S') { echo "ATIVO" ;} else { echo "INATIVO" ;} ?></td>
+                                  <?php  while($row = sqlsrv_fetch_array($result_squila)) { 
+              
+                                    ?>
+                                  <td style="width: 100px"><?php echo $row['ID_MATRICULA'] ?></a></td>
+                                  <td style="text-align: center"><?php echo $row['NOME'] ?></td>
+                                  <td><?php echo $row['LOGIN_REDE'] ?></a></td>
+                                  <td><?php echo $row['NOMEGESTOR'] ?></a></td>
+                                  <td><?php echo 'NÃO POSSUI' ?></a></td>
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
-                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row['ID_QUESTAO'] ?>"  name="ID_QUESTAO"><i class="fa fa-pencil"></i></button>
+                                      <button style="margin-left: 25px" class="btn btn-primary btn-xs" type="submit" value="<?php echo base64_encode($row['ID_MATRICULA']); ?>"  name="ID_MATRICULA"><i class="fa fa-pencil"></i></button>
                                   </td>
                               </tr>
 
                               <?php 
                                     }
                               ?>
-
+                              
                               </tbody>
                           </table>
                         </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
               </div><!-- /row -->
+
+
+      <!-- criar formulario PRESENCIAL-->
+              <div class="row mt">
+                  <div class="col-md-12">
+                      <div class="content-panel">
+
+
+                        <form name="Form" method="get" id="formulario" action="../../CESUDESK/Altera_Senha_FeedBack.php">
+                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
+                            <h4><i class="fa fa-right"></i> Colaborador com senha Cadastrada </h4>
+                            <hr>
+                               <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input></input>
+                              <thead>
+                              <tr>
+                                  <th><i class=""></i> ID Matrícula </th>
+                                  <th style="text-align: center"><i class=""></i> Nome </th>
+                                  <th><i class=""></i> Login Rede </th>
+                                  <th><i class=""></i> Nome Gestor </th>
+                                  <th><i class=""></i> Senha FeedBack </th>
+                                  <th><i class=""></i> Link Senha </th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <?php  while($row2 = sqlsrv_fetch_array($result_squila2)) { 
+              
+                                    ?>
+                                  <td style="width: 100px"><?php echo $row2['ID_MATRICULA'] ?></a></td>
+                                  <td style="text-align: center"><?php echo $row2['NOME'] ?></td>
+                                  <td><?php echo $row2['LOGIN_REDE'] ?></a></td>
+                                  <td><?php echo $row2['NOMEGESTOR'] ?></a></td>
+                                  <td style="text-align: center"><?php echo $row2['PASS_FEEDBACK'] ?></a></td>
+                                  <td>
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button style="margin-left: 20px" class="btn btn-primary btn-xs" type="submit" value="<?php echo base64_encode($row2['ID_MATRICULA']); ?>"  name="ID_MATRICULA"><i class="fa fa-pencil"></i></button>
+                                  </td>
+                              </tr>
+
+                              <?php 
+                                    }
+                              ?>
+                              
+                              </tbody>
+                          </table>
+                        </form>
+                      </div><!-- /content-panel -->
+                  </div><!-- /col-md-12 -->
+              </div><!-- /row -->
+
+
 
     </section>
       </section><!-- /MAIN CONTENT -->
@@ -372,7 +379,7 @@ sqlsrv_execute($result_SomaQuestoes);
     <script src="assets/js/bootstrap.min.js"></script>
     <script class="include" type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
     <script src="assets/js/jquery.scrollTo.min.js"></script>
-    
+
 
     <!--common script for all pages-->
     <script src="assets/js/common-scripts.js"></script>
@@ -385,17 +392,6 @@ sqlsrv_execute($result_SomaQuestoes);
 
 
 <script type="text/javascript">
-
-  $("#myHref").on('click', function() {
-  var person = prompt("Insira o Número de Alternativas da Nova Quesstão", "5");
-   if (person === null) {
-        return; //break out of the function early
-    }else{
-         window.location = "cadastroQuestoesConhecimento.php?NUM_ALT=" + person;
-     } 
-});
-
-
 (function(document) {
   'use strict';
 
