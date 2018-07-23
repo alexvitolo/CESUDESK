@@ -233,6 +233,7 @@ $ID_MATRICULA_AVALIADOR = $_SESSION['MATRICULA'];
                           <li class=""><a  href="monitoriaRealizada.php">Monitoria Realizadas</a></li>
                           <li class=""><a  href="cronogramaAvaliacao.php">Cronograma Avaliação Monitoria</a></li>
                            <li class=""><a  href="prazoAvaliacao.php">Prazo Avaliação Monitoria</a></li>
+                          <li class=""><a  href="ColaboradorSenhaFeedBack.php">Col. Senha FeedBack</a></li>
                       </ul>
                   </li>
 
