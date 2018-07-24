@@ -26,7 +26,7 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 $NUM_ALT = $_GET["NUM_ALT"];
 
 
-if   ( ereg('[^0-6]',$NUM_ALT )) {
+if   ( ereg('[^0-9]',$NUM_ALT )) {
  echo  '<script type="text/javascript">alert("Valor Inválido !");</script>';
  echo  '<script type="text/javascript"> window.location.href = "questoesConhecimento.php"  </script>';
  exit;
