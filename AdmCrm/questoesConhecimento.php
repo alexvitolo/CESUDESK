@@ -387,7 +387,7 @@ sqlsrv_execute($result_SomaQuestoes);
 <script type="text/javascript">
 
   $("#myHref").on('click', function() {
-  var person = prompt("Insira o Número de Alternativas da Nova Quesstão", "5");
+  var person = prompt("Insira o Número de Alternativas da Nova Quesstão", "10");
    if (person === null) {
         return; //break out of the function early
     }else{
