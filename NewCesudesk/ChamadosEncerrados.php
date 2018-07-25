@@ -12,7 +12,7 @@ $ID_LOGIN = $_SESSION['IDLOGIN'];
 $ID_GRUPO = $_SESSION['ID_GRUPO'];
 
 //corrigir SQL
-$squilaChamado = "SELECT TOP 350 cd_tarefa
+$squilaChamado = "SELECT  cd_tarefa
                                 ,dh_entrega_prev
                                 ,prioridade
                                 ,titulo
@@ -24,6 +24,7 @@ $squilaChamado = "SELECT TOP 350 cd_tarefa
 								,(SELECT USUARIO FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] WHERE ID=solicitante_cd_usuario) as LOGIN_REDE
                         FROM DB_CRM_CESUDESK.dbo.tarefa
                        WHERE tp_statustarefa = 'Fechada'
+                         and YEAR(dh_fechamento) = YEAR(getdate())
                       ORDER BY 1 desc";
 
 $result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
