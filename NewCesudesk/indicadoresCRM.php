@@ -9,7 +9,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 
 // refresh automático pág
 
-echo "<meta HTTP-EQUIV='refresh' CONTENT='320; URL=..\NewCesudesk\Main.php'>";
+echo "<meta HTTP-EQUIV='refresh' CONTENT='520; URL=..\NewCesudesk\indicadoresCRM.php'>";
 
 
 $USUARIO = $_SESSION['IDLOGIN'];
