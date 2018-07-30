@@ -38,9 +38,13 @@ sqlsrv_execute($result_squilaProcesso);
 
 
 $squilaGrupo = "   SELECT distinct
-                         CASE WHEN tg.ID_GRUPO  in (1,2,3,4,5,17) THEN 1 ELSE tg.ID_GRUPO END ID_GRUPO
-                         ,tg.DESCRICAO 
-                    FROM tb_crm_grupo tg  ";
+                         CASE WHEN tg.ID_GRUPO  in (1,2,3,4,5,17) THEN 1
+                              WHEN tg.ID_GRUPO in (24,26,27,28,29,30) THEN 24 ELSE tg.ID_GRUPO
+                              END ID_GRUPO
+                             ,tg.DESCRICAO 
+                             ,tg.ID_UNIDADE
+                    FROM tb_crm_grupo tg 
+                ORDER BY tg.ID_UNIDADE ";
 
 $result_squilaGrupo = sqlsrv_prepare($conn, $squilaGrupo);
 sqlsrv_execute($result_squilaGrupo);

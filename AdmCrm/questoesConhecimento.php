@@ -39,7 +39,7 @@ $result_squilaQuestoes = sqlsrv_prepare($conn, $squilaQuestoes);
 sqlsrv_execute($result_squilaQuestoes);
 
 
-$squilaSomaQuestoes = "SELECT DISTINCT
+$squilaSomaQuestoesEAD = "SELECT DISTINCT
                      tcon.DESCRICAO 
                     ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 1 AND BO_ATIVO ='S') as DIFICULDADE_EAZY
                     ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 2 AND BO_ATIVO ='S') as DIFICULDADE_MEDIUN
@@ -47,10 +47,33 @@ $squilaSomaQuestoes = "SELECT DISTINCT
                     ,(SELECT COUNT(ID_QUESTAO) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND BO_ATIVO ='S') as SOMA
             FROM tb_ava_questoes_conhecimento tq
       RIGHT JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
-           WHERE tcon.BO_STATUS = 'S'";
+      INNER JOIN tb_crm_grupo tc ON tc.ID_GRUPO = tcon.ID_GRUPO
+      INNER JOIN tb_crm_unidade tu ON tu.ID_UNIDADE = tc.ID_UNIDADE
+           WHERE tcon.BO_STATUS = 'S'
+             AND tu.ID_UNIDADE = 1";
 
-$result_SomaQuestoes = sqlsrv_prepare($conn, $squilaSomaQuestoes);
-sqlsrv_execute($result_SomaQuestoes);
+$result_SomaQuestoesEAD = sqlsrv_prepare($conn, $squilaSomaQuestoesEAD);
+sqlsrv_execute($result_SomaQuestoesEAD);
+
+
+
+$squilaSomaQuestoesPRESEN = "SELECT DISTINCT
+                     tcon.DESCRICAO 
+                    ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 1 AND BO_ATIVO ='S') as DIFICULDADE_EAZY
+                    ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 2 AND BO_ATIVO ='S') as DIFICULDADE_MEDIUN
+                    ,(SELECT COUNT(DIFICULDADE) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND DIFICULDADE = 3 AND BO_ATIVO ='S') as DIFICULDADE_HARD
+                    ,(SELECT COUNT(ID_QUESTAO) FROM tb_ava_questoes_conhecimento WHERE ID_CONHECIMENTO = tq.ID_CONHECIMENTO AND BO_ATIVO ='S') as SOMA
+            FROM tb_ava_questoes_conhecimento tq
+      RIGHT JOIN tb_ava_conhecimento tcon ON tcon.ID_CONHECIMENTO = tq.ID_CONHECIMENTO
+      INNER JOIN tb_crm_grupo tc ON tc.ID_GRUPO = tcon.ID_GRUPO
+      INNER JOIN tb_crm_unidade tu ON tu.ID_UNIDADE = tc.ID_UNIDADE
+           WHERE tcon.BO_STATUS = 'S'
+             AND tu.ID_UNIDADE = 2";
+
+$result_SomaQuestoesPRESEN = sqlsrv_prepare($conn, $squilaSomaQuestoesPRESEN);
+sqlsrv_execute($result_SomaQuestoesPRESEN);
+
+
 
 
 
@@ -251,9 +274,9 @@ sqlsrv_execute($result_SomaQuestoes);
                   <div class="col-md-12">
                       <div class="content-panel">
 
-                        <legend>  Resumo de Questões  </legend> 
+                        <legend>  Resumo de Questões - EAD </legend> 
                           <table cellspacing="10" style="vertical-align: middle">
-                    <?php while ($row = sqlsrv_fetch_array($result_SomaQuestoes)){ 
+                    <?php while ($row = sqlsrv_fetch_array($result_SomaQuestoesEAD)){ 
 
                          if ($row['DIFICULDADE_EAZY'] >= 3 & $row['DIFICULDADE_MEDIUN'] >= 3 & $row['DIFICULDADE_HARD'] >= 4 ) {
                                       $corStatusQues = "label label-success label-mini";
@@ -287,12 +310,54 @@ sqlsrv_execute($result_SomaQuestoes);
                      <?php } ?>
                           </table>
                          </fieldset><br><br>
-                        <br>
+                        <br><br>
+
+
+
+
+                  <legend>  Resumo de Questões - PRESENCIAL  </legend> 
+                          <table cellspacing="10" style="vertical-align: middle">
+                    <?php while ($row2 = sqlsrv_fetch_array($result_SomaQuestoesPRESEN)){ 
+
+                         if ($row2['DIFICULDADE_EAZY'] >= 3 & $row2['DIFICULDADE_MEDIUN'] >= 3 & $row2['DIFICULDADE_HARD'] >= 4 ) {
+                                      $corStatusQues = "label label-success label-mini";
+                                      $resStatusQues = "OK";
+                                    }else{
+                                      $corStatusQues = "label label-danger  label-mini";
+                                      $resStatusQues = "INCOMPLETO";
+                                    }
+
+                      ?>
+                           <tr>
+                           <td style="width:300px";>
+                             <label style="margin-left: 15px" for="nome"> <?php echo $row2['DESCRICAO'] ?> </label>
+                           <hr> </td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" > Questões Ativas = <?php echo $row2['SOMA'] ?></label>
+                            <hr></td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" > Fácil = <?php echo $row2['DIFICULDADE_EAZY'] ?></label>
+                            <hr></td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" > Médio = <?php echo $row2['DIFICULDADE_MEDIUN'] ?></label>
+                            <hr></td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" > Difícil = <?php echo $row2['DIFICULDADE_HARD'] ?></label>
+                            <hr></td>
+                            <td style="width:140px";>
+                            <label style="margin-left: 15px" ><span class="<?php echo $corStatusQues ?>"> Situação <?php echo $resStatusQues ?></label>
+                            <hr></td>
+                             </tr>
+                     <?php } ?>
+                          </table>
+                         </fieldset><br><br>
+                        <br><br>
+
 
 
                         <form name="Form" method="post" id="formulario" action="editaQuestoesConhecimento.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Questões </h4>
+                            <h4><i class="fa fa-right"></i> Geral Questões </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
                            <a href="#" id="myHref"><input style="float:right; margin-right: 50px" type="button" value="Nova Questão" ></input></a>
