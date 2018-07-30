@@ -25,7 +25,7 @@ if  (($_SESSION['ACESSO'] > 2) or ($_SESSION['ACESSO'] == null ))   {
 
 
 
-$squilaTipoConhecimento = "SELECT tc.ID_CONHECIMENTO
+$squilaTipoConhecimentoEAD = "SELECT tc.ID_CONHECIMENTO
                          ,tc.ID_PROCESSO
                          ,tp.NOME as PROCESSO
                          ,tc.DESCRICAO as DESC_CONHE
@@ -35,10 +35,32 @@ $squilaTipoConhecimento = "SELECT tc.ID_CONHECIMENTO
                     FROM tb_ava_conhecimento tc
               INNER JOIN tb_crm_processo tp ON tp.ID = ID_PROCESSO
                LEFT JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
+               LEFT JOIN tb_crm_unidade tu ON tu.ID_UNIDADE = tg.ID_UNIDADE
+                   WHERE tu.ID_UNIDADE = 1
                 ORDER BY tc.BO_STATUS DESC";
 
-$result_squilaTipoConhecimento = sqlsrv_prepare($conn, $squilaTipoConhecimento);
-sqlsrv_execute($result_squilaTipoConhecimento);
+$result_squilaTipoConhecimentoEAD = sqlsrv_prepare($conn, $squilaTipoConhecimentoEAD);
+sqlsrv_execute($result_squilaTipoConhecimentoEAD);
+
+
+
+$squilaTipoConhecimentoPRESEN = "SELECT tc.ID_CONHECIMENTO
+                         ,tc.ID_PROCESSO
+                         ,tp.NOME as PROCESSO
+                         ,tc.DESCRICAO as DESC_CONHE
+                         ,tc.BO_STATUS
+                         ,tc.ID_GRUPO
+                         ,tg.DESCRICAO DESC_GRUPO
+                    FROM tb_ava_conhecimento tc
+              INNER JOIN tb_crm_processo tp ON tp.ID = ID_PROCESSO
+               LEFT JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tc.ID_GRUPO
+               LEFT JOIN tb_crm_unidade tu ON tu.ID_UNIDADE = tg.ID_UNIDADE
+                   WHERE tu.ID_UNIDADE = 2
+                ORDER BY tc.BO_STATUS DESC";
+
+$result_squilaTipoConhecimentoPRESEN = sqlsrv_prepare($conn, $squilaTipoConhecimentoPRESEN);
+sqlsrv_execute($result_squilaTipoConhecimentoPRESEN);
+
 
 
 ?>
@@ -238,7 +260,7 @@ sqlsrv_execute($result_squilaTipoConhecimento);
                       <div class="content-panel">
                         <form name="Form" method="post" id="formulario" action="editaTipoTesteConhecimento.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tipo Conhecimento </h4>
+                            <h4><i class="fa fa-right"></i> Tipo Conhecimento - EAD </h4>
                             <hr>
                             <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
                             <a href="cadastroTipoTesteConheci.php"><input style="float:right; margin-right: 50px" type="button" value="Novo Conhecimento" ></input></a>
@@ -254,7 +276,7 @@ sqlsrv_execute($result_squilaTipoConhecimento);
                               </thead>
                               <tbody>
                               <tr>
-                                  <?php  while($row = sqlsrv_fetch_array($result_squilaTipoConhecimento)) { 
+                                  <?php  while($row = sqlsrv_fetch_array($result_squilaTipoConhecimentoEAD)) { 
                                     
 
                                     if ($row['BO_STATUS'] == "S") {
@@ -282,6 +304,54 @@ sqlsrv_execute($result_squilaTipoConhecimento);
                               
                               </tbody>
                           </table>
+
+                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
+                            <h4><i class="fa fa-right"></i> Tipo Conhecimento - PRESENCIAL </h4>
+                            <hr>
+                            <input  style="margin-left: 15px;" type="search" class="light-table-filter" data-table="order-table table-wrapper table" placeholder="Search"></input>
+                            <a href="cadastroTipoTesteConheci.php"><input style="float:right; margin-right: 50px" type="button" value="Novo Conhecimento" ></input></a>
+                              <thead>
+                              <tr>
+                                  <th><i class="fa fa-bullhorn"></i> ID Conhecimento </th>
+                                  <th><i class="fa fa-bullhorn"></i> Processo </th>
+                                  <th><i class="fa fa-bullhorn"></i> Descrição </th>
+                                  <th><i class="fa fa-bullhorn"></i> Status </th>
+                                  <th><i class="fa fa-bullhorn"></i> Grupo </th>
+
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <?php  while($row2 = sqlsrv_fetch_array($result_squilaTipoConhecimentoPRESEN)) { 
+                                    
+
+                                    if ($row2['BO_STATUS'] == "S") {
+                                      $corStatus = "label label-success label-mini";
+                                    }elseif ($row2['BO_STATUS'] == "N"){
+                                      $corStatus = "label label-danger  label-mini";
+                                    }
+
+                                 ?>
+
+                                  <td><?php echo $row2['ID_CONHECIMENTO']; ?></a></td>
+                                  <td><?php echo $row2['PROCESSO']; ?></td>
+                                  <td><?php echo $row2['DESC_CONHE']; ?></td>
+                                  <td><span class="<?php echo $corStatus ?>"><?php if($row2['BO_STATUS'] == 'S') { echo "ATIVO" ;} else { echo "INATIVO" ;} ?></td>
+                                  <td><?php echo $row2['DESC_GRUPO']; ?></td>
+                                  <td>
+                                      <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
+                                      <button class="btn btn-primary btn-xs" type="submit" value="<?php echo $row2['ID_CONHECIMENTO'] ?>"  name="ID_CONHECIMENTO"><i class="fa fa-pencil"></i></button>
+                                  </td>
+                              </tr>
+
+                              <?php 
+                                    }
+                              ?>
+                              
+                              </tbody>
+                          </table>
+
+
                         </form>
                       </div><!-- /content-panel -->
                   </div><!-- /col-md-12 -->
