@@ -67,7 +67,7 @@ $squilaTodosProcessos = "SELECT ID
                        ,NOME
                        ,MODALIDADE
                        ,ATIVO
-                FROM tb_crm_processo WHERE MODALIDADE <> 'Presencial' ORDER BY DATA_INICIO DESC";
+                FROM tb_crm_processo ORDER BY DATA_INICIO DESC";
 
 $result_squilaTodosProcessos = sqlsrv_prepare($conn, $squilaTodosProcessos);
 sqlsrv_execute($result_squilaTodosProcessos);
