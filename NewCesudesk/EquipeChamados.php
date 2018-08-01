@@ -12,7 +12,7 @@ $ID_LOGIN = $_SESSION['IDLOGIN'];
 $ID_GRUPO = $_SESSION['ID_GRUPO'];
 
 //corrigir SQL
-$squilaChamado = "SELECT TOP 150 cd_tarefa
+$squilaChamado = "SELECT TOP 200 cd_tarefa
                                 ,dh_entrega_prev
                                 ,prioridade
                                 ,titulo
@@ -25,7 +25,9 @@ $squilaChamado = "SELECT TOP 150 cd_tarefa
                         FROM DB_CRM_CESUDESK.dbo.tarefa
                        WHERE solicitante_cd_usuario in (SELECT ID
                          									FROM [DB_CRM_REPORT].[dbo].[tb_crm_login] TL2
-                         							  INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_colaborador] TC2 ON TC2.LOGIN_REDE = TL2.USUARIO AND ( TC2.ID_GRUPO = {$ID_GRUPO} OR TC2.ID_COLABORADOR_GESTOR = {$ID_COLABORADOR}))
+                         							  INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_colaborador] TC2 ON TC2.LOGIN_REDE = TL2.USUARIO 
+                         							  INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_grupo] TG2 ON TG2.ID_GRUPO = TC2.ID_GRUPO
+                         							       WHERE ( TG2.DESCRICAO = (SELECT DESCRICAO FROM [DB_CRM_REPORT].[dbo].[tb_crm_grupo] WHERE ID_GRUPO = {$ID_GRUPO}) OR TC2.ID_COLABORADOR_GESTOR = {$ID_COLABORADOR}))
                       ORDER BY tp_statustarefa,dh_entrega_prev desc";
 
 $result_squilaChamado = sqlsrv_prepare($conn, $squilaChamado);
