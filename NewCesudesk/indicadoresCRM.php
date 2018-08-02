@@ -186,7 +186,8 @@ $mediaSMS = round($mediaSMS,0);
 
 // alerta email media horas
 
-$squilaEMAILMediaHoras = "SELECT ISNULL(cast(cast(avg(cast(CAST(getdate()-dtDateOfInsertion as datetime) as float)) as datetime) as time),'00:00:00') AvgTime
+$squilaEMAILMediaHoras = "SELECT ISNULL(cast(cast(avg(cast(CAST(getdate()-dtDateOfInsertion as datetime) as float)) as datetime) as time),'00:00:00') AvgTime,
+							     count(1) as COUNT_EMAIL
                             FROM tblOutgoingOBMs  
                            WHERE bCrash = 0 and nErrorCode = 0 ";
 
@@ -195,17 +196,15 @@ sqlsrv_execute($result_squilaEMAILMediaHoras);
 
 $EMAILMediaHoras = sqlsrv_fetch_array($result_squilaEMAILMediaHoras);
 
-foreach ($EMAILMediaHoras as $key => $value) {
-	foreach ($value as $key2 => $value2) {
-		if ($key2 == 'date') {
-			$horaEmailAlert = $value2;
-		}
+foreach ($EMAILMediaHoras[0] as $key => $value) {
+		if ($key == 'date') {
+			$horaEmailAlert = $value;
 	}
 }
 
 $horaEmailAlert = strtotime($horaEmailAlert);
 $horaEmailAlert = date('G.i', $horaEmailAlert);
-
+$SomaEmailAlert = $EMAILMediaHoras[1];
 
 
 
@@ -713,6 +712,7 @@ var chartServer3 = Highcharts.chart('container-server3', Highcharts.merge(gaugeO
 
 
 var MEDIA  = <?php echo $horaEmailAlert ; ?>;
+var SOMA_EMAIL = <?php echo $SomaEmailAlert ; ?>;
 
 Highcharts.chart('container', {
 
@@ -725,7 +725,7 @@ Highcharts.chart('container', {
     },
 
     title: {
-        text: 'Tempo Médio Horas - Ultimos 5 dias'
+        text: 'Tempo Médio Horas - Ultimos 5 dias ('+SOMA_EMAIL+' Emails) '
     },
 
     pane: {
