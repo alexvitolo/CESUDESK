@@ -5,7 +5,7 @@ date_default_timezone_set('America/Sao_Paulo');
 
 $dataValida = date("Y-m-d" ,strtotime("+2 days")); // variavel criada para definir a data minima para selecionar no campo date 
 
-if($_SESSION["USUARIO"] =='alexandre.vitolo'){  //validar usuario para realizar trocas qualquer dia
+if( ($_SESSION["USUARIO"] =='alexandre.vitolo') or ($_SESSION["USUARIO"] =='paulo.mazotti')) {  //validar usuario para realizar trocas qualquer dia
 $dataValida = date("Y-m-d" ,strtotime("-1 year"));
 }
 
