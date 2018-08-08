@@ -278,6 +278,7 @@ sqlsrv_execute($result_squila2);
                                   <th><i class=""></i> Nome Gestor </th>
                                   <th><i class=""></i> Senha FeedBack </th>
                                   <th><i class=""></i> Gerar Senha </th>
+                                  <th><i class=""></i> Enviar Email </th>
                               </tr>
                               </thead>
                               <tbody>
@@ -293,6 +294,10 @@ sqlsrv_execute($result_squila2);
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                       <button style="margin-left: 25px" class="btn btn-primary btn-xs" type="submit" value="<?php echo base64_encode($row['ID_MATRICULA']); ?>"  name="ID_MATRICULA"><i class="fa fa-pencil"></i></button>
+                                  </td>
+                                  <td>
+                                      <a style="margin-left: 25px" href="SenhaFeedBack_SendEmail.php?ID_MATRICULA=<?php echo $row['ID_MATRICULA']; ?>"><i class="fa fa-play"></i></button>
+                                      </a>
                                   </td>
                               </tr>
 
@@ -327,6 +332,7 @@ sqlsrv_execute($result_squila2);
                                   <th><i class=""></i> Nome Gestor </th>
                                   <th><i class=""></i> Senha FeedBack </th>
                                   <th><i class=""></i> Link Senha </th>
+                                   <th><i class=""></i> Enviar Email </th>
                               </tr>
                               </thead>
                               <tbody>
@@ -342,6 +348,10 @@ sqlsrv_execute($result_squila2);
                                   <td>
                                       <!-- <button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button> -->
                                       <button style="margin-left: 20px" class="btn btn-primary btn-xs" type="submit" value="<?php echo base64_encode($row2['ID_MATRICULA']); ?>"  name="ID_MATRICULA"><i class="fa fa-pencil"></i></button>
+                                  </td>
+                                   <td>
+                                      <a style="margin-left: 25px" href="SenhaFeedBack_SendEmail.php?ID_MATRICULA=<?php echo $row2['ID_MATRICULA']; ?>"><i class="fa fa-play"></i></button>
+                                      </a>
                                   </td>
                               </tr>
 
