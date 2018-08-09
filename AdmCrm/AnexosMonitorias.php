@@ -16,6 +16,39 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
 
 
 
+
+ $squilaUltimoProcesso = "SELECT ID
+                          FROM tb_crm_processo 
+                          WHERE MODALIDADE = 'Graduação' AND ATIVO = 1";
+
+$result_squilaUltimoProcesso = sqlsrv_prepare($conn, $squilaUltimoProcesso);
+sqlsrv_execute($result_squilaUltimoProcesso);
+$ID_ULTIMO_PROCESSO = sqlsrv_fetch_array($result_squilaUltimoProcesso);
+
+
+ if ( ! isset ($_GET['PROCESSO'])){
+    $sqlCondicao = "WHERE tp.ID_PROCESSO =".$ID_ULTIMO_PROCESSO['ID'];
+    $_GET['PROCESSO'] = $ID_ULTIMO_PROCESSO['ID'];
+ }else{
+  $sqlCondicao = "WHERE tp.ID_PROCESSO =".$_GET['PROCESSO'];
+ }
+
+
+ $squilaProcessoSelect = "SELECT TOP 6 ID
+                       ,NOME
+                       ,MODALIDADE
+                       ,ATIVO
+                FROM tb_crm_processo WHERE NOME not like '4%' ORDER BY DATA_INICIO DESC";
+
+$result_squilaProcessoSelect = sqlsrv_prepare($conn, $squilaProcessoSelect);
+sqlsrv_execute($result_squilaProcessoSelect);
+
+
+
+
+
+
+
 $ID_COLABORADOR= $_SESSION['ID_COLABORADOR'];
 
 
@@ -33,6 +66,7 @@ if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) {
                         INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_colaborador] tc ON tc.ID_COLABORADOR = tp.ID_COLABORADOR
                         INNER JOIN [DB_CRM_REPORT].[dbo].[tb_qld_pesquisa_anexo] tpa ON tpa.ID_PESQUISA = tp.ID_PESQUISA
                         INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_processo] tpro ON tpro.ID = tp.ID_PROCESSO
+                        ".$sqlCondicao."
                         ";
 
           $result_squilaAnexo = sqlsrv_prepare($conn, $sqlValidaAnexo);
@@ -53,7 +87,7 @@ if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) {
                         INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_colaborador] tc ON tc.ID_COLABORADOR = tp.ID_COLABORADOR
                         INNER JOIN [DB_CRM_REPORT].[dbo].[tb_qld_pesquisa_anexo] tpa ON tpa.ID_PESQUISA = tp.ID_PESQUISA
                         INNER JOIN [DB_CRM_REPORT].[dbo].[tb_crm_processo] tpro ON tpro.ID = tp.ID_PROCESSO
-                            WHERE tc.ID_COLABORADOR_GESTOR = {$ID_COLABORADOR} ";
+                            ".$sqlCondicao." AND tc.ID_COLABORADOR_GESTOR = {$ID_COLABORADOR} ";
 
           $result_squilaAnexo = sqlsrv_prepare($conn, $sqlValidaAnexo);
            sqlsrv_execute($result_squilaAnexo);
@@ -257,6 +291,22 @@ if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) {
               <div class="row mt">
                   <div class="col-md-12">
                       <div class="content-panel">
+                          
+                          <div class="panel-heading">
+                                   <div class="pull-right">
+                                    <form name="Form" method="get" id="id" action="AnexosMonitorias.php">
+                                      <a style="float:left; margin-right: 10px; margin-top: 20px"> PROCESSO </a>
+                                        <select onchange="this.form.submit()" name="PROCESSO" style="float:left; margin-right: 20px; margin-top: 20px" >
+                                           <?php while ($row = sqlsrv_fetch_array($result_squilaProcessoSelect)){ ?>
+                                             <option <?php if($row['ID'] == $_GET['PROCESSO'] ) { echo 'selected' ;} ?> value=<?php echo $row['ID']?> > <?php echo $row['NOME'] ?> </option>
+                                         <?php }
+                                         ?>
+                                        </select>
+                                    </form>
+                                     <!-- <button class="btn btn-default btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span> Filtro </button> -->
+                                    </div>
+                              </div>
+
                         <form name="Form" method="get" id="formulario" action="MonitoriaAnexoDownload.php">
                           <table class="table table-striped table-advance table-hover order-table table-wrapper">
                             <h4><i class="fa fa-right"></i> Monitorias </h4>
