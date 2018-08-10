@@ -60,7 +60,6 @@ $query = "     SELECT tp.ID_PESQUISA
           INNER JOIN tb_crm_colaborador tc ON tc.ID_COLABORADOR = tp.ID_COLABORADOR
           INNER JOIN tb_crm_grupo tg ON tg.ID_GRUPO = tp.ID_GRUPO
           INNER JOIN tb_qld_cronograma_avaliacao tcron ON tcron.ID_AVALIACAO = tp.ID_AVALIACAO
-               WHERE tpro.ATIVO = 1
             ORDER BY tp.DT_SISTEMA desc  ";
 
 $result = sqlsrv_prepare($conn, $query);
