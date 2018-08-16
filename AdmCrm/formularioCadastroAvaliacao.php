@@ -189,7 +189,7 @@ $squilaResultLigacao = "SELECT trs.ID_RESULT_LIG
                                ,trs.DESCRICAO AS DESC_RESUL_LIGACAO
                           FROM tb_qld_resultado_ligacao trs
                     INNER JOIN tb_crm_grupo tg ON (CASE WHEN tg.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 
-                                                        WHEN tc.ID_GRUPO in (37,38) THEN 8 ELSE tg.ID_GRUPO END) = trs.ID_GRUPO
+                                                        WHEN tg.ID_GRUPO in (37,38) THEN 8 ELSE tg.ID_GRUPO END) = trs.ID_GRUPO
                     INNER JOIN tb_crm_colaborador tc ON tc.ID_GRUPO = tg.ID_GRUPO
                          WHERE tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'  ";
 
