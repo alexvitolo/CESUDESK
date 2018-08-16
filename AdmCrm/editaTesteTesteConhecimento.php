@@ -29,14 +29,16 @@ $ID_MATRICULA = $_POST['ID_MATRICULA'];
                                 ,tr.DESCRICAO as NOME_REGIAO
                                 ,tg.DESCRICAO AS NOME_GRUPO
                                 ,(SELECT NOME FROM tb_crm_colaborador WHERE tc.ID_COLABORADOR_GESTOR = ID_COLABORADOR ) NOME_GESTOR
-                                 ,CASE WHEN tc.ID_GRUPO in (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END ID_GRUPO
+                                 ,CASE WHEN tc.ID_GRUPO in (1,2,3,4,5,17) THEN 1 
+                                       WHEN tc.ID_GRUPO in (37,38) THEN 8 ELSE tc.ID_GRUPO END ID_GRUPO
                                 ,tconhe.ID_CONHECIMENTO
                                 ,tconhe.DESCRICAO as NOME_TESTE
                         FROM tb_crm_colaborador tc
                 INNER JOIN tb_crm_grupo tg ON tc.ID_GRUPO  = tg.ID_GRUPO
                 INNER JOIN tb_crm_regiao tr ON tr.ID_REGIAO = tg.ID_REGIAO
                 INNER JOIN tb_ava_conhecimento tconhe  ON CASE 
-                                                    WHEN tc.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END  = tconhe.ID_GRUPO
+                                                    WHEN tc.ID_GRUPO IN (1,2,3,4,5,17) THEN 1
+                                                    WHEN tc.ID_GRUPO IN (37,38) THEN 8 ELSE tc.ID_GRUPO END  = tconhe.ID_GRUPO
                        WHERE tc.ID_MATRICULA ='{$ID_MATRICULA}'
                          AND tc.STATUS_COLABORADOR = 'ATIVO' "; 
 
