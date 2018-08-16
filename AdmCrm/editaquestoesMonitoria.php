@@ -38,7 +38,8 @@ $resultadoSQL = sqlsrv_fetch_array($result_squilaQuestoes);
 
 
 $squilaGrupo = "SELECT DISTINCT 
-                            CASE WHEN ID_GRUPO in (1,2,3,4,5,17) THEN 1 ELSE ID_GRUPO END ID_GRUPO_COLABORADOR
+                            CASE WHEN ID_GRUPO in (1,2,3,4,5,17) THEN 1
+                                 WHEN ID_GRUPO in (37,38) THEN 8 ELSE ID_GRUPO END ID_GRUPO_COLABORADOR
                             ,DESCRICAO
                        FROM tb_crm_grupo";
 

@@ -148,10 +148,12 @@ else{
                                ,tq.DESC_OBSERVACAO
                                ,tq.BO_FALHA_CRITICA
                                ,tq.BO_PARCIAL
-                               ,CASE WHEN tc.ID_GRUPO in (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END GRUPO_COLABORADOR
+                               ,CASE WHEN tc.ID_GRUPO in (1,2,3,4,5,17) THEN 1 
+                                     WHEN tc.ID_GRUPO in (37,38) THEN 8 ELSE tc.ID_GRUPO END GRUPO_COLABORADOR
                           FROM tb_qld_questoes tq 
                     INNER JOIN tb_crm_colaborador tc ON CASE 
-                                                        WHEN tc.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
+                                                        WHEN tc.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 
+                                                        WHEN tc.ID_GRUPO in (37,38) THEN 8 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
                          WHERE tq.BO_FALHA_CRITICA = 'N'
                            AND tq.BO_QUESTAO_ATIVA = 'S'
                            AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'
@@ -168,10 +170,12 @@ else{
                            ,tq.DESC_OBSERVACAO
                            ,tq.BO_FALHA_CRITICA
                            ,tq.BO_PARCIAL
-                           ,CASE WHEN tc.ID_GRUPO in (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END GRUPO_COLABORADOR
+                           ,CASE WHEN tc.ID_GRUPO in (1,2,3,4,5,17) THEN 1
+                                 WHEN tc.ID_GRUPO in (37,38) THEN 8 ELSE tc.ID_GRUPO END GRUPO_COLABORADOR
                       FROM tb_qld_questoes tq 
                 INNER JOIN tb_crm_colaborador tc ON CASE 
-                                                    WHEN tc.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
+                                                    WHEN tc.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 
+                                                    WHEN tc.ID_GRUPO in (37,38) THEN 8 ELSE tc.ID_GRUPO END  = tq.ID_GRUPO
                      WHERE BO_FALHA_CRITICA = 'S'
                        AND tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'
                        AND (tc.STATUS_COLABORADOR ='ATIVO' OR tc.STATUS_COLABORADOR = 'FERIAS') ";
@@ -184,7 +188,8 @@ $squilaResultLigacao = "SELECT trs.ID_RESULT_LIG
                                ,tg.DESCRICAO
                                ,trs.DESCRICAO AS DESC_RESUL_LIGACAO
                           FROM tb_qld_resultado_ligacao trs
-                    INNER JOIN tb_crm_grupo tg ON (CASE WHEN tg.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 ELSE tg.ID_GRUPO END) = trs.ID_GRUPO
+                    INNER JOIN tb_crm_grupo tg ON (CASE WHEN tg.ID_GRUPO IN (1,2,3,4,5,17) THEN 1 
+                                                        WHEN tc.ID_GRUPO in (37,38) THEN 8 ELSE tg.ID_GRUPO END) = trs.ID_GRUPO
                     INNER JOIN tb_crm_colaborador tc ON tc.ID_GRUPO = tg.ID_GRUPO
                          WHERE tc.ID_MATRICULA = '{$ID_MATRICULA_CONSULTOR}'  ";
 
