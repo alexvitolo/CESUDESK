@@ -111,6 +111,7 @@ $squilaResultLigacao = "SELECT tlig.ID_RESULT_LIG
                           FROM tb_qld_resultado_ligacao tlig
                          WHERE tlig.ID_GRUPO = CASE 
                                                WHEN {$resultadoSQL['ID_GRUPO']} IN (1,2,3,4,5) THEN 1 
+                                               WHEN {$resultadoSQL['ID_GRUPO']}  in (37,38) THEN 8
                                                ELSE {$resultadoSQL['ID_GRUPO']} END " ;
 
 $result_squilaResultLigacao = sqlsrv_prepare($conn, $squilaResultLigacao);
