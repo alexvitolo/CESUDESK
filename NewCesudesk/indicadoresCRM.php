@@ -208,6 +208,38 @@ $SomaEmailAlert = $EMAILMediaHoras[1];
 
 
 
+
+
+
+
+
+$squilaGrafCamp= " SELECT CONCAT('{ y:',COUNT(1),', label:%', B.tCampaignName,'%},') as DATAPOINTGRAF
+                     FROM tblOutgoingOBMs A
+               INNER JOIN tblCampaignMain B ON B.aCampaignID = A.nCampaignID 
+                    WHERE A.bCrash = 0 and A.nErrorCode = 0  
+                 GROUP BY nCampaignID,tCampaignName ORDER BY 1 DESC
+
+ ";
+
+$result_squilaGrafCamp = sqlsrv_prepare($conn2, $squilaGrafCamp);
+sqlsrv_execute($result_squilaGrafCamp);
+
+
+$DataGrafCamp = '';
+
+while($row4 = sqlsrv_fetch_array($result_squilaGrafCamp))
+{
+     $DataGrafCamp .= $row4[0];
+}
+
+$DataGrafCamp = str_replace('%', '"', $DataGrafCamp);
+$DataGrafCamp = rtrim($DataGrafCamp, ',');
+
+
+
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -397,6 +429,8 @@ $SomaEmailAlert = $EMAILMediaHoras[1];
 					<div class="panel-body">
 						<div class="canvas-wrapper">
 							<div id="container" style="min-width: 310px; max-width: 400px; height: 300px; margin: 0 auto"></div>
+							<div id="chartContainer" style="height: 300px; width: 85%;margin-left:150px"></div>
+							<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 						</div>
 					</div>
 				</div>
@@ -813,6 +847,40 @@ Highcharts.chart('container', {
 
 },
 );
+
+
+
+//var DATAGRAFCAMP  = <?php echo $DataGrafCamp ; ?>;
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	title:{
+		text: ''
+	},
+	data: [{
+		type: "funnel",
+		indexLabel: "{label} - {y}",
+		toolTipContent: "<b>{label}</b>: {y} <b>({percentage}%)</b>",
+		neckWidth: 20,
+		neckHeight: 0,
+		valueRepresents: "area",
+		dataPoints: [
+			<?php echo $DataGrafCamp ; ?>
+		]
+	}]
+});
+calculatePercentage();
+chart.render();
+
+function calculatePercentage() {
+	var dataPoint = chart.options.data[0].dataPoints;
+	var total = SOMA_EMAIL;
+	for(var i = 0; i < dataPoint.length; i++) {
+		
+		chart.options.data[0].dataPoints[i].percentage = ((dataPoint[i].y / total) * 100).toFixed(2);
+		
+	}
+}
+
 
 
 
