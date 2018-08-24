@@ -205,7 +205,7 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
             <h3><i class="fa fa-right"></i> Lista de Indicadores</h3>
                 <hr>
 
-                   <iframe width="1100" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiMTA3OTYxOTgtNTY3Ny00NmQ1LWEyNTQtYWM4NGViMmI1MzEzIiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"  frameborder="0" allowFullScreen="true"></iframe>
+                   <iframe width="1100" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiZDFkNjRlZjEtMGYyZi00YTYxLTk4ZDAtZGFlOTVmM2VjZDdlIiwidCI6IjJjMjJlNDI4LTJkMGYtNGQ3ZC05MzMwLWVlMTAyMDRmNzUyMSJ9"  frameborder="0" allowFullScreen="true"></iframe>
                   
                   
       <!-- **********************************************************************************************************************************************************

@@ -209,7 +209,7 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
             <h3><i class="fa fa-right"></i> Dashboard Micro Gestão</h3>
                 <hr>
 
-                   <iframe width="1100" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiMjAxYjBhOGUtNjgwNS00YTljLWIxODItZjc2ODcwNTJjMzE3IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"  frameborder="0" allowFullScreen="true"></iframe>
+                   <iframe width="1100" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiNzA5NmI5YTctMjEwYi00NDE3LThkNmItYjk1OTYxODdkYmM3IiwidCI6IjJjMjJlNDI4LTJkMGYtNGQ3ZC05MzMwLWVlMTAyMDRmNzUyMSJ9" frameborder="0" allowFullScreen="true"></iframe>
                   
                   
       <!-- **********************************************************************************************************************************************************

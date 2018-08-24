@@ -209,7 +209,7 @@ if ( (date('H:i:s')) >=  (date('H:i:s', strtotime('+55 minute', strtotime($_SESS
             <h3><i class="fa fa-right"></i> Dashboard Discador</h3>
                 <hr>
 
-                   <iframe width="1100" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiNDAzMmUwZmItZDQxZC00Mjk3LTg4ZDctNjNhZWI3Y2I0Zjg4IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"  frameborder="0" allowFullScreen="true"></iframe>
+                   <iframe width="1100" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiYjJmY2EzZmUtNDQ4ZS00Y2E3LTk1NjEtYWJmOGM2MGQ3NWVhIiwidCI6IjJjMjJlNDI4LTJkMGYtNGQ3ZC05MzMwLWVlMTAyMDRmNzUyMSJ9" frameborder="0" allowFullScreen="true"></iframe>
                   
                   
       <!-- **********************************************************************************************************************************************************
