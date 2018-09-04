@@ -172,7 +172,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
 							<li class="active" id="litab1"><a href="#tab1" data-toggle="tab">Chamados Gerais</a></li>
-							<li id="litab2"><a href="#tab2" data-toggle="tab">Relatórios 2</a></li>
+							<li id="litab2"><a href="#tab2" data-toggle="tab">Codigo Portal</a></li>
 						</ul>
 						<div class="tab-content">
 							<div class="tab-pane fade in active" id="tab1">
@@ -196,10 +196,13 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 
 							</div>
 							<div class="tab-pane fade" id="tab2">
-								<h4>Encerramento</h4><br>
+								<h4>Find Codigo Portal</h4><br>
 								<div class="form-group">
-								       <label>Relatório 2</label>
-								        <a href=""><button type="button" class="btn btn-primary">Download Relatório 2</button></a>
+									   <label>Nome Colaborador</label>
+								       <input name="NOME_COLAB_COD" id="nomecolab" class="form-control" type="name" placeholder="Digite o nome do Colaborador ou Sobrenome">
+								        <br><br>
+								       <label> </label>
+								        <button onclick="PaginaCodPortal()" type="button" class="btn btn-primary" id="btnBuscaColab">Buscar Código</button></a>
 									    <a></input></a><br><br>
 								</div>
 							</div>
@@ -226,6 +229,15 @@ if ($_SESSION['ACESSO'] <> 1 )  {
              document.getElementById("formulario").action = pagina; //Setting form action to "success.php" page
              document.getElementById("formulario").submit(); // Submitting form
         }
+
+
+
+		var campo = document.getElementById('nomecolab').value;
+
+		// Evento que é executado ao clicar no botão de enviar
+		function PaginaCodPortal() {
+		       window.open("http://dd42150:8087/CESUDESK/NewCesudesk/RelatoriosCesudeskCodPortal.php?NOME_COLAB_COD="+campo ,  '_blank', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0')
+		    }
 
 	</script>
 
