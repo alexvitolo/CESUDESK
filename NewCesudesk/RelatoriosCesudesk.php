@@ -232,11 +232,9 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 
 
 
-		var campo = document.getElementById('nomecolab').value;
-
 		// Evento que é executado ao clicar no botão de enviar
 		function PaginaCodPortal() {
-		       window.open("http://dd42150:8087/CESUDESK/NewCesudesk/RelatoriosCesudeskCodPortal.php?NOME_COLAB_COD="+campo ,  '_blank', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0')
+		       window.open("http://dd42150:8087/CESUDESK/NewCesudesk/RelatoriosCesudeskCodPortal.php?NOME_COLAB_COD="+ document.getElementById('nomecolab').value ,  '_blank', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0')
 		    }
 
 	</script>
