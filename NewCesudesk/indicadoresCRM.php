@@ -239,6 +239,34 @@ $DataGrafCamp = rtrim($DataGrafCamp, ',');
 
 
 
+$squilaGrafHistEmail= " SELECT STUFF((  SELECT ',' + CONVERT(varchar,COUNT(*))
+                          FROM 
+                             (
+	                           SELECT CONVERT(date,dtDateOfAction,108) as dtDateOfAction
+	                           	  ,VisitHour = DATEPART(HH, dtDateOfAction)
+	                             FROM tblOBMReportMailer 
+	                             WHERE dtDateOfAction >= CONVERT(date,GETDATE(),103)  
+                               ) AS Visits
+                         WHERE CONVERT(nchar(10), CAST(CAST(VisitHour AS nchar) + ':00' AS datetime), 108) BETWEEN '06:00' and '20:00'
+                      GROUP BY dtDateOfAction
+                          	  ,VisitHour
+                      ORDER BY dtDateOfAction
+                               FOR XML PATH('')  ), 1, 1, '' )
+ 
+ ";
+
+$result_squilaGrafHistEmail = sqlsrv_prepare($conn2, $squilaGrafHistEmail);
+sqlsrv_execute($result_squilaGrafHistEmail);
+
+
+$VetorGrafHistEmail = sqlsrv_fetch_array($result_squilaGrafHistEmail);
+
+
+
+
+
+
+
 
 ?>
 
@@ -414,7 +442,7 @@ $DataGrafCamp = rtrim($DataGrafCamp, ',');
 		</div><!--/.row-->
 
 
-				<div class="row">
+		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -438,7 +466,33 @@ $DataGrafCamp = rtrim($DataGrafCamp, ',');
 		</div><!--/.row-->
 
 
-				<div class="row">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Histórico Envio Email's
+						<ul class="pull-right panel-settings panel-button-tab-right">
+							<li class="dropdown"><a class="pull-right dropdown-toggle" data-toggle="dropdown" href="#">
+								<em class="fa fa-cogs"></em>
+							</a>
+							</li>
+						</ul>
+						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span></div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<canvas id="bar-chart-grouped" width="800" height="450"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->
+
+
+
+
+
+		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -510,6 +564,7 @@ $DataGrafCamp = rtrim($DataGrafCamp, ',');
 	<script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
 <script>
 window.onload = function () {
@@ -880,6 +935,37 @@ function calculatePercentage() {
 		
 	}
 }
+
+
+
+
+
+new Chart(document.getElementById("bar-chart-grouped"), {
+    type: 'bar',
+    data: {
+      labels: ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"],
+      datasets: [
+        {
+          label: "Média Mensal",
+          backgroundColor: "#3e95cd",
+          data: [133,221,783,2478]
+        }, {
+          label: "Hoje",
+          backgroundColor: "#8e5ea2",
+          data: [<?php echo $VetorGrafHistEmail[0] ; ?>]
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: ' '
+      }
+    }
+});
+
+
+
 
 
 
