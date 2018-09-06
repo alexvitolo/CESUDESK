@@ -216,7 +216,7 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 
             <!-- criar formulario -->
               <div class="row mt">
-                      <iframe style="margin-left: 20px" width="1024" height="720" src="https://app.powerbi.com/view?r=eyJrIjoiMWJlMzkxNTMtMDJkNy00OGE2LWEzNmYtYzU4YWEzNjM0Y2E3IiwidCI6IjMxMWJmNTc5LTYzZjItNDI2YS04MGFhLWQzYTI2ZjFjMGFkMSIsImMiOjF9"  frameborder="0" allowFullScreen="true"></iframe>
+                      <iframe style="margin-left: 20px" width="1024" height="720" src="https://app.powerbi.com/view?r=eyJrIjoiNjM3NzZkNjAtMjgyZi00OTJmLWFkNjMtNGE5NmJmYWQ0ZTRjIiwidCI6IjJjMjJlNDI4LTJkMGYtNGQ3ZC05MzMwLWVlMTAyMDRmNzUyMSJ9" frameborder="0" allowFullScreen="true"></iframe>
               </div><!-- /row -->
 
           </section>
