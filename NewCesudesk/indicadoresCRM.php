@@ -1,5 +1,7 @@
 <?php include '..\NewCesudesk\connectionNEWCESUDESK.php'; 
 
+ini_set('max_execution_time', 90);
+
 session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
@@ -9,7 +11,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 
 // refresh automático pág
 
-echo "<meta HTTP-EQUIV='refresh' CONTENT='520; URL=..\NewCesudesk\indicadoresCRM.php'>";
+// echo "<meta HTTP-EQUIV='refresh' CONTENT='520; URL=..\NewCesudesk\indicadoresCRM.php'>";
 
 
 $USUARIO = $_SESSION['IDLOGIN'];
@@ -178,7 +180,13 @@ $Data_SMS = str_replace('))"', '))', $Data_SMS);
 $Data_SMS = str_replace('@', '"', $Data_SMS);
 $Data_SMS = str_replace('""}', '"}', $Data_SMS);
 // print_r($Data_SMS);exit;
-$mediaSMS = $mediaSMS/$aux1;
+
+if ($aux1 == 0){
+	$mediaSMS = 0;
+}else{
+	$mediaSMS = $mediaSMS/$aux1;
+}
+
 $mediaSMS = round($mediaSMS,0);
 //print_r($media);
 // exit;
@@ -234,6 +242,66 @@ while($row4 = sqlsrv_fetch_array($result_squilaGrafCamp))
 
 $DataGrafCamp = str_replace('%', '"', $DataGrafCamp);
 $DataGrafCamp = rtrim($DataGrafCamp, ',');
+
+
+
+
+
+$squilaGrafHistEmail= " SELECT STUFF((  SELECT ',' + CONVERT(varchar,COUNT_HORA)
+                          FROM 
+                             (
+	                           SELECT VisitHour = DATEPART(HH, dtDateOfAction)
+								  ,count((CONVERT(int,DATEPART(HH, dtDateOfAction)))) as COUNT_HORA
+	                             FROM tblOBMReportMailer 
+	                             WHERE dtDateOfAction >= CONVERT(date,GETDATE(),103) 
+								   AND nSentStatus = 1 
+								     GROUP BY DATEPART(HH, dtDateOfAction)
+                               ) AS Visits
+                         WHERE CONVERT(nchar(10), CAST(CAST(VisitHour AS nchar) + ':00' AS datetime), 108) BETWEEN '06:00' and '20:00'
+                      GROUP BY VisitHour,COUNT_HORA
+                      ORDER BY VisitHour
+                               FOR XML PATH('')  ), 1, 1, '' )
+ 
+ ";
+
+$result_squilaGrafHistEmail = sqlsrv_prepare($conn2, $squilaGrafHistEmail);
+sqlsrv_execute($result_squilaGrafHistEmail);
+
+
+$VetorGrafHistEmail = sqlsrv_fetch_array($result_squilaGrafHistEmail);
+
+
+
+
+
+
+$squilaGrafHistEmail2 = "DECLARE @DIAS_MES_ANT INT = DATEDIFF(DAY, DateAdd(mm, DateDiff(mm,0,GetDate()) - 1, 0),DateAdd(mm, DateDiff(mm,0,GetDate()), -1))
+
+						SELECT STUFF((  SELECT ',' + CONVERT(varchar,COUNT_HORA)
+						                          FROM 
+						                             (
+							                           SELECT  VisitHour = (CONVERT(int,DATEPART(HH, dtDateOfAction)))
+														  ,(count((CONVERT(int,DATEPART(HH, dtDateOfAction)))))/@DIAS_MES_ANT as COUNT_HORA
+							                             FROM tblOBMReportMailer 
+							                             WHERE CONVERT(date,dtDateOfAction,108) BETWEEN DateAdd(mm, DateDiff(mm,0,GetDate()) - 1, 0) and DateAdd(mm, DateDiff(mm,0,GetDate()), -1)
+							                               AND nSentStatus = 1 
+														group by (CONVERT(int,DATEPART(HH, dtDateOfAction)))
+											
+						                               ) AS Visits
+						                         WHERE CONVERT(nchar(10), CAST(CAST(VisitHour AS nchar) + ':00' AS datetime), 108) BETWEEN '06:00' and '20:00'
+						                      GROUP BY VisitHour,COUNT_HORA
+						                      ORDER BY VisitHour
+						                               FOR XML PATH('')  ), 1, 1, '' )
+ 
+ ";
+
+$result_squilaGrafHistEmail2 = sqlsrv_prepare($conn2, $squilaGrafHistEmail2);
+sqlsrv_execute($result_squilaGrafHistEmail2);
+
+
+$VetorGrafHistEmail2 = sqlsrv_fetch_array($result_squilaGrafHistEmail2);
+
+
 
 
 
@@ -414,7 +482,7 @@ $DataGrafCamp = rtrim($DataGrafCamp, ',');
 		</div><!--/.row-->
 
 
-				<div class="row">
+		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -438,7 +506,33 @@ $DataGrafCamp = rtrim($DataGrafCamp, ',');
 		</div><!--/.row-->
 
 
-				<div class="row">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Histórico Envio Email's
+						<ul class="pull-right panel-settings panel-button-tab-right">
+							<li class="dropdown"><a class="pull-right dropdown-toggle" data-toggle="dropdown" href="#">
+								<em class="fa fa-cogs"></em>
+							</a>
+							</li>
+						</ul>
+						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span></div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<canvas id="bar-chart-grouped" width="800" height="450"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->
+
+
+
+
+
+		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -510,6 +604,7 @@ $DataGrafCamp = rtrim($DataGrafCamp, ',');
 	<script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
     <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
 <script>
 window.onload = function () {
@@ -880,6 +975,37 @@ function calculatePercentage() {
 		
 	}
 }
+
+
+
+
+
+new Chart(document.getElementById("bar-chart-grouped"), {
+    type: 'bar',
+    data: {
+      labels: ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"],
+      datasets: [
+        {
+          label: "Média Mensal",
+          backgroundColor: "#3e95cd",
+          data: [<?php echo $VetorGrafHistEmail2[0] ; ?>]
+        }, {
+          label: "Hoje",
+          backgroundColor: "#8e5ea2",
+          data: [<?php echo $VetorGrafHistEmail[0] ; ?>]
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: ' '
+      }
+    }
+});
+
+
+
 
 
 
