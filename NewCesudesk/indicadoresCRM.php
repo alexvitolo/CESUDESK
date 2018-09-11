@@ -1,5 +1,7 @@
 <?php include '..\NewCesudesk\connectionNEWCESUDESK.php'; 
 
+ini_set('max_execution_time', 90);
+
 session_start();
 
 if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
@@ -9,7 +11,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
 
 // refresh automático pág
 
-echo "<meta HTTP-EQUIV='refresh' CONTENT='520; URL=..\NewCesudesk\indicadoresCRM.php'>";
+// echo "<meta HTTP-EQUIV='refresh' CONTENT='520; URL=..\NewCesudesk\indicadoresCRM.php'>";
 
 
 $USUARIO = $_SESSION['IDLOGIN'];
@@ -178,7 +180,13 @@ $Data_SMS = str_replace('))"', '))', $Data_SMS);
 $Data_SMS = str_replace('@', '"', $Data_SMS);
 $Data_SMS = str_replace('""}', '"}', $Data_SMS);
 // print_r($Data_SMS);exit;
-$mediaSMS = $mediaSMS/$aux1;
+
+if ($aux1 == 0){
+	$mediaSMS = 0;
+}else{
+	$mediaSMS = $mediaSMS/$aux1;
+}
+
 $mediaSMS = round($mediaSMS,0);
 //print_r($media);
 // exit;
@@ -239,18 +247,19 @@ $DataGrafCamp = rtrim($DataGrafCamp, ',');
 
 
 
-$squilaGrafHistEmail= " SELECT STUFF((  SELECT ',' + CONVERT(varchar,COUNT(*))
+$squilaGrafHistEmail= " SELECT STUFF((  SELECT ',' + CONVERT(varchar,COUNT_HORA)
                           FROM 
                              (
-	                           SELECT CONVERT(date,dtDateOfAction,108) as dtDateOfAction
-	                           	  ,VisitHour = DATEPART(HH, dtDateOfAction)
+	                           SELECT VisitHour = DATEPART(HH, dtDateOfAction)
+								  ,count((CONVERT(int,DATEPART(HH, dtDateOfAction)))) as COUNT_HORA
 	                             FROM tblOBMReportMailer 
-	                             WHERE dtDateOfAction >= CONVERT(date,GETDATE(),103)  
+	                             WHERE dtDateOfAction >= CONVERT(date,GETDATE(),103) 
+								   AND nSentStatus = 1 
+								     GROUP BY DATEPART(HH, dtDateOfAction)
                                ) AS Visits
                          WHERE CONVERT(nchar(10), CAST(CAST(VisitHour AS nchar) + ':00' AS datetime), 108) BETWEEN '06:00' and '20:00'
-                      GROUP BY dtDateOfAction
-                          	  ,VisitHour
-                      ORDER BY dtDateOfAction
+                      GROUP BY VisitHour,COUNT_HORA
+                      ORDER BY VisitHour
                                FOR XML PATH('')  ), 1, 1, '' )
  
  ";
@@ -260,6 +269,37 @@ sqlsrv_execute($result_squilaGrafHistEmail);
 
 
 $VetorGrafHistEmail = sqlsrv_fetch_array($result_squilaGrafHistEmail);
+
+
+
+
+
+
+$squilaGrafHistEmail2 = "DECLARE @DIAS_MES_ANT INT = DATEDIFF(DAY, DateAdd(mm, DateDiff(mm,0,GetDate()) - 1, 0),DateAdd(mm, DateDiff(mm,0,GetDate()), -1))
+
+						SELECT STUFF((  SELECT ',' + CONVERT(varchar,COUNT_HORA)
+						                          FROM 
+						                             (
+							                           SELECT  VisitHour = (CONVERT(int,DATEPART(HH, dtDateOfAction)))
+														  ,(count((CONVERT(int,DATEPART(HH, dtDateOfAction)))))/@DIAS_MES_ANT as COUNT_HORA
+							                             FROM tblOBMReportMailer 
+							                             WHERE CONVERT(date,dtDateOfAction,108) BETWEEN DateAdd(mm, DateDiff(mm,0,GetDate()) - 1, 0) and DateAdd(mm, DateDiff(mm,0,GetDate()), -1)
+							                               AND nSentStatus = 1 
+														group by (CONVERT(int,DATEPART(HH, dtDateOfAction)))
+											
+						                               ) AS Visits
+						                         WHERE CONVERT(nchar(10), CAST(CAST(VisitHour AS nchar) + ':00' AS datetime), 108) BETWEEN '06:00' and '20:00'
+						                      GROUP BY VisitHour,COUNT_HORA
+						                      ORDER BY VisitHour
+						                               FOR XML PATH('')  ), 1, 1, '' )
+ 
+ ";
+
+$result_squilaGrafHistEmail2 = sqlsrv_prepare($conn2, $squilaGrafHistEmail2);
+sqlsrv_execute($result_squilaGrafHistEmail2);
+
+
+$VetorGrafHistEmail2 = sqlsrv_fetch_array($result_squilaGrafHistEmail2);
 
 
 
@@ -948,7 +988,7 @@ new Chart(document.getElementById("bar-chart-grouped"), {
         {
           label: "Média Mensal",
           backgroundColor: "#3e95cd",
-          data: [133,221,783,2478]
+          data: [<?php echo $VetorGrafHistEmail2[0] ; ?>]
         }, {
           label: "Hoje",
           backgroundColor: "#8e5ea2",
