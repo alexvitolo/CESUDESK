@@ -112,7 +112,7 @@ if (($_SESSION['ACESSO'] == 1) or ($_SESSION['ACESSO'] == 2) ) {
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link rel="shortcut icon" href="icone.ico" >
-     <link rel="stylesheet" href="..\AdmCrm\general.css">
+    <link rel="stylesheet" href="..\AdmCrm\general.css">
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         

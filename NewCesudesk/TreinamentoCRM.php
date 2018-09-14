@@ -13,15 +13,16 @@ if ($_SESSION['ACESSO'] <> 1 )  {
 }
 
 
-$squilaModulo = "SELECT cd_modulo
-                        ,desc_modulo
-                        ,inf_complementar
-                        ,CASE WHEN bo_ativo = 0 THEN 'ATIVO' ELSE 'INATIVO' END AS ativo
-                   FROM [DB_CRM_CESUDESK].[dbo].[modulo]
-               ORDER BY ativo,cd_modulo asc";
+$squilaDocumentos = "SELECT [id]
+                           ,[anexo]
+                           ,[dh_upload]
+                           ,[nm_anexo]
+                           ,[bo_documento]
+                       FROM [DB_CRM_CESUDESK].[dbo].[anexo]
+                      WHERE bo_documento = 'S'";
 
-$result_squilaModulo = sqlsrv_prepare($conn, $squilaModulo);
-sqlsrv_execute($result_squilaModulo);
+$result_squilaDocumentos = sqlsrv_prepare($conn, $squilaDocumentos);
+sqlsrv_execute($result_squilaDocumentos);
 
 
 
@@ -150,54 +151,52 @@ sqlsrv_execute($result_squilaModulo);
 				<li><a href="#">
 					<em class="fa fa-home"></em>
 				</a></li>
-				<li class="active">Módulos</li>
+				<li class="active">Gestão CRM</li>
 			</ol>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h1 class="page-header">Módulos</h1>
+				<h1 class="page-header">Gestão CRM</h1>
 			</div>
 		</div><!--/.row-->
 		
 		<div class="row">
 			<div class="col-lg-12">
-				<h2>Módulos Cadastrados no Cesudesk</h2>
+				<h2>Documentação e Treinamentos CRM</h2>
 			</div>
 			<div class="col-md-10">
-			 <div class="row mt">
-                  <div class="col-md-12">
-                      <div class="content-panel">
-                        <form name="Form" method="post" id="formulario" action="">
-                          <table class="table table-striped table-advance table-hover order-table table-wrapper">
-                            <h4><i class="fa fa-right"></i> Tabela de Módulos Cadastrados </h4><br>
-                            <a href="CadastroModulo.php"><button type="button" class="btn btn-primary">Adicionar Módulo</button></a>
-                            <hr>
-                              <thead>
-                              <tr>
-                                  <th><i class=""></i> Módulo </th>
-                                  <th><i class=""></i> Descrição </th>
-                                  <th><i class=""></i> Inf. Complementar </th>
-                                  <th><i class=""></i> Status </th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                              	<?php  while($row = sqlsrv_fetch_array($result_squilaModulo)) { ?>
-                                  <td><?php echo $row['cd_modulo']; ?></a></td>
-                                  <td><?php echo $row['desc_modulo']; ?></a></td>
-                                  <td><?php echo $row['inf_complementar']; ?></a></td>
-                                  <td><?php echo $row['ativo']; ?></a></td>
-                              </tr>
-                              <?php 
-                                     }
-                              ?>
-                              </tbody>
-                          </table>
-                        </form>
-                      </div><!-- /content-panel -->
-                  </div><!-- /col-md-12 -->
-              </div><!-- /row -->
+			 <form role="form" name="FormCha" method="post" id="formulario" action="ValidaAnexoTreinamentoCRM.php" enctype="multipart/form-data">
+
+             <br><br>
+			 	<label>Carregar Anexo</label>
+                <input type="file" name="anexo[1]">
+                <p class="help-block">Selecione um arquivo para anexar ao chamado (exclusão apenas via banco).</p>
+                <button type="submit" class="btn btn-primary">Enviar Anexo</button>
+                
+             <br><br><br>
+
+				<div class="panel panel-default">
+					<div class="panel-body tabs">
+						<ul class="nav nav-pills">
+							<li class="active"><a href="#tab3" data-toggle="tab">Anexos</a></li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade">
+								<h4>Anexos</h4>
+								<div class="form-group">
+                                       <?php while ($row = sqlsrv_fetch_array($result_squilaDocumentos)){ ?>
+								       <label>Carregar Anexo</label>
+									    <a href="ChamadoDownload.php?COD_CHAMADO=<?php echo $row['cd_tarefa']; ?>&ANEXO_ID=<?php echo $row['anexos_id']; ?>"><input type="button" value="<?php echo $row['NomeArq']; ?>" ></input></a><br><br>
+                                   <?php } ?>
+								</div>
+	<!-- 						<button type="button" id='CriarAnexo'>Adicionar um novo anexo</button>
+								<button type="button" id='RemoverAnexo'>Limpar</button> -->
+								</div>
+							</div>
+						</div>
+				</div><!--/.panel-->
+			   </form><br><br>
 			</div><!--/.col-->
 		</div><!--/.row-->
 	</div>	<!--/.main-->
@@ -211,15 +210,6 @@ sqlsrv_execute($result_squilaModulo);
 	<script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/custom.js"></script>
 	<script>
-		window.onload = function () {
-	       var chart1 = document.getElementById("line-chart").getContext("2d");
-	       window.myLine = new Chart(chart1).Line(lineChartData, {
-	       responsive: true,
-	       scaleLineColor: "rgba(0,0,0,.2)",
-	       scaleGridLineColor: "rgba(0,0,0,.05)",
-	       scaleFontColor: "#c5c7cc"
-	       });
-         };
 
 	</script>
 		
