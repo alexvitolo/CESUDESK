@@ -147,6 +147,9 @@ $vetorSQLDesc = sqlsrv_fetch_array($result_squilaDesc);
 					<li><a class="" href="TipoTarefa.php">
 						<span class="fa fa-arrow-right">&nbsp;</span> Tipos de Tarefas
 					</a></li>
+					<li><a class="" href="TreinamentoCRM.php">
+						<span class="fa fa-arrow-right">&nbsp;</span> Documentos CRM
+					</a></li>
 				</ul>
 			</li>
 			<?php }; ?>

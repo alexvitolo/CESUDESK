@@ -52,6 +52,7 @@ $ID_MATRICULA_AVALIADOR = $_SESSION['MATRICULA'];
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet">
     <link rel="shortcut icon" href="icone.ico" >
+    <link rel="stylesheet" href="..\AdmCrm\general.css">
     <!--external css-->
     <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
         
