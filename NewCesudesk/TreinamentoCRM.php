@@ -26,7 +26,6 @@ sqlsrv_execute($result_squilaDocumentos);
 
 
 
-
 ?>
 
 <!DOCTYPE html>
@@ -179,22 +178,22 @@ sqlsrv_execute($result_squilaDocumentos);
 				<div class="panel panel-default">
 					<div class="panel-body tabs">
 						<ul class="nav nav-pills">
-							<li class="active"><a href="#tab3" data-toggle="tab">Anexos</a></li>
+							<li class="active"><a href="#tab1" data-toggle="tab">Anexos</a></li>
 						</ul>
 						<div class="tab-content">
-							<div class="tab-pane fade">
+							<div class="tab-pane fade in active" id="tab1">
 								<h4>Anexos</h4>
 								<div class="form-group">
                                        <?php while ($row = sqlsrv_fetch_array($result_squilaDocumentos)){ ?>
 								       <label>Carregar Anexo</label>
-									    <a href="ChamadoDownload.php?COD_CHAMADO=<?php echo $row['cd_tarefa']; ?>&ANEXO_ID=<?php echo $row['anexos_id']; ?>"><input type="button" value="<?php echo $row['NomeArq']; ?>" ></input></a><br><br>
+									    <a href="ChamadoDownloadDocumentos.php?ANEXO_ID=<?php echo $row['id']; ?>"><input type="button" value="<?php echo $row['nm_anexo']; ?>" ></input></a><br><br>
                                    <?php } ?>
 								</div>
 	<!-- 						<button type="button" id='CriarAnexo'>Adicionar um novo anexo</button>
 								<button type="button" id='RemoverAnexo'>Limpar</button> -->
-								</div>
 							</div>
 						</div>
+					</div>
 				</div><!--/.panel-->
 			   </form><br><br>
 			</div><!--/.col-->
