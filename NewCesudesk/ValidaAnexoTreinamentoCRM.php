@@ -7,7 +7,7 @@ if ( ! isset( $_SESSION['USUARIO'] ) && ! isset( $_SESSION['ACESSO'] ) ) {
    echo  '<script type="text/javascript"> window.location.href = "http://dd42150:8087/CESUDESK/NewCesudesk/index.php"  </script>'; 
 }
 
-print_r($_FILES['anexo']);exit;
+
 
 foreach( $_FILES['anexo'] as $key => $value ){ 
 	// print_r($key);
